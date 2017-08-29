@@ -38,7 +38,7 @@
 					<archive>
 						<index>true</index>
 						<manifest>
-							<mainClass>client.Analysis</mainClass>
+							<mainClass>domain.readFile</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
