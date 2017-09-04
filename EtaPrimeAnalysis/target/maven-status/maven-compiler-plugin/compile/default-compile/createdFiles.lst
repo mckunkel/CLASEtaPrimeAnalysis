@@ -1,0 +1,6 @@
+domain/DalitzEvent/EventList.class
+domain/DalitzEvent/EventParticles.class
+domain/Analysis.class
+client/RunAnalysis.class
+domain/GetResults.class
+domain/readFile.class
