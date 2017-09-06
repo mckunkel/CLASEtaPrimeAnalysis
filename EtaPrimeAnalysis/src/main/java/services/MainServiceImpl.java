@@ -23,6 +23,9 @@ import domain.Coordinate;
 
 public class MainServiceImpl implements MainService {
 
+	private boolean mcFlag = false;
+	private boolean recFlag = false;
+
 	private Map<Coordinate, List<H1F>> plotsByCoordinate = null;
 	private List<Coordinate> invariantMassList = null;
 	private List<Coordinate> missingMassList = null;
@@ -37,13 +40,6 @@ public class MainServiceImpl implements MainService {
 	}
 
 	private void makeHistograms(Map<Coordinate, Integer> aMap, String dataType) {
-
-		String dataTypeStr = null;
-		if (dataType == "gen") {
-			dataTypeStr = "Generated ";
-		} else {
-			dataTypeStr = "Reconstructed ";
-		}
 
 		for (Coordinate aCoordinate : invariantMassList) {
 			List<H1F> aList = new ArrayList<>();
@@ -104,6 +100,22 @@ public class MainServiceImpl implements MainService {
 			sb.append(str);
 		}
 		return sb.toString();
+	}
+
+	public void setMCFlag(boolean flag) {
+		this.mcFlag = flag;
+	}
+
+	public void setRECFlag(boolean flag) {
+		this.recFlag = flag;
+	}
+
+	public boolean getMCFlag() {
+		return this.mcFlag;
+	}
+
+	public boolean getRECFlag() {
+		return this.recFlag;
 	}
 
 	public void setInvariantList(List<Coordinate> aList) {

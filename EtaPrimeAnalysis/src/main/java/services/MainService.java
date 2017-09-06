@@ -21,6 +21,14 @@ import domain.Coordinate;
 
 public interface MainService {
 
+	public void setMCFlag(boolean flag);
+
+	public void setRECFlag(boolean flag);
+
+	public boolean getMCFlag();
+
+	public boolean getRECFlag();
+
 	public void setInvariantList(List<Coordinate> aList);
 
 	public void setMissingMassList(List<Coordinate> aList);

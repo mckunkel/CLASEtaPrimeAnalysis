@@ -78,7 +78,7 @@ public class Analysis {
 	}
 
 	private void readHipo() {
-		for (int evnt = 1; evnt < 10000; evnt++) {// getNEvents()
+		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
 			DataEvent event = (DataEvent) hipoReader.gotoEvent(evnt);
 			List<Particle> genList = fillParticleList(event, mcBankName);
 			List<Particle> recList = fillParticleList(event, recBankName);
@@ -87,17 +87,18 @@ public class Analysis {
 
 			MakePlots makeGenPlots = new MakePlots(genFilter.reactionList(), "gen");
 			makeGenPlots.init();
-			// MakePlots makeGenPlots = new
-			// MakePlots(reconFilter.reactionList());
+			MakePlots makeRecPlots = new MakePlots(reconFilter.reactionList(), "rec");
+			makeRecPlots.init();
 
 		}
-		plotHistograms();
+		plotHistograms("gen");
+		plotHistograms("rec");
 
 	}
 
-	private void plotHistograms() {
-
-		JFrame frame = new JFrame("MK Plots");
+	private void plotHistograms(String dataType) {
+		String plotName = dataType + "Plots";
+		JFrame frame = new JFrame(plotName);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screensize = null;
 		screensize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -116,16 +117,16 @@ public class Analysis {
 		can1.divide(2, 2);
 		can1.cd(0);
 		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), "Mx")).get(0));
+				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(0));
 		can1.cd(1);
 		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), "Mx")).get(1));
+				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(1));
 		can1.cd(2);
 		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), "M")).get(1));
+				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), (dataType + "M"))).get(1));
 		can1.cd(3);
 		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), "M")).get(0));
+				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), (dataType + "M"))).get(0));
 		mainPanel.add(can1);
 
 		frame.add(mainPanel);
@@ -133,7 +134,7 @@ public class Analysis {
 		try {
 			Document d = new Document(PageSize.A4);// PageSize.A4.rotate()
 			PdfWriter writer = PdfWriter.getInstance(d, new FileOutputStream(
-					"/Users/michaelkunkel/WORK/GiBUU/clas/EtaPrimeDilepton/ReconstructedFiles/sample.pdf"));
+					"/Users/michaelkunkel/WORK/GiBUU/clas/EtaPrimeDilepton/ReconstructedFiles/" + plotName + ".pdf"));
 			d.open();
 
 			PdfContentByte cb = writer.getDirectContent();

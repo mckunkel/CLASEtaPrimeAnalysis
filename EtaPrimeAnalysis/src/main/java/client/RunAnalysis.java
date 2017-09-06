@@ -27,7 +27,9 @@ public class RunAnalysis {
 		// mainService.addToIMissingMassList("p", "e-", "e+");
 
 		mainService.addToInvariantList("e+", "e-");
-		mainService.addCut("e+", "e-", 0.957);
+
+		// mainService.addCut("e+", "e-", 0.957);
+
 		String fileName = "/Users/michaelkunkel/WORK/GiBUU/clas/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_50.hipo";
 		// String fileName =
 		// "/Volumes/Mac_Storage/Work_Codes/CLAS12/EtaPrimeDilepton/EtaPrimeDilepton_Analysis/out_EtaPrimeDilepton_Tor-0.75Sol0.6_50.hipo";

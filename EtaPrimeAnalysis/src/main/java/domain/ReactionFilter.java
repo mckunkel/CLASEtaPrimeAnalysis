@@ -19,9 +19,6 @@ import java.util.List;
 import org.jlab.clas.pdg.PDGDatabase;
 import org.jlab.clas.physics.Particle;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 public class ReactionFilter {
 
 	private List<Particle> particleList = null;
@@ -55,18 +52,10 @@ public class ReactionFilter {
 			}
 		}
 		if (aList.size() == reactionList.size()) {
-			// printList(aList);
 			return aList;
 		}
 
 		return new ArrayList<>();
-	}
-
-	private void printList(List<Particle> aList) {
-		System.out.println("######################");
-		for (Particle particle : aList) {
-			System.out.println(particle);
-		}
 	}
 
 	private List<String> getReactionCopy() {
@@ -91,27 +80,11 @@ public class ReactionFilter {
 		this.reactionList = reactionList;
 	}
 
-	public Multimap<Integer, Particle> reactionMap() {
-		Multimap<Integer, Particle> aMap = ArrayListMultimap.create();
-
-		// Map<Integer, Particle> aMap = new HashMap<>();
-		List<Particle> aList = runComparision();
-		for (Particle particle : aList) {
-			aMap.put(particle.pid(), particle);
-		}
-
-		return aMap;
-
-	}
-
 	public List<Particle> reactionList() {
-
 		return runComparision();
-
 	}
 
 	public List<Particle> runComparision() {
-		// return compareList();
 		try {
 			return compareList();
 		} catch (Exception e) {

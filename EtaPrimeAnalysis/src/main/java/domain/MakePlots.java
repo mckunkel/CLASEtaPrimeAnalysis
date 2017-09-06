@@ -32,25 +32,40 @@ public class MakePlots {
 	private String dataType = null;;
 
 	public MakePlots(List<Particle> aList, String dataType) {
-		if (aList.size() > 0) {
-			this.particles = aList;
-			this.dataType = dataType;
-			// init();
-		}
+		this.particles = aList;
+		this.dataType = dataType;
+
 	}
 
 	public void init() {
+		if (this.particles.size() > 0) {
 
-		this.mainService = ServiceManager.getSession();
-		this.aMap = new HashMap<>();
-		seperateList(this.mainService.getMissingMassList());
-		seperateList(this.mainService.getInvariantList());
-		if (this.mainService.getHistSetter().size() == 0) {
-			setHists();
+			this.mainService = ServiceManager.getSession();
+			this.aMap = new HashMap<>();
+			seperateList(this.mainService.getMissingMassList());
+			seperateList(this.mainService.getInvariantList());
+
+			if (getFlag() == false) {
+				setFlag();
+				setHists();
+			}
+			createHists(this.mainService.getMissingMassList(), "Mx");
+			createHists(this.mainService.getInvariantList(), "M");
 		}
-		createHists(this.mainService.getMissingMassList(), "Mx");
-		createHists(this.mainService.getInvariantList(), "M");
+	}
 
+	private boolean getFlag() {
+		if (dataType == "gen") {
+			return this.mainService.getMCFlag();
+		} else
+			return this.mainService.getRECFlag();
+	}
+
+	private void setFlag() {
+		if (dataType == "gen") {
+			this.mainService.setMCFlag(true);
+		} else
+			this.mainService.setRECFlag(true);
 	}
 
 	private void seperateList(List<Coordinate> coordinates) {
@@ -112,25 +127,23 @@ public class MakePlots {
 			for (List<Particle> ic : aList) {
 				tempList = MultArray(tempList, ic);
 			}
-
-			if (topologyType == "Mx") {
+			if (topologyType.equals("Mx")) {
 				for (int i = 0; i < tempList.size(); i++) {
 					Particle sum = new Particle();
 					sum.copy(EventList.beamParticle);
 					sum.combine(EventList.targetParticle, +1);
 					sum.combine(tempList.get(i), -1);
 					// System.out.println(sum.mass() + " blah method");
-					this.mainService.getH1Map().get(makeHistogramCoordinate(aCoordinate, topologyType)).get(i)
-							.fill(sum.mass());
+					this.mainService.getH1Map().get(makeHistogramCoordinate(aCoordinate, dataType + topologyType))
+							.get(i).fill(sum.mass());
 				}
 			} else {
-
 				for (int i = 0; i < tempList.size(); i++) {
 					Particle sum = new Particle();
 					sum.copy(tempList.get(i));
 					// System.out.println(sum.mass() + " blah method");
-					this.mainService.getH1Map().get(makeHistogramCoordinate(aCoordinate, topologyType)).get(i)
-							.fill(sum.mass());
+					this.mainService.getH1Map().get(makeHistogramCoordinate(aCoordinate, dataType + topologyType))
+							.get(i).fill(sum.mass());
 				}
 			}
 		}
