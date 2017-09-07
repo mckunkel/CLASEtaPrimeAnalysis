@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jlab.groot.data.H1F;
+import org.jlab.io.hipo.HipoDataSync;
 
 import domain.Coordinate;
 
@@ -25,17 +26,25 @@ public class MainServiceImpl implements MainService {
 
 	private boolean mcFlag = false;
 	private boolean recFlag = false;
+	private boolean writeFlag = false;
 
 	private Map<Coordinate, List<H1F>> plotsByCoordinate = null;
 	private List<Coordinate> invariantMassList = null;
 	private List<Coordinate> missingMassList = null;
 	private Map<Coordinate, Integer> neededHists = null;
 
+	private HipoDataSync hipoDataSync = null;
+
 	public MainServiceImpl() {
 		this.plotsByCoordinate = new HashMap<Coordinate, List<H1F>>();
 		this.invariantMassList = new ArrayList<>();
 		this.missingMassList = new ArrayList<>();
 		this.neededHists = new HashMap<>();
+
+		if (writeFlag) {
+			this.hipoDataSync = new HipoDataSync();
+			this.hipoDataSync.open("outFile.hipo");
+		}
 
 	}
 
@@ -157,4 +166,21 @@ public class MainServiceImpl implements MainService {
 	public Map<Coordinate, Integer> getHistSetter() {
 		return this.neededHists;
 	}
+
+	public void setWriteFlag() {
+		this.writeFlag = true;
+	}
+
+	public boolean getWriteFlag() {
+		return this.writeFlag;
+	}
+
+	public HipoDataSync getHipoDataSync() {
+		return this.hipoDataSync;
+	}
+
+	public void closeHipoDataSync() {
+		this.hipoDataSync.close();
+	}
+
 }

@@ -23,6 +23,7 @@ public class RunAnalysis {
 
 	public static void main(String[] args) {
 		MainService mainService = ServiceManager.getSession();
+		mainService.setWriteFlag();
 		mainService.addToIMissingMassList("p", "e-");
 		// mainService.addToIMissingMassList("p", "e-", "e+");
 
@@ -39,7 +40,17 @@ public class RunAnalysis {
 		reactionList.add("e+");
 		reactionList.add("e-");
 
-		Analysis analysis = new Analysis(fileName, reactionList);
+		List<String> aList = new ArrayList<>();
+		aList.add(
+				"/Users/michaelkunkel/WORK/GiBUU/clas/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_50.hipo");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GiBUU/clas/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_51.hipo");
+		String[] array = aList.toArray(new String[0]);
+
+		// Analysis analysis = new Analysis(fileName, reactionList);
+		Analysis analysis = new Analysis(array, reactionList);
+		// Analysis analysis = new Analysis(args, reactionList);
+
 	}
 
 }

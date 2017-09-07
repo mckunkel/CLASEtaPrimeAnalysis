@@ -47,4 +47,8 @@ public interface MainService {
 
 	public Map<Coordinate, Integer> getHistSetter();
 
+	public void setWriteFlag();
+
+	public boolean getWriteFlag();
+
 }

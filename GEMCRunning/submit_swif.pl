@@ -37,7 +37,7 @@ my $coatjava_dir = "$clara_dir/plugins/clas12";
 my $reconOutput_dir = "$submit_dir/ReconstructedFiles";
 
 
-my $command_source = "source /group/clas12/gemc/environment.csh 4a.2.0";
+my $command_source = "source /group/clas12/gemc/environment.csh 4a.2.1"; #4a.2.0
 my $command_exit = "exit 0";
 
 #Options to input into Gemc

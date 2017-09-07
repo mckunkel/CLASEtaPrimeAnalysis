@@ -10,7 +10,7 @@ use POSIX;
 
 my $nJobs = 3;	# total number of jobs 469
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
-my $clara_dir = "/work/clas12/mkunkel/myClara";
+my $clara_dir = "/work/clas12/mkunkel/myClara4a.8.1"; #myClara4a.7.3
 my $coatjava_dir = "$clara_dir/plugins/clas12";
 my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
 my @solenoidValue = ("0.6", "0.8");

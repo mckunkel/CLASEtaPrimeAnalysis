@@ -112,6 +112,24 @@
 							<finalName>PlotDifferentSettings.jar</finalName>
 						</configuration>
 					</execution>
+					<execution>
+						<id>build-d</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>client.RunAnalysis</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<finalName>RunAnalysis.jar</finalName>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 

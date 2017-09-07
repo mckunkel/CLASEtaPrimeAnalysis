@@ -45,7 +45,12 @@ import services.ServiceManager;
 public class Analysis {
 
 	private HipoDataSource hipoReader = null;
+	private HipoDataSource[] hipoReaders = null;
+	private int NinputFiles = 0;
+
 	private String fileName;
+	private String[] fileList;
+
 	private String mcBankName;
 	private String recBankName;
 	private List<String> reactionList = null;
@@ -65,6 +70,27 @@ public class Analysis {
 
 	}
 
+	public Analysis(String[] fileList, List<String> reactionList) {
+		this.fileList = fileList;
+		this.NinputFiles = fileList.length;
+		this.reactionList = reactionList;
+		this.genFilter = new ReactionFilter();
+		this.reconFilter = new ReactionFilter();
+		this.mainService = ServiceManager.getSession();
+
+		initWList();
+		for (int i = 0; i < NinputFiles; i++) {
+			System.out.println("operating on file " + fileList[i]);
+			hipoReader = new HipoDataSource();
+			hipoReader.open(fileList[i]);
+			readHipoWList();
+		}
+		plotHistograms("gen");
+		plotHistograms("rec");
+		// System.exit(0);
+
+	}
+
 	private void init() {
 		this.hipoReader = new HipoDataSource();
 		this.hipoReader.open(fileName);
@@ -74,6 +100,35 @@ public class Analysis {
 
 		this.genFilter.setReactionList(this.reactionList);
 		this.reconFilter.setReactionList(this.reactionList);
+
+	}
+
+	private void initWList() {
+		this.hipoReaders = new HipoDataSource[NinputFiles];
+
+		this.mcBankName = "MC::Particle";
+		this.recBankName = "REC::Particle";
+
+		this.genFilter.setReactionList(this.reactionList);
+		this.reconFilter.setReactionList(this.reactionList);
+
+	}
+
+	private void readHipoWList() {
+
+		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
+			DataEvent event = (DataEvent) hipoReader.gotoEvent(evnt);
+			List<Particle> genList = fillParticleList(event, mcBankName);
+			List<Particle> recList = fillParticleList(event, recBankName);
+			genFilter.setParticleList(genList);
+			reconFilter.setParticleList(recList);
+
+			MakePlots makeGenPlots = new MakePlots(genFilter.reactionList(), "gen");
+			makeGenPlots.init();
+			MakePlots makeRecPlots = new MakePlots(reconFilter.reactionList(), "rec");
+			makeRecPlots.init();
+
+		}
 
 	}
 
@@ -93,7 +148,7 @@ public class Analysis {
 		}
 		plotHistograms("gen");
 		plotHistograms("rec");
-
+		System.exit(0);
 	}
 
 	private void plotHistograms(String dataType) {
@@ -133,8 +188,7 @@ public class Analysis {
 		frame.setVisible(true);
 		try {
 			Document d = new Document(PageSize.A4);// PageSize.A4.rotate()
-			PdfWriter writer = PdfWriter.getInstance(d, new FileOutputStream(
-					"/Users/michaelkunkel/WORK/GiBUU/clas/EtaPrimeDilepton/ReconstructedFiles/" + plotName + ".pdf"));
+			PdfWriter writer = PdfWriter.getInstance(d, new FileOutputStream(plotName + ".pdf"));
 			d.open();
 
 			PdfContentByte cb = writer.getDirectContent();

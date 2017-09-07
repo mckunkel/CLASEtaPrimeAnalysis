@@ -21,7 +21,27 @@ public class PlotDifferentSettings {
 			System.out.println(args[i]);
 		}
 
-		new PlotDifferentSettings(args);
+		List<String> aList = new ArrayList<>();
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor-0.75Sol0.6_results.txt");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor-0.75Sol0.8_results.txt");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor0.75Sol0.6_results.txt");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor0.75Sol0.8_results.txt");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor-1.0Sol0.6_results.txt");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor-1.0Sol0.8_results.txt");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor1.0Sol0.6_results.txt");
+		aList.add(
+				"/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/TXTfiles/EtaPrimeDilepton_Tor1.0Sol0.8_results.txt");
+
+		// new PlotDifferentSettings(args);
+		String[] array = aList.toArray(new String[0]);
+		new PlotDifferentSettings(array);
 
 	}
 
@@ -36,6 +56,7 @@ public class PlotDifferentSettings {
 			setGraph();
 			grEff.setMarkerColor(i + 1);
 
+			System.out.println(grEff.getMarkerColor() + "  " + textFile.toString());
 			Scanner sc = new Scanner(new FileInputStream(textFile[i]));
 
 			String currentLine;
@@ -75,13 +96,22 @@ public class PlotDifferentSettings {
 	}
 
 	public void setCanvas() {
-		this.myCanvas = new TCanvas("myCanvas", 500, 500);
+		this.myCanvas = new TCanvas("myCanvas", 1200, 1200);
 		myCanvas.setVisible(true);
 		for (GraphErrors graphErrors : graphList) {
 			myCanvas.draw(graphErrors, "same");
 		}
-		myCanvas.save(
-				"/Volumes/Mac_Storage/Work_Codes/CLAS12/EtaPrimeDilepton/EtaPrimeDilepton_Analysis/diffentSetting");
+		int numCanvas = graphList.size();
+
+		TCanvas aCanvas = new TCanvas("newCanvas", 1200, 1200);
+		aCanvas.divide(3, 3);
+
+		for (int i = 0; i < numCanvas; i++) {
+			aCanvas.cd(i);
+			aCanvas.draw(graphList.get(i));
+		}
+		myCanvas.save("diffentSetting.png");
+		aCanvas.save("individualdiffentSetting.png");
 	}
 
 }
