@@ -13,9 +13,7 @@
 package domain;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +25,7 @@ import org.jlab.clas.pdg.PDGDatabase;
 import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.Particle;
 import org.jlab.clas.physics.Vector3;
+import org.jlab.groot.data.H1F;
 import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
@@ -45,11 +44,8 @@ import services.ServiceManager;
 public class Analysis {
 
 	private HipoDataSource hipoReader = null;
-	private HipoDataSource[] hipoReaders = null;
+	private String[] fileList = null;
 	private int NinputFiles = 0;
-
-	private String fileName;
-	private String[] fileList;
 
 	private String mcBankName;
 	private String recBankName;
@@ -58,17 +54,11 @@ public class Analysis {
 	private ReactionFilter reconFilter = null;
 	private MainService mainService = null;
 
-	public Analysis(String fileName, List<String> reactionList) {
-		this.fileName = fileName;
-		this.reactionList = reactionList;
-		this.genFilter = new ReactionFilter();
-		this.reconFilter = new ReactionFilter();
-		this.mainService = ServiceManager.getSession();
-
-		init();
-		readHipo();
-
-	}
+	private int screenWidth = 1200;// myCanvas1.getWidth();// 100;// (int)
+	// (screensize.getWidth() / 2);
+	private int screenHeight = 800;// myCanvas1.getHeight();// 100;// (int)
+	// (screensize.getHeight() /
+	// 2);
 
 	public Analysis(String[] fileList, List<String> reactionList) {
 		this.fileList = fileList;
@@ -78,23 +68,12 @@ public class Analysis {
 		this.reconFilter = new ReactionFilter();
 		this.mainService = ServiceManager.getSession();
 
-		initWList();
-		for (int i = 0; i < NinputFiles; i++) {
-			System.out.println("operating on file " + fileList[i]);
-			hipoReader = new HipoDataSource();
-			hipoReader.open(fileList[i]);
-			readHipoWList();
-		}
-		plotHistograms("gen");
-		plotHistograms("rec");
-		// System.exit(0);
+		init();
+		run();
 
 	}
 
 	private void init() {
-		this.hipoReader = new HipoDataSource();
-		this.hipoReader.open(fileName);
-
 		this.mcBankName = "MC::Particle";
 		this.recBankName = "REC::Particle";
 
@@ -103,70 +82,41 @@ public class Analysis {
 
 	}
 
-	private void initWList() {
-		this.hipoReaders = new HipoDataSource[NinputFiles];
-
-		this.mcBankName = "MC::Particle";
-		this.recBankName = "REC::Particle";
-
-		this.genFilter.setReactionList(this.reactionList);
-		this.reconFilter.setReactionList(this.reactionList);
-
-	}
-
-	private void readHipoWList() {
-
-		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
-			DataEvent event = (DataEvent) hipoReader.gotoEvent(evnt);
-			List<Particle> genList = fillParticleList(event, mcBankName);
-			List<Particle> recList = fillParticleList(event, recBankName);
-			genFilter.setParticleList(genList);
-			reconFilter.setParticleList(recList);
-
-			MakePlots makeGenPlots = new MakePlots(genFilter.reactionList(), "gen");
-			makeGenPlots.init();
-			MakePlots makeRecPlots = new MakePlots(reconFilter.reactionList(), "rec");
-			makeRecPlots.init();
-
-		}
-
-	}
-
-	private void readHipo() {
-		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
-			DataEvent event = (DataEvent) hipoReader.gotoEvent(evnt);
-			List<Particle> genList = fillParticleList(event, mcBankName);
-			List<Particle> recList = fillParticleList(event, recBankName);
-			genFilter.setParticleList(genList);
-			reconFilter.setParticleList(recList);
-
-			MakePlots makeGenPlots = new MakePlots(genFilter.reactionList(), "gen");
-			makeGenPlots.init();
-			MakePlots makeRecPlots = new MakePlots(reconFilter.reactionList(), "rec");
-			makeRecPlots.init();
-
+	private void run() {
+		for (int i = 0; i < NinputFiles; i++) {
+			System.out.println("operating on file " + this.fileList[i]);
+			this.hipoReader = new HipoDataSource();
+			this.hipoReader.open(this.fileList[i]);
+			readHipo();
 		}
 		plotHistograms("gen");
 		plotHistograms("rec");
-		System.exit(0);
+		makeAcceptance();
+
+		// System.exit(0);
+	}
+
+	private void readHipo() {
+
+		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
+			DataEvent event = (DataEvent) this.hipoReader.gotoEvent(evnt);
+			List<Particle> genList = fillParticleList(event, this.mcBankName);
+			List<Particle> recList = fillParticleList(event, this.recBankName);
+			this.genFilter.setParticleList(genList);
+			this.reconFilter.setParticleList(recList);
+
+			MakePlots makeGenPlots = new MakePlots(this.genFilter.reactionList(), "gen");
+			makeGenPlots.init();
+			MakePlots makeRecPlots = new MakePlots(this.reconFilter.reactionList(), "rec");
+			makeRecPlots.init();
+
+		}
+
 	}
 
 	private void plotHistograms(String dataType) {
-		String plotName = dataType + "Plots";
-		JFrame frame = new JFrame(plotName);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Dimension screensize = null;
-		screensize = Toolkit.getDefaultToolkit().getScreenSize();
-		int screenWidth = 1200;// myCanvas1.getWidth();// 100;// (int)
-								// (screensize.getWidth() / 2);
-		int screenHeight = 800;// myCanvas1.getHeight();// 100;// (int)
-								// (screensize.getHeight() /
-								// 2);
-
-		frame.setSize(screenWidth, screenHeight);
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setSize(screenWidth, screenHeight);
+		JFrame frame = makeJFrame(dataType);
+		JPanel mainPanel = makeJPanel();
 
 		EmbeddedCanvas can1 = new EmbeddedCanvas();
 		can1.divide(2, 2);
@@ -186,6 +136,60 @@ public class Analysis {
 
 		frame.add(mainPanel);
 		frame.setVisible(true);
+
+		savePlots(mainPanel, dataType);
+
+	}
+
+	private void makeAcceptance() {
+		JFrame frame2 = makeJFrame("Acceptance");
+		JPanel mainPanel2 = makeJPanel();
+		EmbeddedCanvas can2 = new EmbeddedCanvas();
+		can2.draw(makeAcceptancePlot());
+		mainPanel2.add(can2);
+		frame2.add(mainPanel2);
+		frame2.setVisible(true);
+	}
+
+	private JFrame makeJFrame(String dataType) {
+		String plotName = dataType + "Plots";
+
+		JFrame frame = new JFrame(plotName);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		frame.setSize(screenWidth, screenHeight);
+
+		return frame;
+	}
+
+	private JPanel makeJPanel() {
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setSize(screenWidth, screenHeight);
+		return mainPanel;
+	}
+
+	private EmbeddedCanvas makeCanvas() {
+
+		EmbeddedCanvas can1 = new EmbeddedCanvas();
+		return can1;
+	}
+
+	private H1F makeAcceptancePlot() {
+		H1F h1f = this.mainService.getH1Map()
+				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), ("rec" + "M"))).get(0)
+				.histClone("h1f");
+		h1f.setTitleX("M(e+e-) GeV");
+		h1f.setTitleY("Acceptance");
+		h1f.divide(this.mainService.getH1Map()
+				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), ("gen" + "M"))).get(1));
+
+		return h1f;
+
+	}
+
+	private void savePlots(JPanel mainPanel, String dataType) {
+		String plotName = dataType + "Plots";
 		try {
 			Document d = new Document(PageSize.A4);// PageSize.A4.rotate()
 			PdfWriter writer = PdfWriter.getInstance(d, new FileOutputStream(plotName + ".pdf"));
@@ -195,7 +199,6 @@ public class Analysis {
 			cb.saveState();
 			// PageSize.A4.getWidth(), PageSize.A4.getHeight()
 			PdfTemplate template = cb.createTemplate(screenWidth, screenHeight);
-			// can1.getWidth(), can1.getHeight()
 			Graphics2D g2d = new PdfGraphics2D(cb, screenWidth, screenHeight);
 
 			g2d.scale(0.5, 0.5);
@@ -211,7 +214,6 @@ public class Analysis {
 		} catch (Exception e) {
 			//
 		}
-		// myCanvas1.cd(2);
 	}
 
 	private Coordinate makeHistogramCoordinate(Coordinate aCoordinate, String string) {

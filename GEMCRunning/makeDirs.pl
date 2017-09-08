@@ -13,6 +13,7 @@ my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
 my @solenoidValue = ("0.6", "0.8");
 my $gemcDataDir = "/volatile/clas12/mkunkel/EtaPrimeDilepton/GEMCFiles";
 
+
 for $a (0 .. $#torusValue)
 {
   for $b (0 .. $#solenoidValue){

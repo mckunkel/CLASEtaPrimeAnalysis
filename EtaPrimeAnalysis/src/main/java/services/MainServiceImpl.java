@@ -127,12 +127,8 @@ public class MainServiceImpl implements MainService {
 		return this.recFlag;
 	}
 
-	public void setInvariantList(List<Coordinate> aList) {
-		this.invariantMassList.addAll(aList);
-	}
+	public void addCut(double mean, double sigmaRange, String... strings) {
 
-	public void setMissingMassList(List<Coordinate> aList) {
-		this.missingMassList.addAll(aList);
 	}
 
 	public List<Coordinate> getInvariantList() {

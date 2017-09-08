@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jlab.groot.data.H1F;
+import org.jlab.io.hipo.HipoDataSync;
 
 import domain.Coordinate;
 
@@ -29,9 +30,7 @@ public interface MainService {
 
 	public boolean getRECFlag();
 
-	public void setInvariantList(List<Coordinate> aList);
-
-	public void setMissingMassList(List<Coordinate> aList);
+	public void addCut(double mean, double sigmaRange, String... strings);
 
 	public List<Coordinate> getInvariantList();
 
@@ -50,5 +49,9 @@ public interface MainService {
 	public void setWriteFlag();
 
 	public boolean getWriteFlag();
+
+	public HipoDataSync getHipoDataSync();
+
+	public void closeHipoDataSync();
 
 }

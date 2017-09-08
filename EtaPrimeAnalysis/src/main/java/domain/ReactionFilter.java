@@ -23,6 +23,7 @@ public class ReactionFilter {
 
 	private List<Particle> particleList = null;
 	private List<String> reactionList = null;
+	private boolean passedFlag = false;
 
 	public ReactionFilter() {
 
@@ -52,6 +53,7 @@ public class ReactionFilter {
 			}
 		}
 		if (aList.size() == reactionList.size()) {
+			setPassedFlag();
 			return aList;
 		}
 
@@ -70,6 +72,14 @@ public class ReactionFilter {
 		aListCopy.addAll(particleList);
 
 		return aListCopy;
+	}
+
+	private void setPassedFlag() {
+		this.passedFlag = true;
+	}
+
+	public boolean getPassedFlag() {
+		return this.passedFlag;
 	}
 
 	public void setParticleList(List<Particle> particleList) {
