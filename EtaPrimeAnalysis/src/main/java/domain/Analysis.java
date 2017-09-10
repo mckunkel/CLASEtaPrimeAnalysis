@@ -26,7 +26,9 @@ import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.Particle;
 import org.jlab.clas.physics.Vector3;
 import org.jlab.groot.data.H1F;
+import org.jlab.groot.fitter.DataFitter;
 import org.jlab.groot.graphics.EmbeddedCanvas;
+import org.jlab.groot.math.F1D;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 import org.jlab.io.hipo.HipoDataSource;
@@ -132,8 +134,31 @@ public class Analysis {
 		can1.cd(3);
 		can1.draw(this.mainService.getH1Map()
 				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), (dataType + "M"))).get(0));
-		mainPanel.add(can1);
+		// mainPanel.add(can1);
 
+		H1F h1 = this.mainService.getH1Map()
+				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(0)
+				.histClone("h1");
+		h1.add(this.mainService.getH1Map()
+				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(1));
+		F1D func = new F1D("f1", "[amp]*gaus(x,[mean],[sigma]) + [p0] + [p1]*x", 0.75, 1.5);
+		func.setParameter(0, 10);
+		func.setParameter(1, 0.957);
+		func.setParameter(2, 0.05);
+		DataFitter.fit(func, h1, "E");
+		func.show();
+		EmbeddedCanvas can = new EmbeddedCanvas();
+
+		can.draw(h1);
+		// can.draw(func, "same");
+		func.setLineColor(36);
+		func.setLineWidth(3);
+		func.setLineStyle(4);
+		can.setFont("HanziPen TC");
+		can.setTitleSize(18);
+		can.setAxisTitleSize(14);
+		can.setAxisLabelSize(12);
+		mainPanel.add(can);
 		frame.add(mainPanel);
 		frame.setVisible(true);
 
