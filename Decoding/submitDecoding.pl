@@ -26,7 +26,7 @@ my $CPU_count = "-cores 1";
 ################################
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
 
-my $clara_dir = "$submit_dir/clara/myClara4a.8.1";
+my $clara_dir = "/work/clas12/mkunkel/myClara4a.8.1";
 my $coatjava_dir = "$clara_dir/plugins/clas12";
 
 my $command_exit = "exit 0";
@@ -55,7 +55,7 @@ for $a (0 .. $#torusValue)
 
       my $decodedData = "EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".hipo";
       
-      my $decodedOut = "$decoded_dir/$decodedData;
+      my $decodedOut = "$decoded_dir/$decodedData";
       if(-e $decodedOut){
         #print "YO dumbass, are you overwriting an existing file? Tsk Tsk! \n";
         $iJob++;
