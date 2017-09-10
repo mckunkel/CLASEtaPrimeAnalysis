@@ -50,7 +50,7 @@ my $torusString = "value=\"clas12-torus-big, -1\"";
 my $solenoidString = "value=\"clas12-solenoid, 1\"";
 
 #my $input_1 = "-input setCLARA.csh $submit_dir/clara/setCLARA.csh";
-my $input_1 = "-input clas12.gcard $submit_dir/clas12.gcard";
+my $input_1 = "-input clas12.gcard $submit_dir/clas12_4a.2.1.gcard";
 
 
 #torus setting for this study -0.75, 0.75, 1,-1.  Solenoid values for this study 0.8, 0.6
