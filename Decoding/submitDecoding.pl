@@ -29,6 +29,9 @@ my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
 my $clara_dir = "/work/clas12/mkunkel/myClara4a.8.1";
 my $coatjava_dir = "$clara_dir/plugins/clas12";
 
+my $command_source = "source setCLARA.csh /work/clas12/mkunkel/myClara4a.8.1"; #4a.2.0
+my $input_0 = "-input setCLARA.csh /work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/setCLARA.csh";
+
 my $command_exit = "exit 0";
 
 #torus setting for this study -0.75, 0.75, 1,-1.  Solenoid values for this study 0.8, 0.6
@@ -45,7 +48,7 @@ for $a (0 .. $#torusValue)
     my $workflow = "-workflow etaP_sim_tor".$torusValue[$a]."sol".$solenoidValue[$b];
     my $gemcInput_dir = "$submit_dir/GEMCFiles/$torusSol_dir";
     my $decoded_dir = "$submit_dir/DecodedFiles/$torusSol_dir";
-    
+
     
     while($iJob < $nJobs){
       
@@ -69,11 +72,11 @@ for $a (0 .. $#torusValue)
       
       
       open my $command_file, ">command.dat" or die "cannot open command.dat file:$!";
-      print $command_file "$doDecoding; $command_exit";
+      print $command_file "$command_source $doDecoding; $command_exit";
       close $command_file;
       
       
-      my $sub = "swif add-job $workflow $project $track $time $OS $ram $disk $CPU_count $input_1 -script command.dat $mv_decoded";
+      my $sub = "swif add-job $workflow $project $track $time $OS $ram $disk $CPU_count $input_0 $input_1 -script command.dat $mv_decoded";
       system ($sub);
       print "$sub \n\n";
       
