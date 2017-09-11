@@ -34,6 +34,8 @@ public interface MainService {
 
 	public void addCut(double mean, double sigma, double sigmaRange, String... strings);
 
+	public void addCut(double mean, int side, String... strings);
+
 	public List<Cuts> getcutList();
 
 	public List<Coordinate> getInvariantList();

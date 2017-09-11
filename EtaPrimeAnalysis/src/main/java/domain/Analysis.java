@@ -91,8 +91,8 @@ public class Analysis {
 			this.hipoReader.open(this.fileList[i]);
 			readHipo();
 		}
-		// plotHistograms("gen");
-		plotHistograms("rec");
+		plotHistograms("gen");
+		// plotHistograms("rec");
 		// makeAcceptance();
 
 		// System.exit(0);
@@ -110,7 +110,7 @@ public class Analysis {
 			MakePlots makeGenPlots = new MakePlots(this.genFilter.reactionList(), "gen");
 			makeGenPlots.init();
 			MakePlots makeRecPlots = new MakePlots(this.reconFilter.reactionList(), "rec");
-			makeRecPlots.init();
+			// makeRecPlots.init();
 
 		}
 
@@ -134,7 +134,7 @@ public class Analysis {
 		can1.cd(3);
 		can1.draw(this.mainService.getH1Map()
 				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), (dataType + "M"))).get(0));
-		// mainPanel.add(can1);
+		mainPanel.add(can1);
 
 		H1F h1 = this.mainService.getH1Map()
 				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(0)
@@ -158,7 +158,7 @@ public class Analysis {
 		can.setTitleSize(18);
 		can.setAxisTitleSize(14);
 		can.setAxisLabelSize(12);
-		mainPanel.add(can);
+		// mainPanel.add(can);
 		frame.add(mainPanel);
 		frame.setVisible(true);
 

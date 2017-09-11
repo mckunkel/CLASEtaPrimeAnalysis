@@ -22,13 +22,17 @@ import services.ServiceManager;
 public class RunAnalysis {
 
 	public static void main(String[] args) {
+		// public static void main(File file, String[] args) {
+
 		MainService mainService = ServiceManager.getSession();
 		mainService.addToIMissingMassList("p", "e-");
 		// mainService.addToIMissingMassList("p", "e-", "e+");
+		// mainService.addToIMissingMassList("p", "e+");
 
-		mainService.addToInvariantList("e+", "e-");
+		mainService.addToInvariantList("e-", "e+");
 
 		mainService.addCut(0.96637, 0.03, 2.5, "Mx", "p", "e-");
+		mainService.addCut(0.96637, 1, "M", "e+", "e-");
 
 		// String dirName =
 		// "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";

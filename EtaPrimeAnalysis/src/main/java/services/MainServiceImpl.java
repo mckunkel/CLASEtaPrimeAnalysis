@@ -133,6 +133,12 @@ public class MainServiceImpl implements MainService {
 		this.cutList.add(cuts);
 	}
 
+	public void addCut(double mean, int side, String... strings) {
+		Coordinate aCoordinate = new Coordinate(strings);
+		Cuts cuts = new Cuts(aCoordinate, mean, side);
+		this.cutList.add(cuts);
+	}
+
 	public List<Cuts> getcutList() {
 		return this.cutList;
 	}
