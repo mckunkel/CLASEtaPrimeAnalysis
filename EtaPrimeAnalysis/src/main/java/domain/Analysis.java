@@ -91,9 +91,9 @@ public class Analysis {
 			this.hipoReader.open(this.fileList[i]);
 			readHipo();
 		}
-		plotHistograms("gen");
+		// plotHistograms("gen");
 		plotHistograms("rec");
-		makeAcceptance();
+		// makeAcceptance();
 
 		// System.exit(0);
 	}
@@ -267,6 +267,14 @@ public class Analysis {
 				aList.add(getParticle(aBank, t));
 			}
 		}
+		// if (bankName.equals("REC::Particle") && aEvent.hasBank(bankName) &&
+		// aEvent.hasBank("FT::particles")) {
+		// DataBank ftBank = aEvent.getBank("FT::particles");
+		// int Nrows = ftBank.rows();
+		// for (int t = 0; t < Nrows; t++) {
+		// aList.add(getFTParticle(ftBank, t));
+		// }
+		// }
 		return aList;
 	}
 
@@ -276,6 +284,12 @@ public class Analysis {
 			return -3312;
 		}
 		return pid;
+	}
+
+	private int getCharge(DataBank aBank, int evntIndex) {
+		int charge = aBank.getInt("charge", evntIndex);
+		return charge;
+
 	}
 
 	private Vector3 getMomentumVector(DataBank aBank, int evntIndex) {
@@ -305,6 +319,35 @@ public class Analysis {
 		aParticle.changePid(getpid(aBank, evntIndex));
 		return aParticle;
 
+	}
+
+	private Vector3 getFTMomentumVector(DataBank aBank, int evntIndex) {
+		Vector3 momVector = new Vector3();
+		double mass = PDGDatabase.getParticleById(11).mass();
+		double energy = aBank.getFloat("energy", evntIndex);
+		double totalMomentum = Math.sqrt(Math.pow(energy, 2) - Math.pow(mass, 2));
+		momVector.setXYZ(totalMomentum * aBank.getFloat("cx", evntIndex),
+				totalMomentum * aBank.getFloat("cy", evntIndex), totalMomentum * aBank.getFloat("cz", evntIndex));
+		return momVector;
+	}
+
+	private LorentzVector getFTLorentzVector(DataBank aBank, int evntIndex) {
+		LorentzVector aLorentzVector = new LorentzVector();
+		double mass = PDGDatabase.getParticleById(11).mass();
+		aLorentzVector.setVectM(getFTMomentumVector(aBank, evntIndex), mass);
+		return aLorentzVector;
+	}
+
+	private Particle getFTParticle(DataBank aBank, int evntIndex) {
+		Particle aParticle = new Particle();
+		Vector3 vrtVector = new Vector3();
+		vrtVector.setXYZ(0.0, 0.0, 0.0);
+		aParticle.setVector(getFTLorentzVector(aBank, evntIndex), vrtVector);
+		if (getCharge(aBank, evntIndex) == -1) {
+			aParticle.changePid(11);
+		} else
+			aParticle.changePid(-3312);
+		return aParticle;
 	}
 
 }
