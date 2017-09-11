@@ -28,11 +28,12 @@ public class RunAnalysis {
 
 		mainService.addToInvariantList("e+", "e-");
 
-		mainService.addCut(0.957, 2.5, "p", "e-");
+		mainService.addCut(0.96637, 0.03, 2.5, "Mx", "p", "e-");
 
-		// String fileName =
-		// "/Users/michaelkunkel/WORK/GiBUU/clas/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_50.hipo";
-		String dirName = "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
+		// String dirName =
+		// "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
+		String dirName = "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
+
 		String part1Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_100.hipo";
 		String part2Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_101.hipo";
 		String part3Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_102.hipo";
@@ -49,12 +50,12 @@ public class RunAnalysis {
 
 		List<String> aList = new ArrayList<>();
 		aList.add(dirName + part1Name);
-		aList.add(dirName + part2Name);
-		aList.add(dirName + part3Name);
-		aList.add(dirName + part4Name);
-		aList.add(dirName + part5Name);
-		aList.add(dirName + part6Name);
-		aList.add(dirName + part7Name);
+		// aList.add(dirName + part2Name);
+		// aList.add(dirName + part3Name);
+		// aList.add(dirName + part4Name);
+		// aList.add(dirName + part5Name);
+		// aList.add(dirName + part6Name);
+		// aList.add(dirName + part7Name);
 
 		// aList.add(
 		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CODES/SIMUALTION/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_51.hipo");

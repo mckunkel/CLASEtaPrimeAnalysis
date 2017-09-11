@@ -18,33 +18,27 @@ import java.util.List;
 import java.util.Map;
 
 import org.jlab.groot.data.H1F;
-import org.jlab.io.hipo.HipoDataSync;
 
 import domain.Coordinate;
+import domain.Cuts;
 
 public class MainServiceImpl implements MainService {
 
 	private boolean mcFlag = false;
 	private boolean recFlag = false;
-	private boolean writeFlag = false;
 
 	private Map<Coordinate, List<H1F>> plotsByCoordinate = null;
 	private List<Coordinate> invariantMassList = null;
 	private List<Coordinate> missingMassList = null;
 	private Map<Coordinate, Integer> neededHists = null;
-
-	private HipoDataSync hipoDataSync = null;
+	private List<Cuts> cutList = null;
 
 	public MainServiceImpl() {
 		this.plotsByCoordinate = new HashMap<Coordinate, List<H1F>>();
 		this.invariantMassList = new ArrayList<>();
 		this.missingMassList = new ArrayList<>();
 		this.neededHists = new HashMap<>();
-
-		if (writeFlag) {
-			this.hipoDataSync = new HipoDataSync();
-			this.hipoDataSync.open("outFile.hipo");
-		}
+		this.cutList = new ArrayList<>();
 
 	}
 
@@ -55,7 +49,7 @@ public class MainServiceImpl implements MainService {
 			String topology = getTopology(aCoordinate, "M(");
 			String title = getTitle(aCoordinate, "Invariant Mass of ");
 			for (int i = 0; i < this.neededHists.get(aCoordinate); i++) {
-				H1F h1f = new H1F(topology, "", 100, 0, 1.0);
+				H1F h1f = new H1F(topology, "", 100, 0, 4.0);
 				h1f.setTitleX(topology);
 				h1f.setTitleY("Entries");
 				h1f.setTitle(title);
@@ -128,7 +122,19 @@ public class MainServiceImpl implements MainService {
 	}
 
 	public void addCut(double mean, double sigmaRange, String... strings) {
+		Coordinate aCoordinate = new Coordinate(strings);
+		Cuts cuts = new Cuts(aCoordinate, mean, sigmaRange);
+		this.cutList.add(cuts);
+	}
 
+	public void addCut(double mean, double sigma, double sigmaRange, String... strings) {
+		Coordinate aCoordinate = new Coordinate(strings);
+		Cuts cuts = new Cuts(aCoordinate, mean, sigma, sigmaRange);
+		this.cutList.add(cuts);
+	}
+
+	public List<Cuts> getcutList() {
+		return this.cutList;
 	}
 
 	public List<Coordinate> getInvariantList() {
@@ -161,22 +167,6 @@ public class MainServiceImpl implements MainService {
 
 	public Map<Coordinate, Integer> getHistSetter() {
 		return this.neededHists;
-	}
-
-	public void setWriteFlag() {
-		this.writeFlag = true;
-	}
-
-	public boolean getWriteFlag() {
-		return this.writeFlag;
-	}
-
-	public HipoDataSync getHipoDataSync() {
-		return this.hipoDataSync;
-	}
-
-	public void closeHipoDataSync() {
-		this.hipoDataSync.close();
 	}
 
 }

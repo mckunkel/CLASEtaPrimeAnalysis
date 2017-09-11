@@ -15,25 +15,36 @@ package domain;
 public class Cuts {
 
 	private Coordinate topology = null;
-	private int mean;
-	private int sigmaRange;
+	private double mean;
+	private double sigmaRange;
+	private double sigma;
 
-	public Cuts(Coordinate topology, int mean, int sigmaRange) {
+	public Cuts(Coordinate topology, double mean, double sigmaRange) {
 		this.topology = topology;
 		this.mean = mean;
 		this.sigmaRange = sigmaRange;
+	}
+
+	public Cuts(Coordinate topology, double mean, double sigma, double sigmaRange) {
+		this.topology = topology;
+		this.mean = mean;
+		this.sigmaRange = sigmaRange;
+		this.sigma = sigma;
 	}
 
 	public Coordinate getTopology() {
 		return topology;
 	}
 
-	public int getMean() {
+	public double getMean() {
 		return mean;
 	}
 
-	public int getSigmaRange() {
+	public double getSigmaRange() {
 		return sigmaRange;
 	}
 
+	public double getSigma() {
+		return this.sigma;
+	}
 }

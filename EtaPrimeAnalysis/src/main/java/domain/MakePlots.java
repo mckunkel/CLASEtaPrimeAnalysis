@@ -51,6 +51,8 @@ public class MakePlots {
 			}
 			createHists(this.mainService.getMissingMassList(), "Mx");
 			createHists(this.mainService.getInvariantList(), "M");
+
+			applyCuts(createHistMap(this.mainService.getMissingMassList(), "Mx"));
 		}
 	}
 
@@ -149,6 +151,64 @@ public class MakePlots {
 		}
 	}
 
+	private Map<Coordinate, List<Particle>> createHistMap(List<Coordinate> coordinates, String topologyType) {
+		Map<Coordinate, List<Particle>> fillMap = new HashMap<>();
+		for (Coordinate aCoordinate : coordinates) {
+			Coordinate histCoordinate = makeHistogramCoordinate(aCoordinate, dataType + topologyType);
+			List<List<Particle>> aList = new ArrayList<>();
+			for (String string : aCoordinate) {
+				aList.add(aMap.get(string));
+			}
+			List<Particle> tempList = new ArrayList<>();
+			Particle tempPart = new Particle(22, 0.0, 0.0, 0.0);
+			tempList.add(tempPart);
+			for (List<Particle> ic : aList) {
+				tempList = MultArray(tempList, ic);
+			}
+			List<Particle> returnList = new ArrayList<>();
+
+			if (topologyType.equals("Mx")) {
+				for (int i = 0; i < tempList.size(); i++) {
+					Particle sum = new Particle();
+					sum.copy(EventList.beamParticle);
+					sum.combine(EventList.targetParticle, +1);
+					sum.combine(tempList.get(i), -1);
+					returnList.add(sum);
+				}
+			} else {
+				for (int i = 0; i < tempList.size(); i++) {
+					Particle sum = new Particle();
+					sum.copy(tempList.get(i));
+					returnList.add(sum);
+				}
+			}
+			fillMap.put(histCoordinate, returnList);
+		}
+		return fillMap;
+	}
+
+	private void applyCuts(Map<Coordinate, List<Particle>> aMap) {
+		for (Map.Entry<Coordinate, List<Particle>> entry : aMap.entrySet()) {
+			Coordinate key = entry.getKey();
+			List<Particle> value = entry.getValue();
+			for (Particle particle : value) {
+				System.out.println(coordinateToString(key) + "   " + particle.mass());
+
+			}
+		}
+		if (this.mainService.getcutList().isEmpty()) {
+			// this.mainService.getH1Map().get(makeHistogramCoordinate(aCoordinate,
+			// dataType + topologyType)).get(i)
+			// .fill(sum.mass());
+
+		} else {
+			// System.out.println("cuts will be applied");
+			for (Cuts cut : this.mainService.getcutList()) {
+				// System.out.println(cut.getTopology().toString());
+			}
+		}
+	}
+
 	private List<Particle> MultArray(List<Particle> aList1, List<Particle> aList2) {
 		List<Particle> returnList = new ArrayList<>();
 		for (Particle p1 : aList1) {
@@ -163,6 +223,15 @@ public class MakePlots {
 			}
 		}
 		return returnList;
+	}
+
+	private String coordinateToString(Coordinate aCoordinate) {
+		String sb = new String();
+		for (int i = 0; i < aCoordinate.getSize(); i++) {
+			sb += aCoordinate.getStrings()[i];
+
+		}
+		return sb;
 	}
 
 	private Coordinate makeHistogramCoordinate(Coordinate aCoordinate, String string) {

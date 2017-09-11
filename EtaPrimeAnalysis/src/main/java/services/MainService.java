@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jlab.groot.data.H1F;
-import org.jlab.io.hipo.HipoDataSync;
 
 import domain.Coordinate;
+import domain.Cuts;
 
 public interface MainService {
 
@@ -31,6 +31,10 @@ public interface MainService {
 	public boolean getRECFlag();
 
 	public void addCut(double mean, double sigmaRange, String... strings);
+
+	public void addCut(double mean, double sigma, double sigmaRange, String... strings);
+
+	public List<Cuts> getcutList();
 
 	public List<Coordinate> getInvariantList();
 
@@ -45,13 +49,5 @@ public interface MainService {
 	public void setHists(Map<Coordinate, Integer> aMap, String dataType);
 
 	public Map<Coordinate, Integer> getHistSetter();
-
-	public void setWriteFlag();
-
-	public boolean getWriteFlag();
-
-	public HipoDataSync getHipoDataSync();
-
-	public void closeHipoDataSync();
 
 }

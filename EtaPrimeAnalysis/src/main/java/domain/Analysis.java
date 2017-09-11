@@ -141,7 +141,7 @@ public class Analysis {
 				.histClone("h1");
 		h1.add(this.mainService.getH1Map()
 				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(1));
-		F1D func = new F1D("f1", "[amp]*gaus(x,[mean],[sigma]) + [p0] + [p1]*x", 0.75, 1.5);
+		F1D func = new F1D("f1", "[amp]*gaus(x,[mean],[sigma]) + [p0] + [p1]*x+[p2]*x*x", 0.5, 1.5);
 		func.setParameter(0, 10);
 		func.setParameter(1, 0.957);
 		func.setParameter(2, 0.05);
@@ -267,14 +267,13 @@ public class Analysis {
 				aList.add(getParticle(aBank, t));
 			}
 		}
-		// if (bankName.equals("REC::Particle") && aEvent.hasBank(bankName) &&
-		// aEvent.hasBank("FT::particles")) {
-		// DataBank ftBank = aEvent.getBank("FT::particles");
-		// int Nrows = ftBank.rows();
-		// for (int t = 0; t < Nrows; t++) {
-		// aList.add(getFTParticle(ftBank, t));
-		// }
-		// }
+		if (bankName.equals("REC::Particle") && aEvent.hasBank(bankName) && aEvent.hasBank("FT::particles")) {
+			DataBank ftBank = aEvent.getBank("FT::particles");
+			int Nrows = ftBank.rows();
+			for (int t = 0; t < Nrows; t++) {
+				aList.add(getFTParticle(ftBank, t));
+			}
+		}
 		return aList;
 	}
 
