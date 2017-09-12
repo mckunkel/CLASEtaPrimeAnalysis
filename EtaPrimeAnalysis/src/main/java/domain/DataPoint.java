@@ -17,16 +17,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class Coordinate implements Iterable<String> {
-	private String[] size;
-	private int[] ints;
+public class DataPoint implements Iterable<Double> {
+	private Double[] size;
 
-	public Coordinate(String... size) {
+	public DataPoint(Double... size) {
 		this.size = size;
-	}
-
-	public Coordinate(int... ints) {
-		this.ints = ints;
 	}
 
 	@Override
@@ -45,17 +40,17 @@ public class Coordinate implements Iterable<String> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Coordinate other = (Coordinate) obj;
+		DataPoint other = (DataPoint) obj;
 		if (!Arrays.equals(size, other.size))
 			return false;
 		return true;
 	}
 
-	public String[] getStrings() {
+	public Double[] getDoubles() {
 		return size;
 	}
 
-	public int getStrSize() {
+	public int getDoubleSize() {
 		return size.length;
 	}
 
@@ -65,8 +60,8 @@ public class Coordinate implements Iterable<String> {
 	 * @see java.lang.Iterable#iterator()
 	 */
 	@Override
-	public Iterator<String> iterator() {
-		final List<String> strList = new ArrayList<String>();
+	public Iterator<Double> iterator() {
+		final List<Double> strList = new ArrayList<Double>();
 		for (int i = 0; i < size.length; i++) {
 			strList.add(size[i]);
 		}

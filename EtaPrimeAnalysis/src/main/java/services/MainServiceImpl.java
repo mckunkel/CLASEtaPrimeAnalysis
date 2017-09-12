@@ -75,10 +75,10 @@ public class MainServiceImpl implements MainService {
 	}
 
 	private Coordinate makeHistogramCoordinate(Coordinate aCoordinate, String string) {
-		int size = aCoordinate.getSize() + 1;
+		int size = aCoordinate.getStrSize() + 1;
 		String[] sb = new String[size];
 		sb[0] = string;
-		for (int i = 0; i < aCoordinate.getSize(); i++) {
+		for (int i = 0; i < aCoordinate.getStrSize(); i++) {
 			sb[i + 1] = aCoordinate.getStrings()[i];
 
 		}

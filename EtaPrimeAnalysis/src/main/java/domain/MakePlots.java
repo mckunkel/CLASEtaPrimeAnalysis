@@ -14,6 +14,7 @@ package domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class MakePlots {
 			seperateList(this.mainService.getMissingMassList());
 			seperateList(this.mainService.getInvariantList());
 
-			printPartMap();
+			// printPartMap();
 
 			if (getFlag() == false) {
 				setFlag();
@@ -107,7 +108,7 @@ public class MakePlots {
 			for (String string : aCoordinate) {
 				totalSize = totalSize + this.aMap.get(string).size();
 			}
-			int histsNeeded = totalSize - aCoordinate.getSize() + 1;
+			int histsNeeded = totalSize - aCoordinate.getStrSize() + 1;
 			if (!aMap.containsKey(aCoordinate)) {
 				aMap.put(aCoordinate, histsNeeded);
 			}
@@ -117,7 +118,7 @@ public class MakePlots {
 			for (String string : aCoordinate) {
 				totalSize = totalSize + this.aMap.get(string).size();
 			}
-			int histsNeeded = totalSize - aCoordinate.getSize() + 1;
+			int histsNeeded = totalSize - aCoordinate.getStrSize() + 1;
 			if (!aMap.containsKey(aCoordinate)) {
 				aMap.put(aCoordinate, histsNeeded);
 			}
@@ -167,7 +168,6 @@ public class MakePlots {
 			Coordinate histCoordinate = makeHistogramCoordinate(aCoordinate, topologyType);
 			List<List<Particle>> aList = new ArrayList<>();
 			for (String string : aCoordinate) {
-				System.out.println(string);
 				aList.add(aMap.get(string));
 			}
 			List<Particle> tempList = new ArrayList<>();
@@ -225,6 +225,17 @@ public class MakePlots {
 	private void applyCuts(Map<Coordinate, List<Particle>> aMap) {
 		Map<Coordinate, List<Pair<Particle, Integer>>> passedCutMap = new HashMap<>();
 		Map<Coordinate, List<Pair<Particle, Integer>>> failedCutMap = new HashMap<>();
+		// first fill passedCutMap with all values from aMap. Then we will
+		// remove then and place in failedCutMap during routine
+		for (Map.Entry<Coordinate, List<Particle>> entry : aMap.entrySet()) {
+			Coordinate key = entry.getKey();
+			List<Particle> value = entry.getValue();
+			List<Pair<Particle, Integer>> passedParticles = new ArrayList<>();
+			for (Particle particle : value) {
+				passedParticles.add(Pair.of(particle, value.indexOf(particle)));
+			}
+			passedCutMap.put(key, passedParticles);
+		}
 
 		for (Map.Entry<Coordinate, List<Particle>> entry : aMap.entrySet()) {
 			Coordinate key = entry.getKey();
@@ -232,6 +243,15 @@ public class MakePlots {
 
 			List<Pair<Particle, Integer>> passedParticles = new ArrayList<>();
 			List<Pair<Particle, Integer>> failedParticles = new ArrayList<>();
+			List<Cuts> cutsCopy = new ArrayList<>();
+			cutsCopy.addAll(this.mainService.getcutList());
+			Iterator<Cuts> cutsIterator = cutsCopy.iterator();
+			while (cutsIterator.hasNext()) {
+				Cuts cut = cutsIterator.next();
+				if (cut.getTopology().equals(key)) {
+
+				}
+			}
 			for (Cuts cut : this.mainService.getcutList()) {
 				if (cut.getTopology().equals(key)) {
 					for (Particle particle : value) {
@@ -295,7 +315,7 @@ public class MakePlots {
 
 	private String coordinateToString(Coordinate aCoordinate) {
 		String sb = new String();
-		for (int i = 0; i < aCoordinate.getSize(); i++) {
+		for (int i = 0; i < aCoordinate.getStrSize(); i++) {
 			sb += aCoordinate.getStrings()[i];
 
 		}
@@ -303,10 +323,10 @@ public class MakePlots {
 	}
 
 	private Coordinate makeHistogramCoordinate(Coordinate aCoordinate, String string) {
-		int size = aCoordinate.getSize() + 1;
+		int size = aCoordinate.getStrSize() + 1;
 		String[] sb = new String[size];
 		sb[0] = string;
-		for (int i = 0; i < aCoordinate.getSize(); i++) {
+		for (int i = 0; i < aCoordinate.getStrSize(); i++) {
 			sb[i + 1] = aCoordinate.getStrings()[i];
 
 		}

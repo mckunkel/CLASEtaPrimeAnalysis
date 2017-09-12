@@ -91,7 +91,7 @@ public class Analysis {
 			this.hipoReader.open(this.fileList[i]);
 			readHipo();
 		}
-		plotHistograms("gen");
+		// plotHistograms("gen");
 		// plotHistograms("rec");
 		// makeAcceptance();
 
@@ -108,9 +108,9 @@ public class Analysis {
 			this.reconFilter.setParticleList(recList);
 
 			MakePlots makeGenPlots = new MakePlots(this.genFilter.reactionList(), "gen");
-			makeGenPlots.init();
+			// makeGenPlots.init();
 			MakePlots makeRecPlots = new MakePlots(this.reconFilter.reactionList(), "rec");
-			// makeRecPlots.init();
+			makeRecPlots.init();
 
 		}
 
@@ -242,10 +242,10 @@ public class Analysis {
 	}
 
 	private Coordinate makeHistogramCoordinate(Coordinate aCoordinate, String string) {
-		int size = aCoordinate.getSize() + 1;
+		int size = aCoordinate.getStrSize() + 1;
 		String[] sb = new String[size];
 		sb[0] = string;
-		for (int i = 0; i < aCoordinate.getSize(); i++) {
+		for (int i = 0; i < aCoordinate.getStrSize(); i++) {
 			sb[i + 1] = aCoordinate.getStrings()[i];
 
 		}
