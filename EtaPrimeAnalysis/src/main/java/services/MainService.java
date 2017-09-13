@@ -19,8 +19,21 @@ import org.jlab.groot.data.H1F;
 
 import domain.Coordinate;
 import domain.Cuts;
+import domain.TreeVector;
 
 public interface MainService {
+
+	public void runService(String[] array);
+
+	public void setReaction(String... strings);
+
+	public void addMCService();
+
+	public void addReconService();
+
+	public List<String> getSkimService();
+
+	public List<String> getReactionList();
 
 	public void setMCFlag(boolean flag);
 
@@ -48,8 +61,14 @@ public interface MainService {
 
 	public Map<Coordinate, List<H1F>> getH1Map();
 
-	public void setHists(Map<Coordinate, Integer> aMap, String dataType);
+	public void setHists(Map<Coordinate, Integer> aMap, List<String> skimService);
+
+	public List<String> getGenList();
+
+	public List<String> getRecList();
 
 	public Map<Coordinate, Integer> getHistSetter();
+
+	public TreeVector getTree();
 
 }

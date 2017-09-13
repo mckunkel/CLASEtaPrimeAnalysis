@@ -26,9 +26,7 @@ import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.Particle;
 import org.jlab.clas.physics.Vector3;
 import org.jlab.groot.data.H1F;
-import org.jlab.groot.fitter.DataFitter;
 import org.jlab.groot.graphics.EmbeddedCanvas;
-import org.jlab.groot.math.F1D;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 import org.jlab.io.hipo.HipoDataSource;
@@ -62,16 +60,15 @@ public class Analysis {
 	// (screensize.getHeight() /
 	// 2);
 
-	public Analysis(String[] fileList, List<String> reactionList) {
+	public Analysis(String[] fileList) {
 		this.fileList = fileList;
 		this.NinputFiles = fileList.length;
-		this.reactionList = reactionList;
 		this.genFilter = new ReactionFilter();
 		this.reconFilter = new ReactionFilter();
 		this.mainService = ServiceManager.getSession();
+		this.reactionList = mainService.getReactionList();
 
 		init();
-		run();
 
 	}
 
@@ -84,7 +81,7 @@ public class Analysis {
 
 	}
 
-	private void run() {
+	public void run() {
 		for (int i = 0; i < NinputFiles; i++) {
 			System.out.println("operating on file " + this.fileList[i]);
 			this.hipoReader = new HipoDataSource();
@@ -100,69 +97,101 @@ public class Analysis {
 
 	private void readHipo() {
 
-		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
+		for (int evnt = 1; evnt < 100; evnt++) {// getNEvents()
 			DataEvent event = (DataEvent) this.hipoReader.gotoEvent(evnt);
 			List<Particle> genList = fillParticleList(event, this.mcBankName);
 			List<Particle> recList = fillParticleList(event, this.recBankName);
 			this.genFilter.setParticleList(genList);
 			this.reconFilter.setParticleList(recList);
+			System.out.println("in Analysis and the number of branches is "
+					+ this.mainService.getTree().getListOfBranches().size() + "  for event" + evnt);
 
 			MakePlots makeGenPlots = new MakePlots(this.genFilter.reactionList(), "gen");
-			// makeGenPlots.init();
+			makeGenPlots.init();
 			MakePlots makeRecPlots = new MakePlots(this.reconFilter.reactionList(), "rec");
 			makeRecPlots.init();
+			System.out.println(this.reconFilter.reactionList().size() + " event " + evnt);
+			System.out.println("each event " + this.mainService.getTree().getDataVector("recMxPEm1", "").size());
+			// System.out.println("each event " +
+			// this.mainService.getTree().getDataVector("genMxPEm1",
+			// "").size());
 
 		}
 
 	}
 
 	private void plotHistograms(String dataType) {
-		JFrame frame = makeJFrame(dataType);
-		JPanel mainPanel = makeJPanel();
+		// JFrame frame = makeJFrame(dataType);
+		// JPanel mainPanel = makeJPanel();
+		//
+		// EmbeddedCanvas can1 = new EmbeddedCanvas();
+		// can1.divide(2, 2);
+		// can1.cd(0);
+		// can1.draw(this.mainService.getH1Map()
+		// .get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0),
+		// (dataType + "Mx"))).get(0));
+		// can1.cd(1);
+		// can1.draw(this.mainService.getH1Map()
+		// .get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0),
+		// (dataType + "Mx"))).get(1));
+		// can1.cd(2);
+		// can1.draw(this.mainService.getH1Map()
+		// .get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0),
+		// (dataType + "M"))).get(1));
+		// can1.cd(3);
+		// can1.draw(this.mainService.getH1Map()
+		// .get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0),
+		// (dataType + "M"))).get(0));
+		// mainPanel.add(can1);
+		//
+		// H1F h1 = this.mainService.getH1Map()
+		// .get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0),
+		// (dataType + "Mx"))).get(0)
+		// .histClone("h1");
+		// h1.add(this.mainService.getH1Map()
+		// .get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0),
+		// (dataType + "Mx"))).get(1));
+		// F1D func = new F1D("f1", "[amp]*gaus(x,[mean],[sigma]) + [p0] +
+		// [p1]*x+[p2]*x*x", 0.5, 1.5);
+		// func.setParameter(0, 10);
+		// func.setParameter(1, 0.957);
+		// func.setParameter(2, 0.05);
+		// DataFitter.fit(func, h1, "E");
+		// func.show();
+		// EmbeddedCanvas can = new EmbeddedCanvas();
+		//
+		// can.draw(h1);
+		// // can.draw(func, "same");
+		// func.setLineColor(36);
+		// func.setLineWidth(3);
+		// func.setLineStyle(4);
+		// can.setFont("HanziPen TC");
+		// can.setTitleSize(18);
+		// can.setAxisTitleSize(14);
+		// can.setAxisLabelSize(12);
+		// // mainPanel.add(can);
+		// frame.add(mainPanel);
+		// frame.setVisible(true);
+		//
+		// savePlots(mainPanel, dataType);
 
-		EmbeddedCanvas can1 = new EmbeddedCanvas();
-		can1.divide(2, 2);
-		can1.cd(0);
-		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(0));
-		can1.cd(1);
-		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(1));
-		can1.cd(2);
-		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), (dataType + "M"))).get(1));
-		can1.cd(3);
-		can1.draw(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getInvariantList().get(0), (dataType + "M"))).get(0));
-		mainPanel.add(can1);
+		// lets see if treevector works
+		for (String str : this.mainService.getTree().getListOfBranches()) {
+			System.out.println(str + " is a branch that you set");
+			if (str.equals("recMxPEm1")) {
+				System.out.println("match");
+				System.out.println("size of branch " + this.mainService.getTree().getDataVector(str, "").size());
 
-		H1F h1 = this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(0)
-				.histClone("h1");
-		h1.add(this.mainService.getH1Map()
-				.get(makeHistogramCoordinate(this.mainService.getMissingMassList().get(0), (dataType + "Mx"))).get(1));
-		F1D func = new F1D("f1", "[amp]*gaus(x,[mean],[sigma]) + [p0] + [p1]*x+[p2]*x*x", 0.5, 1.5);
-		func.setParameter(0, 10);
-		func.setParameter(1, 0.957);
-		func.setParameter(2, 0.05);
-		DataFitter.fit(func, h1, "E");
-		func.show();
-		EmbeddedCanvas can = new EmbeddedCanvas();
-
-		can.draw(h1);
-		// can.draw(func, "same");
-		func.setLineColor(36);
-		func.setLineWidth(3);
-		func.setLineStyle(4);
-		can.setFont("HanziPen TC");
-		can.setTitleSize(18);
-		can.setAxisTitleSize(14);
-		can.setAxisLabelSize(12);
-		// mainPanel.add(can);
-		frame.add(mainPanel);
-		frame.setVisible(true);
-
-		savePlots(mainPanel, dataType);
+			}
+		}
+		System.out.println(this.mainService.getTree().getName());
+		// DataVector vec =
+		// this.mainService.getTree().getDataVector("genMx(pe-)1", "");
+		// System.out.println(vec.size());
+		// for (int i = 0; i < vec.getSize(); i++) {
+		// System.out.println(" element " + i + " = " + vec.getValue(i));
+		// }
+		this.mainService.getTree().drawH1F(this.mainService.getTree().getDataVector("recMxPEm1", ""));
 
 	}
 

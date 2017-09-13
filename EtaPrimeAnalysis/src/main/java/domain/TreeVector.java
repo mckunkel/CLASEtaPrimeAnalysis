@@ -12,10 +12,6 @@
 */
 package domain;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,44 +22,19 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.jlab.groot.data.DataVector;
+import org.jlab.groot.data.H1F;
 import org.jlab.groot.tree.Branch;
 import org.jlab.groot.tree.Tree;
 import org.jlab.groot.tree.TreeProvider;
+import org.jlab.groot.ui.TCanvas;
 
 public class TreeVector extends Tree implements TreeProvider {
 
-	private static int TREEFILE_CSV = 1;
-	private static int TREEFILE_SPACE = 2;
-	private static int TREEFILE_SEMICOLON = 3;
-
-	private String dataSeparator = "\\s+";
-	private int textFileType = 2;
-
 	private List<DataVector> dataVectors = new ArrayList<DataVector>();
-	private int currentData = 0;
 
 	public TreeVector(String name) {
 		super(name);
 
-	}
-
-	public TreeVector(String name, int type) {
-		super(name);
-		this.textFileType = type;
-		if (type == TreeVector.TREEFILE_CSV) {
-			dataSeparator = ",";
-		}
-		if (type == TreeVector.TREEFILE_SEMICOLON) {
-			dataSeparator = ";";
-		}
-	}
-
-	public TreeVector(String name, String filename, int columns) {
-		super(name);
-	}
-
-	public void readFile(String filename) {
-		this.readFile(filename, dataSeparator);
 	}
 
 	public void addToTree(DataPoint aDataPoint) {
@@ -79,70 +50,6 @@ public class TreeVector extends Tree implements TreeProvider {
 			}
 		} else {
 			dataVectors.add(vector);
-		}
-	}
-
-	public void readFile(String filename, String separator) {
-
-		dataVectors.clear();
-		String line = null;
-		try {
-			// FileReader reads text files in the default encoding.
-			FileReader fileReader = new FileReader(filename);
-			// Always wrap FileReader in BufferedReader.
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-			int lineNumber = 0;
-			int firstLineRead = 0;
-
-			while ((line = bufferedReader.readLine()) != null) {
-				if (line.startsWith("#") == false) {
-					// System.out.println(line);
-					String[] tokens = line.split(separator);
-					if (tokens.length > 0) {
-						DataVector vector = new DataVector();
-						for (int i = 0; i < tokens.length; i++) {
-
-							try {
-								double value = Double.parseDouble(tokens[i]);
-								vector.add(value);
-							} catch (Exception e) {
-
-							}
-						}
-
-						if (dataVectors.size() > 0) {
-							if (vector.getSize() != dataVectors.get(0).getSize()) {
-								System.out.println("[TreeTextFile::read] ---> error on line # " + lineNumber);
-							} else {
-								dataVectors.add(vector);
-							}
-						} else {
-							dataVectors.add(vector);
-						}
-
-						if (firstLineRead == 0 && this.getListOfBranches().size() == 0) {
-							int size = vector.getSize();
-							String[] names = this.generateBranchNames(size);
-							this.initBranches(names);
-							firstLineRead++;
-						}
-					}
-				} else {
-					line = line.replace("#!", "");
-					String[] labels = line.split(":");
-					initBranches(labels);
-				}
-				lineNumber++;
-			}
-			// Always close files.
-			bufferedReader.close();
-			this.currentData = 0;
-		} catch (FileNotFoundException ex) {
-			// ClasUtilsFile.printLog("Unable to open file : '" + filename +
-			// "'");
-		} catch (IOException ex) {
-			// Or we could just do this:
-			// ex.printStackTrace();
 		}
 	}
 
@@ -179,20 +86,6 @@ public class TreeVector extends Tree implements TreeProvider {
 		return data;
 	}
 
-	@Override
-	public void reset() {
-		this.currentData = 0;
-	}
-
-	@Override
-	public boolean readNext() {
-		if (this.currentData >= this.dataVectors.size())
-			return false;
-		this.readEntry(currentData);
-		currentData++;
-		return true;
-	}
-
 	public void openFile() {
 
 	}
@@ -212,6 +105,11 @@ public class TreeVector extends Tree implements TreeProvider {
 			icounter++;
 		}
 		return 1;
+	}
+
+	public void drawH1F(DataVector dVector) {
+		TCanvas canvas = new TCanvas("aCanvas", 500, 500);
+		canvas.draw(create("H1F", 100, dVector));
 	}
 
 	@Override
@@ -254,7 +152,7 @@ public class TreeVector extends Tree implements TreeProvider {
 
 	@Override
 	public void setSource(String filename) {
-		this.readFile(filename);
+		// this.readFile(filename);
 		// throw new UnsupportedOperationException("Not supported yet."); //To
 		// change body of generated methods, choose Tools | Templates.
 	}
@@ -269,6 +167,24 @@ public class TreeVector extends Tree implements TreeProvider {
 		return this;
 	}
 
+	public static H1F create(String name, int bins, DataVector vec) {
+		double min = vec.getMin();
+		double max = vec.getMax();
+		if (min == max) {
+			min = .9999 * min;
+			max = 1.0001 * max;
+		}
+		// lets increment max by one increment so we can see last bin
+		double increment = (max - min) / bins;
+		max = max + increment;
+		H1F h = new H1F(name, "", bins, min, max);
+		for (int i = 0; i < vec.getSize(); i++) {
+			h.fill(vec.getValue(i));
+		}
+		h.setFillColor(43);
+		return h;
+	}
+
 	public static void main(String[] args) {
 		TreeVector tree = new TreeVector("T");
 		DataPoint d1 = new DataPoint(11.0, 12.0, 13.0, 14.0);
@@ -277,6 +193,8 @@ public class TreeVector extends Tree implements TreeProvider {
 		DataPoint d4 = new DataPoint(19.0, 13.0, 23.0, 14.0);
 		DataPoint d5 = new DataPoint(21.0, 14.0, 33.0, 14.0);
 		DataPoint d6 = new DataPoint(12.0, 15.0, 43.0, 14.0);
+		DataPoint d7 = new DataPoint(0.0, 15.0, 43.0, 14.0);
+		DataPoint d8 = new DataPoint(100.0, 15.0, 43.0, 14.0);
 
 		tree.addToTree(d1);
 		tree.addToTree(d2);
@@ -284,16 +202,33 @@ public class TreeVector extends Tree implements TreeProvider {
 		tree.addToTree(d4);
 		tree.addToTree(d5);
 		tree.addToTree(d6);
-		String[] labels = { "p1", "p2", "p3", "p4" };
-		tree.initBranches(labels);
+		tree.addToTree(d7);
+		tree.addToTree(d8);
+
+		String[] labels = { "p1", "p2", "p3", "genMxpe1" };
+		// tree.initBranches(labels);
+		tree.addBranch("p1", "a p1", "mass");
+		tree.addBranch("p2", "a p2", "cm");
+		tree.addBranch("p3", "a p3", "time");
+		tree.addBranch("genMxpe1", "a p4", "W");
 
 		System.out.println(" entries = " + tree.getEntries());
 
-		DataVector vec = tree.getDataVector("p1", "p2>12.5&&p3>23.5", 10);
+		DataVector vec = tree.getDataVector("p1", "", 10);
+		tree.drawH1F(vec);
+		// DataVector vec2 = tree.getDataVector("p2", "", 10);
+
+		tree.drawH1F(tree.getDataVector("genMxpe1", ""));
 		System.out.println(" datavector size =  " + vec.getSize());
 		for (int i = 0; i < vec.getSize(); i++) {
 			System.out.println(" element " + i + " =  " + vec.getValue(i));
 		}
+
+		String teString = "Me+e-1";
+		String my_new_str = teString.replaceAll("e\\+", "Ep");
+		my_new_str = my_new_str.replaceAll("e\\-", "Em");
+
+		System.out.println(my_new_str);
 	}
 
 }

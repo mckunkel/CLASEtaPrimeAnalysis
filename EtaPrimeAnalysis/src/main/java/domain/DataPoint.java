@@ -54,6 +54,20 @@ public class DataPoint implements Iterable<Double> {
 		return size.length;
 	}
 
+	public DataPoint addDataPoint(DataPoint dp) {
+		Double[] dList = new Double[this.getDoubleSize() + dp.getDoubleSize()];
+		for (int i = 0; i < this.getDoubleSize(); i++) {
+			dList[i] = size[i];
+		}
+		for (int i = 0; i < dp.getDoubleSize(); i++) {
+			dList[this.getDoubleSize() + i] = dp.getDoubles()[i];
+		}
+		// for (Double double1 : dList) {
+		// System.out.println(double1);
+		// }
+		return new DataPoint(dList);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -61,11 +75,20 @@ public class DataPoint implements Iterable<Double> {
 	 */
 	@Override
 	public Iterator<Double> iterator() {
-		final List<Double> strList = new ArrayList<Double>();
+		final List<Double> doubleList = new ArrayList<Double>();
 		for (int i = 0; i < size.length; i++) {
-			strList.add(size[i]);
+			doubleList.add(size[i]);
 		}
-		return strList.iterator();
+		return doubleList.iterator();
+	}
+
+	public static void main(String[] args) {
+		DataPoint d8 = new DataPoint();
+
+		for (Double double1 : d8) {
+			System.out.println(double1);
+		}
+		d8.addDataPoint(new DataPoint(10.0, 12.1));
 	}
 
 }
