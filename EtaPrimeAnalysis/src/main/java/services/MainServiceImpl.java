@@ -94,9 +94,15 @@ public class MainServiceImpl implements MainService {
 			}
 		}
 		if (calQ) {
-			String branchName = dataType + "Q2";
-			treeVector.addBranch(branchName, "", "");
-			tmpList.add(branchName);
+			String branchName = "";
+			int occurrences = Collections.frequency(reactionList, "e-");
+			// System.out.println(occurrences + " the number of possible
+			// calculations for Q2");
+			for (int i = 0; i < occurrences; i++) {
+				branchName = dataType + "QSq" + Integer.toString(i + 1);
+				treeVector.addBranch(branchName, "", "");
+				tmpList.add(branchName);
+			}
 		}
 		if (dataType.equals("gen")) {
 			this.genList.addAll(tmpList);

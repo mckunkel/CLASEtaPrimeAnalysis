@@ -129,7 +129,40 @@ public class MakePlots {
 		// place Q2 here
 
 		if (this.mainService.isQ()) {
+			List<List<Particle>> aList = new ArrayList<>();
+			aList.add(aMap.get("e-"));
 
+			List<Particle> tempList = new ArrayList<>();
+			Particle tempPart = new Particle(22, 0.0, 0.0, 0.0);
+			tempList.add(tempPart);
+			for (List<Particle> ic : aList) {
+				tempList = MultArray(tempList, ic);
+			}
+			if (tempList.size() > 1) {
+				for (int i = 0; i < tempList.size(); i++) {
+					String branchName = "";
+
+					branchName = dataType + "QSq" + Integer.toString(i + 1);
+
+					Particle sum = new Particle();
+					sum.copy(EventList.beamParticle);
+					sum.combine(tempList.get(0), -1);
+
+					// if ((branchName.equals("recQSq2") ||
+					// branchName.equals("recQSq1")) && -1.0 * sum.mass() <
+					// 400.0) {
+					// System.out.println(-1.0 * sum.mass() + " blah method " +
+					// branchName);
+					// }
+					sortMap.put(branchName, -1.0 * sum.mass());
+				}
+			} else {
+				String branchName = dataType + "QSq";
+				Particle sum = new Particle();
+				sum.copy(EventList.beamParticle);
+				sum.combine(tempList.get(0), -1);
+				sortMap.put(branchName, -1.0 * sum.mass());
+			}
 		}
 	}
 
