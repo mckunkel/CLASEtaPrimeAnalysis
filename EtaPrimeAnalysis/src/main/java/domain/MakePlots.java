@@ -77,7 +77,6 @@ public class MakePlots {
 	private void fillTree(List<Coordinate> coordinates, String topologyType) {
 		for (Coordinate aCoordinate : coordinates) {
 			String branchName = "";
-
 			List<List<Particle>> aList = new ArrayList<>();
 			for (String string : aCoordinate) {
 				aList.add(aMap.get(string));
@@ -126,6 +125,11 @@ public class MakePlots {
 			} else {
 				System.err.println("This kind of topology is not yet implemented ...  topology " + topologyType);
 			}
+		}
+		// place Q2 here
+
+		if (this.mainService.isQ()) {
+
 		}
 	}
 

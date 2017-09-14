@@ -25,7 +25,7 @@ import domain.Cuts;
 import domain.DataPoint;
 import domain.TreeVector;
 
-public class MainServiceImpl implements MainService {
+public class MainServiceImpl2 implements MainService {
 
 	private List<String> reactionList = null;
 	private List<String> skimService = null;
@@ -33,7 +33,6 @@ public class MainServiceImpl implements MainService {
 
 	private List<Coordinate> invariantMassList = null;
 	private List<Coordinate> missingMassList = null;
-	private boolean calQ;;
 	private Map<Coordinate, Integer> neededHists = null;
 
 	private List<String> genList = null;
@@ -43,14 +42,13 @@ public class MainServiceImpl implements MainService {
 
 	private TreeVector treeVector = null;
 
-	public MainServiceImpl() {
+	public MainServiceImpl2() {
 		this.reactionList = new ArrayList<>();
 		this.skimService = new ArrayList<>();
 		this.dataPoint = new DataPoint();
 
 		this.invariantMassList = new ArrayList<>();
 		this.missingMassList = new ArrayList<>();
-		this.calQ = false;
 		this.neededHists = new HashMap<>();
 
 		this.genList = new ArrayList<>();
@@ -92,11 +90,6 @@ public class MainServiceImpl implements MainService {
 				treeVector.addBranch(branchName, "", "");
 				tmpList.add(branchName);
 			}
-		}
-		if (calQ) {
-			String branchName = dataType + "Q2";
-			treeVector.addBranch(branchName, "", "");
-			tmpList.add(branchName);
 		}
 		if (dataType.equals("gen")) {
 			this.genList.addAll(tmpList);
@@ -158,6 +151,39 @@ public class MainServiceImpl implements MainService {
 			createTreeBranches(dataType);
 		}
 
+	}
+
+	private void makeDataTypePlacers(String dataType) {
+		List<String> tmpList = new ArrayList<>();
+		for (Coordinate aCoordinate : invariantMassList) {
+			String branchName = "";
+			if (this.neededHists.get(aCoordinate) > 1) {
+				for (int i = 0; i < this.neededHists.get(aCoordinate); i++) {
+					branchName = dataType + "M" + coordinateToString(aCoordinate) + Integer.toString(i + 1);
+					tmpList.add(branchName);
+				}
+			} else {
+				branchName = dataType + "M" + coordinateToString(aCoordinate);
+				tmpList.add(branchName);
+			}
+		}
+		for (Coordinate aCoordinate : missingMassList) {
+			String branchName = "";
+			if (this.neededHists.get(aCoordinate) > 1) {
+				for (int i = 0; i < this.neededHists.get(aCoordinate); i++) {
+					branchName = dataType + "Mx" + coordinateToString(aCoordinate) + Integer.toString(i + 1);
+					tmpList.add(branchName);
+				}
+			} else {
+				branchName = dataType + "Mx" + coordinateToString(aCoordinate);
+				tmpList.add(branchName);
+			}
+		}
+		if (dataType.equals("gen")) {
+			this.genList.addAll(tmpList);
+		} else {
+			this.recList.addAll(tmpList);
+		}
 	}
 
 	public List<String> getGenList() {
@@ -229,14 +255,6 @@ public class MainServiceImpl implements MainService {
 	public void addToIMissingMassList(String... strings) {
 		Coordinate aCoordinate = new Coordinate(strings);
 		this.missingMassList.add(aCoordinate);
-	}
-
-	public void calQ() {
-		this.calQ = true;
-	}
-
-	public boolean isQ() {
-		return this.calQ;
 	}
 
 	public TreeVector getTree() {

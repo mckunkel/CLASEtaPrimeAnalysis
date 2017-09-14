@@ -33,6 +33,10 @@ public interface MainService {
 
 	public List<String> getReactionList();
 
+	public List<String> getGenList();
+
+	public List<String> getRecList();
+
 	public void addCut(double mean, double sigmaRange, String... strings);
 
 	public void addCut(double mean, double sigma, double sigmaRange, String... strings);
@@ -48,6 +52,10 @@ public interface MainService {
 	public void addToInvariantList(String... strings);
 
 	public void addToIMissingMassList(String... strings);
+
+	public void calQ();
+
+	public boolean isQ();
 
 	public TreeVector getTree();
 
