@@ -83,12 +83,15 @@ public class DataPoint implements Iterable<Double> {
 	}
 
 	public static void main(String[] args) {
-		DataPoint d8 = new DataPoint();
+		DataPoint d8 = new DataPoint(10.2, 11.2);
 
 		for (Double double1 : d8) {
 			System.out.println(double1);
 		}
-		d8.addDataPoint(new DataPoint(10.0, 12.1));
+		d8 = d8.addDataPoint(new DataPoint(10.0, 12.1));
+		for (Double double1 : d8) {
+			System.out.println(double1);
+		}
 	}
 
 }

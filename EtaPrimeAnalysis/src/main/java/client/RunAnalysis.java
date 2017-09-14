@@ -69,6 +69,7 @@ public class RunAnalysis {
 		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CODES/SIMUALTION/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_51.hipo");
 		String[] array = aList.toArray(new String[0]);
 		mainService.runService(array);
+		// mainService.runService(args);
 
 	}
 

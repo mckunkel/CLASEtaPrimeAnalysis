@@ -57,7 +57,17 @@ public class ReactionFilter {
 			return aList;
 		}
 
-		return new ArrayList<>();
+		return makeZeroList();
+	}
+
+	private List<Particle> makeZeroList() {
+		List<Particle> aList = new ArrayList<>();
+		for (String particle : reactionList) {
+			Particle p = new Particle(PDGDatabase.getParticleByName(particle).pid(), -10000.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+			aList.add(p);
+		}
+		return aList;
+
 	}
 
 	private List<String> getReactionCopy() {

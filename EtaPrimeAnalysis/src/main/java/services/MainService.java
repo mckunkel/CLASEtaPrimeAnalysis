@@ -13,12 +13,10 @@
 package services;
 
 import java.util.List;
-import java.util.Map;
-
-import org.jlab.groot.data.H1F;
 
 import domain.Coordinate;
 import domain.Cuts;
+import domain.DataPoint;
 import domain.TreeVector;
 
 public interface MainService {
@@ -34,14 +32,6 @@ public interface MainService {
 	public List<String> getSkimService();
 
 	public List<String> getReactionList();
-
-	public void setMCFlag(boolean flag);
-
-	public void setRECFlag(boolean flag);
-
-	public boolean getMCFlag();
-
-	public boolean getRECFlag();
 
 	public void addCut(double mean, double sigmaRange, String... strings);
 
@@ -59,16 +49,10 @@ public interface MainService {
 
 	public void addToIMissingMassList(String... strings);
 
-	public Map<Coordinate, List<H1F>> getH1Map();
-
-	public void setHists(Map<Coordinate, Integer> aMap, List<String> skimService);
-
-	public List<String> getGenList();
-
-	public List<String> getRecList();
-
-	public Map<Coordinate, Integer> getHistSetter();
-
 	public TreeVector getTree();
+
+	public void addDataPoint(DataPoint dataPoint);
+
+	public void assembleDataPoint();
 
 }

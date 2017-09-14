@@ -33,43 +33,24 @@ public class MakePlots {
 	private String dataType = null;
 	private Map<String, Number> sortMap = null;
 
-	private List<String> kludgeMap = null;
-
 	public MakePlots(List<Particle> aList, String dataType) {
 		this.particles = aList;
 		this.dataType = dataType;
-
-	}
-
-	public void init() {
 		this.mainService = ServiceManager.getSession();
 		this.aMap = new HashMap<>();
 		this.sortMap = new LinkedHashMap<>();
-		setKludgeMap();
-
-		if (this.particles.size() == 0) {
-			fillEmptyTree();
-			sortAndFillTree();
-			System.out.println(" ?????   " + this.mainService.getTree().getDataVector("recMxPEm1", "").size());
-
-		}
-		if (this.particles.size() > 0) {
-
-			seperateList(this.mainService.getMissingMassList());
-			seperateList(this.mainService.getInvariantList());
-
-			fillTree(this.mainService.getMissingMassList(), "Mx");
-			fillTree(this.mainService.getInvariantList(), "M");
-
-			sortAndFillTree();
-		}
 	}
 
-	private void setKludgeMap() {
-		if (dataType == "gen") {
-			kludgeMap = this.mainService.getGenList();
-		} else
-			kludgeMap = this.mainService.getRecList();
+	public void init() {
+
+		seperateList(this.mainService.getMissingMassList());
+		seperateList(this.mainService.getInvariantList());
+
+		fillTree(this.mainService.getMissingMassList(), "Mx");
+		fillTree(this.mainService.getInvariantList(), "M");
+
+		sortAndFillTree();
+
 	}
 
 	private void seperateList(List<Coordinate> coordinates) {
@@ -126,7 +107,7 @@ public class MakePlots {
 					sortMap.put(branchName, sum.mass());
 				}
 
-			} else {
+			} else if (topologyType.equals("M")) {
 				if (tempList.size() > 1) {
 					for (int i = 0; i < tempList.size(); i++) {
 						branchName = dataType + topologyType + coordinateToString(aCoordinate)
@@ -142,35 +123,29 @@ public class MakePlots {
 					branchName = dataType + topologyType + coordinateToString(aCoordinate);
 					sortMap.put(branchName, tempList.get(0).mass());
 				}
+			} else {
+				System.err.println("This kind of topology is not yet implemented ...  topology " + topologyType);
 			}
-		}
-	}
-
-	private void fillEmptyTree() {
-		for (String string : kludgeMap) {
-			sortMap.put(string, -10000.0);
 		}
 	}
 
 	private void sortAndFillTree() {
 		// System.out.println("####################################");
 		DataPoint dPoint = new DataPoint();
-		for (Map.Entry<String, Number> entry : sortMap.entrySet()) {
-			String key = entry.getKey();
-			Number value = entry.getValue();
-			// System.out.println(key + " " + value + " from sortMap");
-			for (String str : this.mainService.getTree().getListOfBranches()) {
+		for (String str : this.mainService.getTree().getListOfBranches()) {
+			for (Map.Entry<String, Number> entry : sortMap.entrySet()) {
+				String key = entry.getKey();
+				Number value = entry.getValue();
+				// System.out.println(key + " " + value + " from sortMap");
 				// System.out.println(str + " is a branch");
 				if (str.equals(key)) {
-					System.out.println(str + " filled with value " + (Double) value);
-
+					// System.out.println(key + "<-- key branch-->" + str + "
+					// filled with value " + (Double) value);
 					dPoint = dPoint.addDataPoint(new DataPoint((Double) value));
 				}
 			}
 		}
-
-		this.mainService.getTree().addToTree(dPoint);
-
+		this.mainService.addDataPoint(dPoint);
 	}
 
 	private Particle beamTargetParticle() {

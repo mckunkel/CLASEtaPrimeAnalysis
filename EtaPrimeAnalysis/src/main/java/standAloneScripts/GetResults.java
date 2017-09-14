@@ -1,5 +1,5 @@
 
-package domain;
+package standAloneScripts;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

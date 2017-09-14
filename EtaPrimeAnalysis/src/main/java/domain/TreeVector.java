@@ -102,14 +102,16 @@ public class TreeVector extends Tree implements TreeProvider {
 		for (Map.Entry<String, Branch> branches : getBranches().entrySet()) {
 			String key = branches.getKey();
 			branches.getValue().setValue(vec.getValue(icounter));
+			// System.out.println(key + " what what " + vec.getValue(icounter) +
+			// " counter " + icounter);
 			icounter++;
 		}
 		return 1;
 	}
 
-	public void drawH1F(DataVector dVector) {
+	public void drawH1F(DataVector dVector, String name) {
 		TCanvas canvas = new TCanvas("aCanvas", 500, 500);
-		canvas.draw(create("H1F", 100, dVector));
+		canvas.draw(create(name, 100, dVector));
 	}
 
 	@Override
@@ -168,8 +170,16 @@ public class TreeVector extends Tree implements TreeProvider {
 	}
 
 	public static H1F create(String name, int bins, DataVector vec) {
-		double min = vec.getMin();
-		double max = vec.getMax();
+		DataVector newVec = new DataVector();
+		for (int i = 0; i < vec.getSize(); i++) {
+			if (vec.getValue(i) == -10000.0) {
+				continue;
+			} else
+				newVec.add(vec.getValue(i));
+		}
+
+		double min = newVec.getMin();
+		double max = newVec.getMax();
 		if (min == max) {
 			min = .9999 * min;
 			max = 1.0001 * max;
@@ -178,8 +188,9 @@ public class TreeVector extends Tree implements TreeProvider {
 		double increment = (max - min) / bins;
 		max = max + increment;
 		H1F h = new H1F(name, "", bins, min, max);
-		for (int i = 0; i < vec.getSize(); i++) {
-			h.fill(vec.getValue(i));
+		h.setTitle(name);
+		for (int i = 0; i < newVec.getSize(); i++) {
+			h.fill(newVec.getValue(i));
 		}
 		h.setFillColor(43);
 		return h;
@@ -215,10 +226,10 @@ public class TreeVector extends Tree implements TreeProvider {
 		System.out.println(" entries = " + tree.getEntries());
 
 		DataVector vec = tree.getDataVector("p1", "", 10);
-		tree.drawH1F(vec);
+		tree.drawH1F(vec, "");
 		// DataVector vec2 = tree.getDataVector("p2", "", 10);
 
-		tree.drawH1F(tree.getDataVector("genMxpe1", ""));
+		tree.drawH1F(tree.getDataVector("genMxpe1", ""), "my name");
 		System.out.println(" datavector size =  " + vec.getSize());
 		for (int i = 0; i < vec.getSize(); i++) {
 			System.out.println(" element " + i + " =  " + vec.getValue(i));

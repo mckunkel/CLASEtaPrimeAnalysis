@@ -1,4 +1,4 @@
-package domain;
+package standAloneScripts;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
