@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jlab.groot.data.DataVector;
+import org.jlab.groot.data.GraphErrors;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.groot.ui.TCanvas;
@@ -42,12 +43,17 @@ public class AnalysisPlotsForDaniel {
 	// (screensize.getHeight() /
 	// 2);
 	private MainService mainService = null;
+	
+	private String myCut = null;
+	private GraphErrors grRatio = null;
 
 	public AnalysisPlotsForDaniel() {
 		this.mainService = ServiceManager.getSession();
 	}
 
 	public void run() {
+		plotHistograms();
+		/*
 		if (this.mainService.getSkimService().size() == 2) {
 			plotHistograms("gen");
 			plotHistograms("rec");
@@ -60,8 +66,181 @@ public class AnalysisPlotsForDaniel {
 			System.err.println("Did you set the MC or REC service correctly?!? ");
 			System.exit(1);
 		}
+		*/
 	}
+	
+	
+	private void plotHistograms() {
 
+		plotGenWCuts(0.975,0.03,30,"total");
+		plotRecWCuts(0.975,0.03,30,"total");
+		plotAcceptance();
+		plotEstimatedYield();
+
+	}
+	
+	//*******************************************************************************************************
+	
+
+	private void plotGenWCuts(double mean, double sigma, int Nsteps, String option) {
+		DataVector vector = this.mainService.getTree().getDataVector("genMxPEm1","");
+		DataVector vector2 = this.mainService.getTree().getDataVector("genMxPEm2","");
+
+        cutScanner("genMxPEm1", "genMxPEm2", Nsteps, mean, sigma,option);
+		
+        drawRatio(mean,sigma,"gen");
+	}
+	
+	//========================================
+
+	private void plotRecWCuts(double mean, double sigma, int Nsteps, String option) {
+		DataVector vector = this.mainService.getTree().getDataVector("recMxPEm1","");
+		DataVector vector2 = this.mainService.getTree().getDataVector("recMxPEm2","");
+
+        cutScanner("recMxPEm1", "recMxPEm2", Nsteps, mean, sigma,option);
+		
+        drawRatio(mean,sigma,"rec");
+	}
+	
+	//========================================
+
+	private void plotAcceptance() {
+
+	}
+	
+	//========================================
+
+	private void plotEstimatedYield() {
+
+	}
+	
+	//========================================
+	
+	public void loadCut(String myVar, double mean, double sigma, double sigmaRange, String option) {
+		resetCut();
+		
+		if(option.equals("")) {
+			this.myCut = "abs(" + myVar + "-" + mean + ") < " + sigmaRange + "*" + sigma;
+		}else if(option.equals("left")) {
+			this.myCut = myVar + ">" + mean + "-" + sigmaRange + "*" + sigma;
+		}else if(option.equals("right")) {
+			this.myCut = myVar + "<" + mean + "+" + sigmaRange + "*" + sigma;
+		}else {
+			System.out.println("Sorry. You did not specify any cut. Nothing will happen.");
+			myCut = "";
+		}
+	}
+	
+	//========================================
+	
+	public void resetCut() {
+		myCut = null;
+	}
+	
+	//========================================
+	
+	public String applyCut() {
+		return myCut;
+	}
+	
+	//========================================
+	
+	public void cutScanner(String var1, String var2, int Nsteps, double mean, double sigma, String option) {
+		grRatio = null;
+		grRatio = new GraphErrors();
+		double step = (3.0-mean)/(sigma*Nsteps);
+		
+		DataVector vec1,vec2;
+		H1F hist1 = new H1F("hist1",100,0,3.0);
+		H1F hist2 = new H1F("hist2",100,0,3.0);
+		double ratio = 0;
+		double cutval = 0;
+		
+		double maxRatio = 0;
+		double foundCutMax = 0;
+		int foundNMax = 0;
+		
+		double minRatio = 10000;
+		double foundCutMin = 0;
+		int foundNMin = 0;
+		
+		for(int k=0;k<Nsteps;k++) {
+			cutval = mean + sigma*step*(k+1);
+			loadCut(var1,mean,sigma,step*(k+1),"right");
+			vec1 = this.mainService.getTree().getDataVector(var1,applyCut());
+			hist1.fill(vec1);
+			loadCut(var2,mean,sigma,step*(k+1),"right");
+			vec2 = this.mainService.getTree().getDataVector(var2,applyCut());
+			hist2.fill(vec2);
+			
+			ratio = getRatio(hist1,hist2,option);
+			//System.out.println("Step: " + k + " with cut-val: " +  cutval  +  " with ratio: " + ratio);
+			grRatio.addPoint(k+1, ratio, 0.0, 0.0);
+			
+			if(ratio >= maxRatio) {
+				maxRatio = ratio;
+				foundCutMax = cutval;
+				foundNMax = k+1;
+			}
+			
+			if(ratio <= minRatio) {
+				minRatio = ratio;
+				foundCutMin = cutval;
+				foundNMin = k+1;
+			}
+			
+			vec1.clear();
+			vec2.clear();
+			hist1.reset();
+			hist2.reset();
+		}
+		
+		System.out.println("    ");
+		System.out.println("Found cut value: " + foundCutMax +  " at "+ foundNMax + " sigma at max. S/(S+B) ratio:  " + maxRatio);
+		System.out.println("Found cut value: " + foundCutMin +  " at "+ foundNMin + " sigma at min. S/(S+B) ratio:  " + minRatio);
+		System.out.println("    ");
+		
+	}
+	
+	//========================================
+	
+	public double getRatio(H1F hist1, H1F hist2, String option) {
+		double ratio = 0.0;
+		
+		double leftR = 0.975 - 2.5*0.03;
+		double rightR = 0.975 + 2.5*0.03;
+		
+		int leftInt = hist1.getAxis().getBin(leftR);
+		int rightInt = hist1.getAxis().getBin(rightR);
+		
+		if(option.equals("peak")) {
+		 ratio = hist1.integral(leftInt,rightInt) / (hist1.integral(leftInt,rightInt) + hist2.integral(leftInt,rightInt));
+		}else if(option.equals("total")) {
+			ratio = hist1.integral() / (hist1.integral() + hist2.integral());
+		}
+		return ratio;
+	}
+	
+	//========================================
+	
+	
+	public void drawRatio(double mean, double sigma, String option) {
+		String xAxisName = "n from " + mean + " < " + "n*" + sigma; 
+		grRatio.setTitleX(xAxisName);
+		grRatio.setTitleY("S/(S + B)");
+		
+		String cname;
+		if(option.equals("gen")) {
+			cname = "Scan of cuts for generated particles";
+		}else if(option.equals("rec")) {
+			cname = "Scan of cuts for reconstructed particles";
+		}else cname = "";
+		TCanvas rc = new TCanvas(cname,500,500);
+		rc.draw(grRatio);
+	}
+	//*******************************************************************************************************
+	
+/*
 	private void plotHistograms(String dataType) {
 
 		this.mainService.getTree().drawH1F(
@@ -134,7 +313,7 @@ public class AnalysisPlotsForDaniel {
 		canvasGen3.draw(aGenH12, "same");
 
 	}
-
+*/
 	private void makeAcceptance() {
 		JFrame frame2 = makeJFrame("Acceptance");
 		JPanel mainPanel2 = makeJPanel();
