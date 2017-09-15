@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.jlab.groot.data.DataVector;
+import org.jlab.groot.data.GraphErrors;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.groot.ui.TCanvas;
@@ -42,12 +43,19 @@ public class AnalysisPlotsForDaniel {
 	// (screensize.getHeight() /
 	// 2);
 	private MainService mainService = null;
+	
+	private String myCut = null;
+	private GraphErrors grRatio = null;
+	private GraphErrors grRatio2 = null;
+	private GraphErrors grRatio3 = null;
 
 	public AnalysisPlotsForDaniel() {
 		this.mainService = ServiceManager.getSession();
 	}
 
 	public void run() {
+		plotHistograms();
+		/*
 		if (this.mainService.getSkimService().size() == 2) {
 			plotHistograms("gen");
 			plotHistograms("rec");
@@ -60,8 +68,246 @@ public class AnalysisPlotsForDaniel {
 			System.err.println("Did you set the MC or REC service correctly?!? ");
 			System.exit(1);
 		}
+		*/
 	}
+	
+	
+	private void plotHistograms() {
 
+		plotGenWCuts(0.975,0.03,30,"total");
+		plotRecWCuts(0.975,0.03,30,"total");
+		plotAcceptance();
+		plotEstimatedYield();
+
+	}
+	
+	//*******************************************************************************************************
+	
+
+	private void plotGenWCuts(double mean, double sigma, int Nsteps, String option) {
+		DataVector vector = this.mainService.getTree().getDataVector("genMxPEm1","");
+		DataVector vector2 = this.mainService.getTree().getDataVector("genMxPEm2","");
+
+        cutScanner("genMxPEm1", "genMxPEm2", Nsteps, mean,sigma,option);
+		
+        drawRatio(mean,sigma,"gen");
+	}
+	
+	//========================================
+
+	private void plotRecWCuts(double mean, double sigma, int Nsteps, String option) {
+		DataVector vector = this.mainService.getTree().getDataVector("recMxPEm1","");
+		DataVector vector2 = this.mainService.getTree().getDataVector("recMxPEm2","");
+
+        cutScanner("recMxPEm1", "recMxPEm2", Nsteps, mean, sigma,option);
+		
+        drawRatio(mean,sigma,"rec");
+	}
+	
+	//========================================
+
+	private void plotAcceptance() {
+
+	}
+	
+	//========================================
+
+	private void plotEstimatedYield() {
+
+	}
+	
+	//========================================
+	
+	public void loadCut(String myVar, double mean, double sigma, double sigmaRange, String option) {
+		resetCut();
+		
+		if(option.equals("")) {
+			this.myCut = "0 < " + myVar + " && abs(" + myVar + "-" + mean + ") < " + sigmaRange + "*" + sigma;
+		}else if(option.equals("left")) {
+			this.myCut = "0 < " + myVar + " && " + myVar + ">" + mean + "-" + sigmaRange + "*" + sigma;
+		}else if(option.equals("right")) {
+			this.myCut = "0 < " + myVar + " && " + myVar + "<" + mean + "+" + sigmaRange + "*" + sigma;
+		}else {
+			System.out.println("Sorry. You did not specify any cut. Nothing will happen.");
+			myCut = "";
+		}
+	}
+	
+	//========================================
+	
+	public void resetCut() {
+		myCut = null;
+	}
+	
+	//========================================
+	
+	public String applyCut() {
+		return myCut;
+	}
+	
+	//========================================
+	
+	public void cutScanner(String var1, String var2, int Nsteps, double mean, double sigma, String option) {
+		grRatio = null;
+		grRatio = new GraphErrors();
+		grRatio2 = null;
+		grRatio2 = new GraphErrors();
+		grRatio3 = null;
+		grRatio3 = new GraphErrors();
+		
+		double step = (3.0-mean)/(sigma*Nsteps);
+		
+		DataVector vecUnCut;
+		H1F histUnCut = new H1F("histUnCut",100,0,3.0);
+		vecUnCut = this.mainService.getTree().getDataVector(var1,"");
+		histUnCut.fill(vecUnCut);
+		
+		H1F hist1 = new H1F("hist1",100,0,3.0);
+		H1F hist2 = new H1F("hist2",100,0,3.0);
+		double ratio = 0;
+		double cutval = 0;
+		
+		double maxRatio = 0;
+		double foundCutMax = 0;
+		int foundNMax = 0;
+		
+		double minRatio = 10000;
+		double foundCutMin = 0;
+		int foundNMin = 0;
+		
+		double eff = 0.0;
+		
+		for(int k=0;k<Nsteps;k++) {
+			DataVector vec1,vec2;
+			vec1 = null;
+			vec2 = null;
+			
+			cutval = mean + sigma*step*(k+1);
+			loadCut(var1,mean,sigma,step*(k+1),"right");
+			vec1 = this.mainService.getTree().getDataVector(var1,applyCut());
+			hist1.fill(vec1);
+			loadCut(var2,mean,sigma,step*(k+1),"right");
+			vec2 = this.mainService.getTree().getDataVector(var2,applyCut());
+			hist2.fill(vec2);
+			
+			ratio = getRatio(hist1,hist2,option,"sigTobk");
+			//System.out.println("Step: " + k + " with cut-val: " +  cutval  +  " with ratio: " + ratio);
+			grRatio.addPoint(k+1, ratio, 0.0, 0.0);
+			
+			eff = getEff(hist1,histUnCut,option);
+			grRatio2.addPoint(k+1, eff, 0.0, 0.0);
+			grRatio3.addPoint(eff, ratio, 0.0, 0.0);
+			
+			if(ratio >= maxRatio) {
+				maxRatio = ratio;
+				foundCutMax = cutval;
+				foundNMax = k+1;
+			}
+			
+			if(ratio <= minRatio) {
+				minRatio = ratio;
+				foundCutMin = cutval;
+				foundNMin = k+1;
+			}
+			
+			vec1.clear();
+			vec2.clear();
+			hist1.reset();
+			hist2.reset();
+		}
+		vecUnCut.clear();
+		
+		histUnCut.reset();
+		
+		System.out.println("    ");
+		System.out.println("Found cut value: " + foundCutMax +  " at "+ foundNMax + " sigma at max. S/(S+B) ratio:  " + maxRatio);
+		System.out.println("Found cut value: " + foundCutMin +  " at "+ foundNMin + " sigma at min. S/(S+B) ratio:  " + minRatio);
+		System.out.println("    ");
+		
+	}
+	
+	//========================================
+	
+	public double getRatio(H1F hist1, H1F hist2, String option, String mode) {
+		double ratio = 0.0;
+		
+		double leftR = 0.975 - 2.5*0.03;
+		double rightR = 0.975 + 2.5*0.03;
+		
+		int leftInt,rightInt;
+		leftInt = rightInt = 0;
+		if(option.equals("peak")) {
+			leftInt = hist1.getAxis().getBin(leftR);
+			rightInt = hist1.getAxis().getBin(rightR);
+		}else if(option.equals("total")) {
+			leftInt = 1;
+			rightInt = hist1.getDataSize(0);
+		}
+		
+		double integralHist1,integralHist2;
+		integralHist1 = integralHist2 = 0.0;
+		
+		for(int t=leftInt;t<=rightInt;t++) {
+			integralHist1 += hist1.getBinContent(t);
+			integralHist2 += hist2.getBinContent(t);
+		}
+		
+		if(mode.equals("def")) {
+			ratio = integralHist1 / integralHist2;
+			//System.out.println("integral1: " + integralHist1 + " and integral2: " + integralHist2);
+		}else if(mode.equals("sigTobk")) {
+		    ratio = integralHist1 / (integralHist1 + integralHist2);
+		}else if(mode.equals("sigTobk2")) {
+			ratio = Math.sqrt(2*(integralHist1+integralHist2)*Math.log(1+integralHist1/integralHist2)-2*integralHist1);
+		}
+		return ratio;
+	}
+	
+	//========================================
+	
+	public double getEff(H1F histCut, H1F histUnCut, String option) {
+		double out = 0;
+		
+		out = getRatio(histCut,histUnCut,option,"def");
+		return out;
+	}
+	
+	//========================================
+	
+	
+	public void drawRatio(double mean, double sigma, String option) {
+		String xAxisName = "n from " + mean + " < " + "n*" + sigma; 
+		grRatio.setTitleX(xAxisName);
+		grRatio.setTitleY("S/(S + B)");
+		
+		grRatio2.setTitleX(xAxisName);
+		grRatio2.setTitleY("Efficiency");
+		
+		grRatio3.setTitleX("Efficiency");
+		grRatio3.setTitleY("S/(S + B)");
+		
+		String cname;
+		TCanvas rc = null;
+		if(option.equals("gen")) {
+			cname = "Scan of cuts for generated particles";
+			rc = new TCanvas(cname,500,500);
+			rc.draw(grRatio);
+		}else if(option.equals("rec")) {
+			cname = "Scan of cuts for reconstructed particles";
+			rc = new TCanvas(cname,1200,600);
+			rc.divide(3, 1);
+			rc.cd(0);
+			rc.draw(grRatio);
+			rc.cd(1);
+			rc.draw(grRatio2);
+			rc.cd(2);
+			rc.draw(grRatio3);
+		}else cname = "";
+
+	}
+	//*******************************************************************************************************
+	
+/*
 	private void plotHistograms(String dataType) {
 
 		this.mainService.getTree().drawH1F(
@@ -134,7 +380,7 @@ public class AnalysisPlotsForDaniel {
 		canvasGen3.draw(aGenH12, "same");
 
 	}
-
+*/
 	private void makeAcceptance() {
 		JFrame frame2 = makeJFrame("Acceptance");
 		JPanel mainPanel2 = makeJPanel();
