@@ -46,6 +46,8 @@ public class AnalysisPlotsForDaniel {
 	
 	private String myCut = null;
 	private GraphErrors grRatio = null;
+	private GraphErrors grRatio2 = null;
+	private GraphErrors grRatio3 = null;
 
 	public AnalysisPlotsForDaniel() {
 		this.mainService = ServiceManager.getSession();
@@ -86,7 +88,7 @@ public class AnalysisPlotsForDaniel {
 		DataVector vector = this.mainService.getTree().getDataVector("genMxPEm1","");
 		DataVector vector2 = this.mainService.getTree().getDataVector("genMxPEm2","");
 
-        cutScanner("genMxPEm1", "genMxPEm2", Nsteps, mean, sigma,option);
+        cutScanner("genMxPEm1", "genMxPEm2", Nsteps, mean,sigma,option);
 		
         drawRatio(mean,sigma,"gen");
 	}
@@ -120,11 +122,11 @@ public class AnalysisPlotsForDaniel {
 		resetCut();
 		
 		if(option.equals("")) {
-			this.myCut = "abs(" + myVar + "-" + mean + ") < " + sigmaRange + "*" + sigma;
+			this.myCut = "0 < " + myVar + " && abs(" + myVar + "-" + mean + ") < " + sigmaRange + "*" + sigma;
 		}else if(option.equals("left")) {
-			this.myCut = myVar + ">" + mean + "-" + sigmaRange + "*" + sigma;
+			this.myCut = "0 < " + myVar + " && " + myVar + ">" + mean + "-" + sigmaRange + "*" + sigma;
 		}else if(option.equals("right")) {
-			this.myCut = myVar + "<" + mean + "+" + sigmaRange + "*" + sigma;
+			this.myCut = "0 < " + myVar + " && " + myVar + "<" + mean + "+" + sigmaRange + "*" + sigma;
 		}else {
 			System.out.println("Sorry. You did not specify any cut. Nothing will happen.");
 			myCut = "";
@@ -148,9 +150,18 @@ public class AnalysisPlotsForDaniel {
 	public void cutScanner(String var1, String var2, int Nsteps, double mean, double sigma, String option) {
 		grRatio = null;
 		grRatio = new GraphErrors();
+		grRatio2 = null;
+		grRatio2 = new GraphErrors();
+		grRatio3 = null;
+		grRatio3 = new GraphErrors();
+		
 		double step = (3.0-mean)/(sigma*Nsteps);
 		
-		DataVector vec1,vec2;
+		DataVector vecUnCut;
+		H1F histUnCut = new H1F("histUnCut",100,0,3.0);
+		vecUnCut = this.mainService.getTree().getDataVector(var1,"");
+		histUnCut.fill(vecUnCut);
+		
 		H1F hist1 = new H1F("hist1",100,0,3.0);
 		H1F hist2 = new H1F("hist2",100,0,3.0);
 		double ratio = 0;
@@ -164,7 +175,13 @@ public class AnalysisPlotsForDaniel {
 		double foundCutMin = 0;
 		int foundNMin = 0;
 		
+		double eff = 0.0;
+		
 		for(int k=0;k<Nsteps;k++) {
+			DataVector vec1,vec2;
+			vec1 = null;
+			vec2 = null;
+			
 			cutval = mean + sigma*step*(k+1);
 			loadCut(var1,mean,sigma,step*(k+1),"right");
 			vec1 = this.mainService.getTree().getDataVector(var1,applyCut());
@@ -173,9 +190,13 @@ public class AnalysisPlotsForDaniel {
 			vec2 = this.mainService.getTree().getDataVector(var2,applyCut());
 			hist2.fill(vec2);
 			
-			ratio = getRatio(hist1,hist2,option);
+			ratio = getRatio(hist1,hist2,option,"sigTobk");
 			//System.out.println("Step: " + k + " with cut-val: " +  cutval  +  " with ratio: " + ratio);
 			grRatio.addPoint(k+1, ratio, 0.0, 0.0);
+			
+			eff = getEff(hist1,histUnCut,option);
+			grRatio2.addPoint(k+1, eff, 0.0, 0.0);
+			grRatio3.addPoint(eff, ratio, 0.0, 0.0);
 			
 			if(ratio >= maxRatio) {
 				maxRatio = ratio;
@@ -194,6 +215,9 @@ public class AnalysisPlotsForDaniel {
 			hist1.reset();
 			hist2.reset();
 		}
+		vecUnCut.clear();
+		
+		histUnCut.reset();
 		
 		System.out.println("    ");
 		System.out.println("Found cut value: " + foundCutMax +  " at "+ foundNMax + " sigma at max. S/(S+B) ratio:  " + maxRatio);
@@ -204,21 +228,48 @@ public class AnalysisPlotsForDaniel {
 	
 	//========================================
 	
-	public double getRatio(H1F hist1, H1F hist2, String option) {
+	public double getRatio(H1F hist1, H1F hist2, String option, String mode) {
 		double ratio = 0.0;
 		
 		double leftR = 0.975 - 2.5*0.03;
 		double rightR = 0.975 + 2.5*0.03;
 		
-		int leftInt = hist1.getAxis().getBin(leftR);
-		int rightInt = hist1.getAxis().getBin(rightR);
-		
+		int leftInt,rightInt;
+		leftInt = rightInt = 0;
 		if(option.equals("peak")) {
-		 ratio = hist1.integral(leftInt,rightInt) / (hist1.integral(leftInt,rightInt) + hist2.integral(leftInt,rightInt));
+			leftInt = hist1.getAxis().getBin(leftR);
+			rightInt = hist1.getAxis().getBin(rightR);
 		}else if(option.equals("total")) {
-			ratio = hist1.integral() / (hist1.integral() + hist2.integral());
+			leftInt = 1;
+			rightInt = hist1.getDataSize(0);
+		}
+		
+		double integralHist1,integralHist2;
+		integralHist1 = integralHist2 = 0.0;
+		
+		for(int t=leftInt;t<=rightInt;t++) {
+			integralHist1 += hist1.getBinContent(t);
+			integralHist2 += hist2.getBinContent(t);
+		}
+		
+		if(mode.equals("def")) {
+			ratio = integralHist1 / integralHist2;
+			//System.out.println("integral1: " + integralHist1 + " and integral2: " + integralHist2);
+		}else if(mode.equals("sigTobk")) {
+		    ratio = integralHist1 / (integralHist1 + integralHist2);
+		}else if(mode.equals("sigTobk2")) {
+			ratio = Math.sqrt(2*(integralHist1+integralHist2)*Math.log(1+integralHist1/integralHist2)-2*integralHist1);
 		}
 		return ratio;
+	}
+	
+	//========================================
+	
+	public double getEff(H1F histCut, H1F histUnCut, String option) {
+		double out = 0;
+		
+		out = getRatio(histCut,histUnCut,option,"def");
+		return out;
 	}
 	
 	//========================================
@@ -229,14 +280,30 @@ public class AnalysisPlotsForDaniel {
 		grRatio.setTitleX(xAxisName);
 		grRatio.setTitleY("S/(S + B)");
 		
+		grRatio2.setTitleX(xAxisName);
+		grRatio2.setTitleY("Efficiency");
+		
+		grRatio3.setTitleX("Efficiency");
+		grRatio3.setTitleY("S/(S + B)");
+		
 		String cname;
+		TCanvas rc = null;
 		if(option.equals("gen")) {
 			cname = "Scan of cuts for generated particles";
+			rc = new TCanvas(cname,500,500);
+			rc.draw(grRatio);
 		}else if(option.equals("rec")) {
 			cname = "Scan of cuts for reconstructed particles";
+			rc = new TCanvas(cname,1200,600);
+			rc.divide(3, 1);
+			rc.cd(0);
+			rc.draw(grRatio);
+			rc.cd(1);
+			rc.draw(grRatio2);
+			rc.cd(2);
+			rc.draw(grRatio3);
 		}else cname = "";
-		TCanvas rc = new TCanvas(cname,500,500);
-		rc.draw(grRatio);
+
 	}
 	//*******************************************************************************************************
 	
