@@ -265,8 +265,8 @@ public class MainServiceImpl implements MainService {
 		}
 		Analysis analysis = new Analysis(array);
 		analysis.run();
-		// AnalysisPlotsForDaniel analysisPlots = new AnalysisPlotsForDaniel();
-		// analysisPlots.run();
+		// AnalysisPlotsForDaniel analysisPlotsD = new AnalysisPlotsForDaniel();
+		// analysisPlotsD.run();
 		AnalysisPlots analysisPlots = new AnalysisPlots();
 		analysisPlots.run();
 	}

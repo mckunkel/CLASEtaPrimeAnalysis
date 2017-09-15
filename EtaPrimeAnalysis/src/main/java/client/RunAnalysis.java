@@ -62,9 +62,9 @@ public class RunAnalysis {
 		aList.add(dirName + part1Name);
 		aList.add(dirName + part2Name);
 		aList.add(dirName + part3Name);
-		aList.add(dirName + part4Name);
-		aList.add(dirName + part5Name);
-		aList.add(dirName + part6Name);
+		// aList.add(dirName + part4Name);
+		// aList.add(dirName + part5Name);
+		// aList.add(dirName + part6Name);
 		// aList.add(dirName + part7Name);
 
 		// aList.add(
