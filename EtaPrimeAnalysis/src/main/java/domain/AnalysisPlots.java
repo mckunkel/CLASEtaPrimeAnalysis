@@ -171,11 +171,11 @@ public class AnalysisPlots {
 	}
 
 	private void plotRec() {
-		// Gen Mxpe-
+		// Rec Mxpe-
 
 		TCanvas c1 = new TCanvas("Reconstructed Mx(pe-)", 800, 800);
 		c1.divide(1, 3);
-		String cuts[] = { "genMxPEm2", "-1.0*recMxPEm1", "recMxPEm2" };
+		String cuts[] = { "genMxPEm2", "recMxPEm1", "recMxPEm2" };
 		double cutVals[] = { 0.957, 0.0, 0.0 };
 		double[] cutLimits = { 2.5 * 0.03, 0.0, 0.0 };
 		String[] cutOperations = { "<", ">", ">" };
@@ -196,21 +196,22 @@ public class AnalysisPlots {
 		c1.draw(mxPEm1);
 		c1.draw(mxPEm2, "same");
 		//
-		// Gen Me+e-
+		// Rec Me+e-
 		TCanvas c2 = new TCanvas("Reconstructed M(e+e-)", 800, 800);
 		c2.divide(1, 3);
-		c2.cd(0);
-		H1F mEpEm2test = Mplots("recMEmEp2", "M(e+e-) [GeV]", 100, 0.0, 3.6, 2, cuts, cutVals, cutLimits, cutOperations,
-				cutSeperators);
 
-		c2.draw(mEpEm2test);
+		H1F mEpEm2test = Mplots("recMEmEp2", "M(e+e-) [GeV]", 100, 0.0, 3.6, 2, cuts, cutVals, cutLimits, cutOperations,
+				cutSeperators, cutDesign);
+
 		H1F mEpEm1test = Mplots("recMEmEp1", "M(e+e-) [GeV]", 100, 0.0, 3.6, 4, cuts, cutVals, cutLimits, cutOperations,
-				cutSeperators);
+				cutSeperators, cutDesign);
+		c2.cd(0);
+		c2.draw(mEpEm1test);
 		c2.cd(1);
-		c2.draw(mEpEm1test);
+		c2.draw(mEpEm2test);
 		c2.cd(2);
-		c2.draw(mEpEm1test);
-		c2.draw(mEpEm2test, "same");
+		c2.draw(mEpEm2test);
+		c2.draw(mEpEm1test, "same");
 
 		// // MxPe Cut
 		//
@@ -258,36 +259,6 @@ public class AnalysisPlots {
 		///
 		////
 		///
-
-		H1F mEpEm1 = new H1F("title", 100, 0.0, 3.6);
-		H1F mEpEm2 = new H1F("title", 100, 0.0, 3.6);
-		mEpEm1.setFillColor(4);
-		mEpEm1.setLineColor(4);
-		mEpEm2.setFillColor(2);
-		mEpEm2.setLineColor(2);
-		mEpEm1.setTitleX("M(e+e-) [GeV]");
-		mEpEm2.setTitleX("M(e+e-) [GeV]");
-		mEpEm1.setTitleY("Entries / 36 MeV");
-		mEpEm2.setTitleY("Entries / 36 MeV");
-		mEpEm1.setOptStat(11);
-		mEpEm2.setOptStat(11);
-
-		DataVector recMEmEp1 = this.mainService.getTree().getDataVector("recMEmEp1",
-				"(abs(genMxPEm2 - 0.957)<(2.5*0.03))  && recMxPEm1>0.0 && recMxPEm2>0.0");
-		DataVector recMEmEp2 = this.mainService.getTree().getDataVector("recMEmEp2",
-				"(abs(genMxPEm2 - 0.957)<(2.5*0.03))  && recMxPEm1>0.0 && recMxPEm2>0.0");
-
-		mEpEm1.fill(recMEmEp1);
-		mEpEm2.fill(recMEmEp2);
-		TCanvas canvas2 = new TCanvas("name", 800, 800);
-		canvas2.divide(1, 3);
-		canvas2.cd(0);
-		canvas2.draw(mEpEm1);
-		canvas2.cd(1);
-		canvas2.draw(mEpEm2);
-		canvas2.cd(2);
-		canvas2.draw(mEpEm2);
-		canvas2.draw(mEpEm1, "same");
 
 		// MxPe Cut
 		H1F mxPEm1Cut = new H1F("title", 100, 0.8, 3.6);
@@ -436,7 +407,7 @@ public class AnalysisPlots {
 
 		double energyPerBin = 1000.0 * (xmax - xmin) / ((double) bins);
 		h1.setTitleY("Entries / " + Double.toString(energyPerBin) + " MeV");
-		String thisCut = loadTotalCut(cuts, cutVals, cutLimits, cutOperations, cutSeperators);
+		String thisCut = loadTotalCut(cuts, cutVals, cutLimits, cutOperations, cutSeperators, cutDesign);
 		h1.fill(this.mainService.getTree().getDataVector(topology, thisCut));
 		return h1;
 	}
@@ -453,6 +424,30 @@ public class AnalysisPlots {
 		for (int i = 0; i < cuts.length; i++) {
 			myCut.append(
 					"abs(" + cuts[i] + "-" + cutVals[i] + ")" + cutOperations[i] + cutLimits[i] + cutSeperators[i]);
+		}
+
+		System.out.println(myCut);
+		return myCut.toString();
+	}
+
+	private String loadTotalCut(String[] cuts, double[] cutVals, double[] cutLimits, String[] cutOperations,
+			String[] cutSeperators, String[] cutDesign) {
+
+		StringBuilder myCut = new StringBuilder();
+		if (cuts.length != cutVals.length || cuts.length != cutLimits.length || cuts.length != cutOperations.length
+				|| cuts.length != cutSeperators.length || cuts.length != cutDesign.length) {
+			System.err.println("[[---AnalysisPlots---]] -----> Operations not equal size");
+		}
+
+		for (int i = 0; i < cuts.length; i++) {
+			if (cutDesign[i] == "sym") {
+				myCut.append(
+						"abs(" + cuts[i] + "-" + cutVals[i] + ")" + cutOperations[i] + cutLimits[i] + cutSeperators[i]);
+			} else if (cutDesign[i] == "side") {
+				myCut.append(
+						"(" + cuts[i] + "-" + cutVals[i] + ")" + cutOperations[i] + cutLimits[i] + cutSeperators[i]);
+			}
+
 		}
 
 		System.out.println(myCut);
