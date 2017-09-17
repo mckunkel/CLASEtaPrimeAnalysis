@@ -9,16 +9,16 @@ use strict;
 use warnings;
 
 
-my $nJobs = 4;	# total number of jobs
+my $nJobs = 469;	# total number of jobs
 my $NEvents = 10000; #
 #workflow settings
 my $project = "-project clas12";
 my $track = "-track simulation";
-my $time = "-time 10min";
+my $time = "-time 5min";
 my $OS = "-os centos7";
 my $shell = "-shell /bin/tcsh";
 my $ram = "-ram 6g";
-my $disk = "-disk 4g";
+my $disk = "-disk 2g";
 my $CPU_count = "-cores 1";
 
 #
@@ -48,15 +48,14 @@ for $a (0 .. $#torusValue)
     my $workflow = "-workflow etaP_sim_tor".$torusValue[$a]."sol".$solenoidValue[$b];
     my $gemcInput_dir = "$submit_dir/GEMCFiles/$torusSol_dir";
     my $decoded_dir = "$submit_dir/DecodedFiles/$torusSol_dir";
-
-
+    
     
     while($iJob < $nJobs){
       
       #check to see in gemc file already exists
       my $gemc_in = "EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
       my $input_1 = "-input $gemc_in $gemcInput_dir/$gemc_in";
-
+      
       my $decodedData = "EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".hipo";
       
       my $decodedOut = "$decoded_dir/$decodedData";
@@ -73,7 +72,7 @@ for $a (0 .. $#torusValue)
       
       
       open my $command_file, ">command.dat" or die "cannot open command.dat file:$!";
-      print $command_file "$doDecoding; $command_exit";#$command_source
+      print $command_file "$doDecoding; $command_exit"; #$command_source
       close $command_file;
       
       
