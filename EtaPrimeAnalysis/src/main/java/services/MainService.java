@@ -55,7 +55,11 @@ public interface MainService {
 
 	public void calQ();
 
+	public void calW();
+
 	public boolean isQ();
+
+	public boolean isW();
 
 	public TreeVector getTree();
 

@@ -26,7 +26,9 @@ public class RunAnalysis {
 		MainService mainService = ServiceManager.getSession();
 		mainService.addToIMissingMassList("p", "e-");
 		mainService.addToIMissingMassList("e-");
-		// mainService.calQ();
+		mainService.calQ();
+		mainService.calW();
+
 		// mainService.addToIMissingMassList("p", "e-", "e+");
 		mainService.addToIMissingMassList("p", "e+");
 
@@ -46,9 +48,9 @@ public class RunAnalysis {
 		mainService.addMCService();
 		mainService.addReconService();
 
+		String dirName = "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
 		// String dirName =
-		// "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
-		String dirName = "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
+		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
 
 		String part1Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_100.hipo";
 		String part2Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_101.hipo";

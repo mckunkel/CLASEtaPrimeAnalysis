@@ -1,5 +1,5 @@
 #!/apps/bin/perl -w
-### setCLARA.csh /work/clas12/mkunkel/myClara
+### setCLARA.csh /work/clas12/mkunkel/myClara4a.8.2
 #Script to run clara with decoded files
 #Written by: Michael C. Kunkel / m.kunkel@fz-juelich.de
 
@@ -19,7 +19,7 @@ my $claraSERVICE = "$ENV{'COATJAVA'}/config/services.yaml"; #Location of the ser
 
 print "$claraSERVICE\n";
 
-my $nJobs = 469;	# total number of jobs 469
+my $nJobs = 4;	# total number of jobs 469
 my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
 my @solenoidValue = ("0.6", "0.8");
 my $session = 0;

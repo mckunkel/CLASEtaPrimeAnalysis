@@ -33,7 +33,8 @@ public class MainServiceImpl implements MainService {
 
 	private List<Coordinate> invariantMassList = null;
 	private List<Coordinate> missingMassList = null;
-	private boolean calQ;;
+	private boolean calQ;
+	private boolean calW;
 	private Map<Coordinate, Integer> neededHists = null;
 
 	private List<String> genList = null;
@@ -51,6 +52,8 @@ public class MainServiceImpl implements MainService {
 		this.invariantMassList = new ArrayList<>();
 		this.missingMassList = new ArrayList<>();
 		this.calQ = false;
+		this.calW = false;
+
 		this.neededHists = new HashMap<>();
 
 		this.genList = new ArrayList<>();
@@ -100,6 +103,17 @@ public class MainServiceImpl implements MainService {
 			// calculations for Q2");
 			for (int i = 0; i < occurrences; i++) {
 				branchName = dataType + "QSq" + Integer.toString(i + 1);
+				treeVector.addBranch(branchName, "", "");
+				tmpList.add(branchName);
+			}
+		}
+		if (calW) {
+			String branchName = "";
+			int occurrences = Collections.frequency(reactionList, "e-");
+			// System.out.println(occurrences + " the number of possible
+			// calculations for Q2");
+			for (int i = 0; i < occurrences; i++) {
+				branchName = dataType + "W" + Integer.toString(i + 1);
 				treeVector.addBranch(branchName, "", "");
 				tmpList.add(branchName);
 			}
@@ -241,8 +255,16 @@ public class MainServiceImpl implements MainService {
 		this.calQ = true;
 	}
 
+	public void calW() {
+		this.calW = true;
+	}
+
 	public boolean isQ() {
 		return this.calQ;
+	}
+
+	public boolean isW() {
+		return this.calW;
 	}
 
 	public TreeVector getTree() {

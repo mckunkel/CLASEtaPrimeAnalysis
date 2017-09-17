@@ -12,6 +12,8 @@ use warnings;
 my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
 my @solenoidValue = ("0.6", "0.8");
 
+my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
+my $type_dir = "DecodedFiles";
 
 for $a (0 .. $#torusValue)
 {

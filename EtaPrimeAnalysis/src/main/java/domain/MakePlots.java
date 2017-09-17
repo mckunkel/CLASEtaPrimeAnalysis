@@ -74,7 +74,144 @@ public class MakePlots {
 		}
 	}
 
+	private void fillM(List<Coordinate> coordinates, String topologyType) {
+		for (Coordinate aCoordinate : coordinates) {
+			String branchName = "";
+			List<List<Particle>> aList = new ArrayList<>();
+			for (String string : aCoordinate) {
+				aList.add(aMap.get(string));
+			}
+			List<Particle> tempList = new ArrayList<>();
+			Particle tempPart = new Particle(22, 0.0, 0.0, 0.0);
+			tempList.add(tempPart);
+			for (List<Particle> ic : aList) {
+				tempList = MultArray(tempList, ic);
+			}
+			if (topologyType.equals("Mx")) {
+				if (tempList.size() > 1) {
+					for (int i = 0; i < tempList.size(); i++) {
+						branchName = dataType + topologyType + coordinateToString(aCoordinate)
+								+ Integer.toString(i + 1);
+
+						Particle sum = beamTargetParticle();
+						sum.combine(tempList.get(i), -1);
+						// System.out.println(sum.mass() + " blah method " +
+						// branchName);
+						sortMap.put(branchName, sum.mass());
+					}
+				} else {
+					branchName = dataType + topologyType + coordinateToString(aCoordinate);
+					Particle sum = beamTargetParticle();
+					sum.combine(tempList.get(0), -1);
+					sortMap.put(branchName, sum.mass());
+				}
+
+			} else if (topologyType.equals("M")) {
+				if (tempList.size() > 1) {
+					for (int i = 0; i < tempList.size(); i++) {
+						branchName = dataType + topologyType + coordinateToString(aCoordinate)
+								+ Integer.toString(i + 1);
+
+						Particle sum = new Particle();
+						sum.copy(tempList.get(i));
+						// System.out.println(sum.mass() + " blah method " +
+						// branchName);
+						sortMap.put(branchName, sum.mass());
+					}
+				} else {
+					branchName = dataType + topologyType + coordinateToString(aCoordinate);
+					sortMap.put(branchName, tempList.get(0).mass());
+				}
+			} else {
+				System.err.println("This kind of topology is not yet implemented ...  topology " + topologyType);
+			}
+		}
+	}
+
+	private void fillM() {
+
+	}
+
+	private void fillQsq() {
+		if (this.mainService.isQ()) {
+			List<List<Particle>> aList = new ArrayList<>();
+			aList.add(aMap.get("e-"));
+
+			List<Particle> tempList = new ArrayList<>();
+			Particle tempPart = new Particle(22, 0.0, 0.0, 0.0);
+			tempList.add(tempPart);
+			for (List<Particle> ic : aList) {
+				tempList = MultArray(tempList, ic);
+			}
+			if (tempList.size() > 1) {
+				for (int i = 0; i < tempList.size(); i++) {
+					String branchName = "";
+
+					branchName = dataType + "QSq" + Integer.toString(i + 1);
+
+					Particle sum = new Particle();
+					sum.copy(EventList.beamParticle);
+					sum.combine(tempList.get(0), -1);
+
+					// if ((branchName.equals("recQSq2") ||
+					// branchName.equals("recQSq1")) && -1.0 * sum.mass() <
+					// 400.0) {
+					// System.out.println(-1.0 * sum.mass() + " blah method " +
+					// branchName);
+					// }
+					sortMap.put(branchName, -1.0 * sum.mass());
+				}
+			} else {
+				String branchName = dataType + "QSq";
+				Particle sum = new Particle();
+				sum.copy(EventList.beamParticle);
+				sum.combine(tempList.get(0), -1);
+				sortMap.put(branchName, -1.0 * sum.mass());
+			}
+		}
+	}
+
+	private void fillW() {
+		if (this.mainService.isW()) {
+			List<List<Particle>> aList = new ArrayList<>();
+			aList.add(aMap.get("e-"));
+
+			List<Particle> tempList = new ArrayList<>();
+			Particle tempPart = new Particle(22, 0.0, 0.0, 0.0);
+			tempList.add(tempPart);
+			for (List<Particle> ic : aList) {
+				tempList = MultArray(tempList, ic);
+			}
+			if (tempList.size() > 1) {
+				for (int i = 0; i < tempList.size(); i++) {
+					String branchName = "";
+
+					branchName = dataType + "QSq" + Integer.toString(i + 1);
+
+					Particle sum = beamTargetParticle();
+
+					sum.combine(tempList.get(0), -1);
+
+					if ((branchName.equals("recW1") || branchName.equals("recW2"))) {
+						System.out.println(sum.mass() + " blah method " + branchName);
+					}
+					sortMap.put(branchName, sum.mass());
+				}
+			} else {
+				String branchName = dataType + "W";
+				Particle sum = beamTargetParticle();
+
+				sum.combine(tempList.get(0), -1);
+				sortMap.put(branchName, sum.mass());
+			}
+		}
+	}
+
 	private void fillTree(List<Coordinate> coordinates, String topologyType) {
+		// fillM(coordinates, topologyType);
+		// fillM();
+		// fillQsq();
+		// fillW();
 		for (Coordinate aCoordinate : coordinates) {
 			String branchName = "";
 			List<List<Particle>> aList = new ArrayList<>();
@@ -146,8 +283,10 @@ public class MakePlots {
 
 					Particle sum = new Particle();
 					sum.copy(EventList.beamParticle);
-					sum.combine(tempList.get(0), -1);
+					sum.combine(tempList.get(i), -1);
 
+					// System.out.println("###########################################");
+					//
 					// if ((branchName.equals("recQSq2") ||
 					// branchName.equals("recQSq1")) && -1.0 * sum.mass() <
 					// 400.0) {
@@ -162,6 +301,44 @@ public class MakePlots {
 				sum.copy(EventList.beamParticle);
 				sum.combine(tempList.get(0), -1);
 				sortMap.put(branchName, -1.0 * sum.mass());
+			}
+		}
+
+		// place W here
+		// place Q2 here
+
+		if (this.mainService.isW()) {
+			List<List<Particle>> aList = new ArrayList<>();
+			aList.add(aMap.get("e-"));
+
+			List<Particle> tempList = new ArrayList<>();
+			Particle tempPart = new Particle(22, 0.0, 0.0, 0.0);
+			tempList.add(tempPart);
+			for (List<Particle> ic : aList) {
+				tempList = MultArray(tempList, ic);
+			}
+			if (tempList.size() > 1) {
+				for (int i = 0; i < tempList.size(); i++) {
+					String branchName = "";
+
+					branchName = dataType + "W" + Integer.toString(i + 1);
+					Particle sum = beamTargetParticle();
+
+					sum.combine(tempList.get(i), -1);
+					//
+					// if ((branchName.equals("recW2") ||
+					// branchName.equals("recW1")) && sum.mass() > -100.0) {
+					// System.out.println(sum.mass() + " blah method " +
+					// branchName);
+					// }
+					sortMap.put(branchName, sum.mass());
+				}
+			} else {
+				String branchName = dataType + "W";
+				Particle sum = beamTargetParticle();
+
+				sum.combine(tempList.get(0), -1);
+				sortMap.put(branchName, sum.mass());
 			}
 		}
 	}

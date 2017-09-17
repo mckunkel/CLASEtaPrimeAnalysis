@@ -19,7 +19,6 @@ import java.io.FileOutputStream;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.jlab.groot.data.DataVector;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.groot.ui.TCanvas;
@@ -86,8 +85,8 @@ public class AnalysisPlots {
 
 	private void plotAcceptance() {
 		// plotGen();
-		plotRec();
-		// acceptance();
+		// plotRec();
+		acceptance();
 
 	}
 
@@ -175,17 +174,17 @@ public class AnalysisPlots {
 
 		TCanvas c1 = new TCanvas("Reconstructed Mx(pe-)", 800, 800);
 		c1.divide(1, 3);
-		String cuts[] = { "genMxPEm2", "recMxPEm1", "recMxPEm2" };
-		double cutVals[] = { 0.957, 0.0, 0.0 };
+		String[] cuts = { "genMxPEm2", "recMxPEm1", "recMxPEm2" };
+		double[] cutVals = { 0.957, 0.0, 0.0 };
 		double[] cutLimits = { 2.5 * 0.03, 0.0, 0.0 };
 		String[] cutOperations = { "<", ">", ">" };
 		String[] cutSeperators = { "&& ", "&& ", "" };
 		String[] cutDesign = { "sym", "side", "side" };
 
-		H1F mxPEm2 = Mplots("recMxPEm2", "Mx(pe-) [GeV]", 100, 0.8, 3.6, 4, cuts, cutVals, cutLimits, cutOperations,
+		H1F mxPEm2 = Mplots("recMxPEm2", "Mx(pe-) [GeV]", 100, 0.8, 3.6, 2, cuts, cutVals, cutLimits, cutOperations,
 				cutSeperators, cutDesign);
 
-		H1F mxPEm1 = Mplots("recMxPEm1", "Mx(pe-) [GeV]", 100, 0.8, 3.6, 2, cuts, cutVals, cutLimits, cutOperations,
+		H1F mxPEm1 = Mplots("recMxPEm1", "Mx(pe-) [GeV]", 100, 0.8, 3.6, 4, cuts, cutVals, cutLimits, cutOperations,
 				cutSeperators, cutDesign);
 		c1.cd(0);
 
@@ -213,122 +212,50 @@ public class AnalysisPlots {
 		c2.draw(mEpEm2test);
 		c2.draw(mEpEm1test, "same");
 
-		// // MxPe Cut
-		//
-		// TCanvas c3 = new TCanvas("Reconstructed Mx(pe-) with cuts", 800,
-		// 800);
-		// c3.divide(1, 3);
-		// c3.cd(0);
-		// H1F mxPEm2Cut = Mplots("genMxPEm2", "Mx(pe-) [GeV]", 100, 0.8, 3.6,
-		// 4, cuts, cutVals, cutLimits, cutOperations,
-		// cutSeperators);
-		//
-		// c3.draw(mxPEm2Cut);
-		// cuts[0] = "genMxPEm1";
-		//
-		// H1F mxPEm1Cut = Mplots("genMxPEm1", "Mx(pe-) [GeV]", 100, 0.8, 3.6,
-		// 2, cuts, cutVals, cutLimits, cutOperations,
-		// cutSeperators);
-		// c3.cd(1);
-		// c3.draw(mxPEm1Cut);
-		// c3.cd(2);
-		// c3.draw(mxPEm2Cut);
-		// c3.draw(mxPEm1Cut, "same");
-		//
-		// // MEpEmCut
-		// TCanvas c4 = new TCanvas("Reconstructed M(e+e-) with cuts", 800,
-		// 800);
-		// c4.divide(1, 3);
-		// c4.cd(0);
-		// H1F mEpEm2Cut = Mplots("genMEmEp2", "M(e+e-) [GeV]", 100, 0.0, 3.6,
-		// 4, cuts, cutVals, cutLimits, cutOperations,
-		// cutSeperators);
-		//
-		// c4.draw(mEpEm2Cut);
-		// cuts[0] = "genMxPEm2";
-		//
-		// H1F mEpEm1Cut = Mplots("genMEmEp1", "M(e+e-) [GeV]", 100, 0.0, 3.6,
-		// 2, cuts, cutVals, cutLimits, cutOperations,
-		// cutSeperators);
-		// c4.cd(1);
-		// c4.draw(mEpEm1Cut);
-		// c4.cd(2);
-		// c4.draw(mEpEm1Cut);
-		// c4.draw(mEpEm2Cut, "same");
-
-		///
-		////
-		///
-
 		// MxPe Cut
-		H1F mxPEm1Cut = new H1F("title", 100, 0.8, 3.6);
-		H1F mxPEm2Cut = new H1F("title", 100, 0.8, 3.6);
 
-		mxPEm1Cut.setFillColor(4);
-		mxPEm1Cut.setLineColor(4);
-		mxPEm2Cut.setFillColor(2);
-		mxPEm2Cut.setLineColor(2);
-		mxPEm1Cut.setTitleX("Mx(pe-) [GeV]");
-		mxPEm2Cut.setTitleX("Mx(pe-) [GeV]");
-		mxPEm1Cut.setTitleY("Entries / 28 MeV");
-		mxPEm2Cut.setTitleY("Entries / 28 MeV");
-		mxPEm1Cut.setOptStat(11);
-		mxPEm2Cut.setOptStat(11);
+		String[] cutsNew = { "genMxPEm2", "recMxPEm1" };
+		double[] cutValsNew = { 0.957, 0.96637 };
+		double[] cutLimitsNew = { 2.5 * 0.03, 2.5 * 0.03 };
+		String[] cutOperationsNew = { "<", "<" };
+		String[] cutSeperatorsNew = { "&& ", "" };
+		String[] cutDesignNew = { "sym", "sym" };
 
-		mxPEm1Cut.setTitleX("Mx(pe-) [GeV]");
-		mxPEm2Cut.setTitleX("Mx(pe-) [GeV]");
+		TCanvas c3 = new TCanvas("Reconstructed Mx(pe-) with cuts", 800, 800);
+		c3.divide(1, 3);
+		c3.cd(0);
 
-		mxPEm1Cut.setTitleY("Entries / 26 GeV");
-		mxPEm2Cut.setTitleY("Entries / 26 GeV");
+		H1F mxPEm1Cut = Mplots("recMxPEm1", "Mx(pe-) [GeV]", 100, 0.8, 3.6, 4, cutsNew, cutValsNew, cutLimitsNew,
+				cutOperationsNew, cutSeperatorsNew);
+		c3.draw(mxPEm1Cut);
+		cutsNew[1] = "recMxPEm2";
 
-		DataVector recmxPEm1Cut = this.mainService.getTree().getDataVector("recMxPEm1",
-				" (abs(recMxPEm1 - 0.96637)<(2.5*0.03))");
-		DataVector recmxPEm2Cut = this.mainService.getTree().getDataVector("recMxPEm2",
-				"(abs(recMxPEm2 - 0.96637)<(2.5*0.03))");
-
-		mxPEm1Cut.fill(recmxPEm1Cut);
-		mxPEm2Cut.fill(recmxPEm2Cut);
-		TCanvas canvas3 = new TCanvas("name", 800, 800);
-		canvas3.divide(1, 3);
-		canvas3.cd(0);
-		canvas3.draw(mxPEm1Cut);
-		canvas3.cd(1);
-		canvas3.draw(mxPEm2Cut);
-		canvas3.cd(2);
-		canvas3.draw(mxPEm1Cut);
-		canvas3.draw(mxPEm2Cut, "same");
+		H1F mxPEm2Cut = Mplots("recMxPEm2", "Mx(pe-) [GeV]", 100, 0.8, 3.6, 2, cutsNew, cutValsNew, cutLimitsNew,
+				cutOperationsNew, cutSeperatorsNew);
+		c3.cd(1);
+		c3.draw(mxPEm2Cut);
+		c3.cd(2);
+		c3.draw(mxPEm1Cut);
+		c3.draw(mxPEm2Cut, "same");
 
 		// MEpEmCut
-		H1F mEpEm1Cut = new H1F("mEpEm1Cut", 100, 0.0, 3.6);
-		H1F mEpEm2Cut = new H1F("mEpEm2Cut", 100, 0.0, 3.6);
-		mEpEm1Cut.setFillColor(4);
-		mEpEm1Cut.setLineColor(4);
-		mEpEm2Cut.setFillColor(2);
-		mEpEm2Cut.setLineColor(2);
-		mEpEm1Cut.setTitleX("M(e+e-) [GeV]");
-		mEpEm2Cut.setTitleX("M(e+e-) [GeV]");
-		mEpEm1Cut.setTitleY("Entries / 36 MeV");
-		mEpEm2Cut.setTitleY("Entries / 36 MeV");
-		mEpEm1Cut.setOptStat(11);
-		mEpEm2Cut.setOptStat(11);
-		mEpEm1Cut.setTitle("mEpEm1Cut");
-		mEpEm2Cut.setTitle("mEpEm2Cut");
-		DataVector recEpEm1Cut = this.mainService.getTree().getDataVector("recMEmEp1",
-				"(abs(recMxPEm2 - 0.96637)<(2.5*0.03))");
-		DataVector recEpEm2Cut = this.mainService.getTree().getDataVector("recMEmEp2",
-				"(abs(recMxPEm1 - 0.96637)<(2.5*0.03))");
+		TCanvas c4 = new TCanvas("Reconstructed M(e+e-) with cuts", 800, 800);
+		c4.divide(1, 3);
+		c4.cd(0);
+		cutsNew[1] = "recMxPEm2";
 
-		mEpEm1Cut.fill(recEpEm1Cut);
-		mEpEm2Cut.fill(recEpEm2Cut);
-		TCanvas canvas4 = new TCanvas("Cut Plots", 800, 800);
-		canvas4.divide(1, 3);
-		canvas4.cd(0);
-		canvas4.draw(mEpEm1Cut);
-		canvas4.cd(1);
-		canvas4.draw(mEpEm2Cut);
-		canvas4.cd(2);
-		canvas4.draw(mEpEm2Cut);
-		canvas4.draw(mEpEm1Cut, "same");
+		H1F mEpEm1Cuttest = Mplots("recMEmEp1", "M(e+e-) [GeV]", 100, 0.0, 3.6, 4, cutsNew, cutValsNew, cutLimitsNew,
+				cutOperationsNew, cutSeperatorsNew);
+
+		c4.draw(mEpEm1Cuttest);
+		cutsNew[1] = "recMxPEm1";
+		H1F mEpEm2Cuttest = Mplots("recMEmEp2", "M(e+e-) [GeV]", 100, 0.0, 3.6, 2, cutsNew, cutValsNew, cutLimitsNew,
+				cutOperationsNew, cutSeperatorsNew);
+		c4.cd(1);
+		c4.draw(mEpEm2Cuttest);
+		c4.cd(2);
+		c4.draw(mEpEm2Cuttest);
+		c4.draw(mEpEm1Cuttest, "same");
 
 	}
 
@@ -336,18 +263,19 @@ public class AnalysisPlots {
 		// zoom in to EpEm plots with cuts
 		TCanvas c1 = new TCanvas("Cut Plots", 800, 800);
 		c1.divide(1, 2);
-		String cuts[] = { "recMxPEm1" };
-		double cutVals[] = { 0.96637 };
-		double[] cutLimits = { 2.5 * 0.03 };
-		String[] cutOperations = { "<" };
-		String[] cutSeperators = { "" };
+
+		String[] cuts = { "genMxPEm2", "recMxPEm1" };
+		double[] cutVals = { 0.957, 0.96637 };
+		double[] cutLimits = { 2.5 * 0.03, 2.5 * 0.03 };
+		String[] cutOperations = { "<", "<" };
+		String[] cutSeperators = { "&& ", "" };
 
 		c1.cd(0);
-		H1F recMEmEp2Scaled = Mplots("recMEmEp2", "M(e+e-) [GeV]", 100, 0.0, 1.0, 2, cuts, cutVals, cutLimits,
+		H1F recMEmEp2Scaled = Mplots("recMEmEp2", "M(e+e-) [GeV]", 100, 0.0, 0.965, 2, cuts, cutVals, cutLimits,
 				cutOperations, cutSeperators);
 		c1.draw(recMEmEp2Scaled);
-		cuts[0] = "recMxPEm2";
-		H1F recMEmEp1Scaled = Mplots("recMEmEp1", "M(e+e-) [GeV]", 100, 0.0, 1.0, 4, cuts, cutVals, cutLimits,
+		cuts[1] = "recMxPEm2";
+		H1F recMEmEp1Scaled = Mplots("recMEmEp1", "M(e+e-) [GeV]", 100, 0.0, 0.965, 4, cuts, cutVals, cutLimits,
 				cutOperations, cutSeperators);
 		c1.draw(recMEmEp1Scaled, "same");
 
@@ -356,30 +284,60 @@ public class AnalysisPlots {
 		c1.cd(1);
 		c1.draw(total);
 
-		// // rec plots
-		// TCanvas c2 = new TCanvas("Cut Plots", 800, 800);
-		// c2.divide(1, 2);
-		// String cuts[] = { "recMxPEm1" };
-		// double cutVals[] = { 0.96637 };
-		// double[] cutLimits = { 2.5 * 0.03 };
-		// String[] cutOperations = { "<" };
-		// String[] cutSeperators = { "" };
-		//
-		// c2.cd(0);
-		// H1F recMEmEp2Scaled = Mplots("recMEmEp2", "M(e+e-) [GeV]", 100, 0.0,
-		// 1.0, 2, cuts, cutVals, cutLimits,
-		// cutOperations, cutSeperators);
-		// c2.draw(recMEmEp2Scaled);
-		// cuts[0] = "recMxPEm2";
-		// H1F recMEmEp1Scaled = Mplots("recMEmEp1", "M(e+e-) [GeV]", 100, 0.0,
-		// 1.0, 4, cuts, cutVals, cutLimits,
-		// cutOperations, cutSeperators);
-		// c2.draw(recMEmEp1Scaled, "same");
-		//
-		// H1F totalRec = recMEmEp2Scaled.histClone("total");
-		// totalRec.add(recMEmEp1Scaled);
-		// c2.cd(1);
-		// c2.draw(totalRec);
+		// gen plots
+
+		// MEpEmCut
+		String cutsGen[] = { "genMxPEm1" };
+		double cutValsGen[] = { 0.957 };
+		double[] cutLimitsGen = { 2.5 * 0.03 };
+		String[] cutOperationsGen = { "<" };
+		String[] cutSeperatorsGen = { "" };
+
+		TCanvas c2 = new TCanvas("Generated M(e+e-) with cuts", 800, 800);
+		c2.divide(1, 2);
+		H1F genMEmEp2Scaled = Mplots("genMEmEp2", "M(e+e-) [GeV]", 100, 0.0, 0.965, 4, cutsGen, cutValsGen,
+				cutLimitsGen, cutOperationsGen, cutSeperatorsGen);
+
+		cutsGen[0] = "genMxPEm2";
+
+		H1F genMEmEp1Scaled = Mplots("genMEmEp1", "M(e+e-) [GeV]", 100, 0.0, 0.965, 2, cutsGen, cutValsGen,
+				cutLimitsGen, cutOperationsGen, cutSeperatorsGen);
+		c2.cd(0);
+		c2.draw(genMEmEp1Scaled);
+		c2.draw(genMEmEp2Scaled, "same");
+
+		H1F gentotal = genMEmEp2Scaled.histClone("total");
+		gentotal.add(genMEmEp1Scaled);
+		c2.cd(1);
+		c2.draw(gentotal);
+
+
+		TCanvas c3 = new TCanvas("Acceptance in  M(e+e-)", 800, 800);
+
+		// c3.getCanvas().divide(1, 2);
+
+		H1F totalClone = total.histClone("totalClone");
+		totalClone.setFillColor(5);
+		totalClone.setLineColor(1);
+		totalClone.divide(gentotal);
+		c3.draw(totalClone, "E");
+		// c3.getCanvas().getPad(0).draw(totalClone, "E");
+
+		// im not trusting the error propagation of the histogram division, lets
+		// check manually
+		H1F errorPlot = new H1F("Error Plot", 100, 0.0, 0.965);
+		for (int i = 0; i < total.getXaxis().getNBins(); i++) {
+			errorPlot.setBinContent(i, totalClone.getBinError(i));
+		}
+		// c3.getCanvas().getPad(1).draw(errorPlot, "");
+
+		// TCanvas c4 = new TCanvas("Error in Acceptance in M(e+e-)", 800, 800);
+		// c4.draw(errorPlot);
+		
+		saveCanvas(c1);
+		saveCanvas(c2);
+		saveCanvas(c3);
+
 	}
 
 	private H1F Mplots(String topology, String title, int bins, double xmin, double xmax, int color, String[] cuts,
@@ -426,7 +384,7 @@ public class AnalysisPlots {
 					"abs(" + cuts[i] + "-" + cutVals[i] + ")" + cutOperations[i] + cutLimits[i] + cutSeperators[i]);
 		}
 
-		System.out.println(myCut);
+		// System.out.println(myCut);
 		return myCut.toString();
 	}
 
@@ -450,98 +408,46 @@ public class AnalysisPlots {
 
 		}
 
-		System.out.println(myCut);
+		// System.out.println(myCut);
 		return myCut.toString();
 	}
 
 	private void plotEstimatedYield() {
 
 	}
-	// private void plotHistograms(String dataType) {
-	// List<String> plotList = new ArrayList<>();
-	// if (dataType == "gen") {
-	// plotList.addAll(this.mainService.getGenList());
-	// } else if (dataType == "rec") {
-	// plotList.addAll(this.mainService.getGenList());
-	// }
-	// for (String str : plotList) {
-	// this.mainService.getTree().drawH1F(this.mainService.getTree().getDataVector(str,
-	// ""), str);
-	// }
-	// //
-	// //// this.mainService.getTree().drawH1F(
-	// //// this.mainService.getTree().getDataVector("recMxPEm1",
-	// // "abs(recMxPEm1 - 0.957)<(2.5*0.03)"),
-	// //// "recMxPEm1");
-	// //
-	// // H1F aH1f = new H1F("title", 100, 0.8, 3.2);
-	// // H1F aH12 = new H1F("title", 100, 0.8, 3.2);
-	// // aH1f.setLineColor(1);
-	// // aH12.setLineColor(2);
-	// //
-	// // DataVector vector =
-	// // this.mainService.getTree().getDataVector("recMxPEm1", "");
-	// // DataVector vector2 =
-	// // this.mainService.getTree().getDataVector("recMxPEm2", "");
-	// // // DataVector vector3 =
-	// // // this.mainService.getTree().getDataVector("genMEmEp1", "");
-	// // // DataVector vector4 =
-	// // // this.mainService.getTree().getDataVector("genMEmEp2", "");
-	// // // DataVector vector5 =
-	// // // this.mainService.getTree().getDataVector("genMxPEp", "");
-	// //
-	// // aH1f.fill(vector);
-	// // aH12.fill(vector2);
-	// //
-	// // TCanvas canvas = new TCanvas("name", 800, 800);
-	// // canvas.draw(aH1f);
-	// // TCanvas canvas2 = new TCanvas("name", 800, 800);
-	// // canvas2.draw(aH12);
-	// // TCanvas canvas3 = new TCanvas("name", 800, 800);
-	// // canvas3.draw(aH1f);
-	// // canvas3.draw(aH12, "same");
-	// //
-	// //
-	// this.mainService.getTree().drawH1F(this.mainService.getTree().getDataVector("genMxPEm1",
-	// // ""), "genMxPEm1");
-	// //
-	// this.mainService.getTree().drawH1F(this.mainService.getTree().getDataVector("genMxPEm2",
-	// // ""), "genMxPEm2");
-	// //
-	// this.mainService.getTree().drawH1F(this.mainService.getTree().getDataVector("genMEmEp1",
-	// // ""), "genMEmEp1");
-	// //
-	// this.mainService.getTree().drawH1F(this.mainService.getTree().getDataVector("genMEmEp2",
-	// // ""), "genMEmEp2");
-	// //
-	// // H1F aGenH1f = new H1F("title", 100, 0.8, 3.2);
-	// // H1F aGenH12 = new H1F("title", 100, 0.8, 3.2);
-	// // aGenH1f.setLineColor(1);
-	// // aGenH12.setLineColor(2);
-	// //
-	// // DataVector vectorGen =
-	// // this.mainService.getTree().getDataVector("genMxPEm1", "");
-	// // DataVector vectorGen2 =
-	// // this.mainService.getTree().getDataVector("genMxPEm2", "");
-	// // // DataVector vector3 =
-	// // // this.mainService.getTree().getDataVector("genMEmEp1", "");
-	// // // DataVector vector4 =
-	// // // this.mainService.getTree().getDataVector("genMEmEp2", "");
-	// // // DataVector vector5 =
-	// // // this.mainService.getTree().getDataVector("genMxPEp", "");
-	// //
-	// // aGenH1f.fill(vectorGen);
-	// // aGenH12.fill(vectorGen2);
-	// //
-	// // TCanvas canvasGen = new TCanvas("name", 800, 800);
-	// // canvasGen.draw(aGenH1f);
-	// // TCanvas canvasGen2 = new TCanvas("name", 800, 800);
-	// // canvasGen2.draw(aGenH12);
-	// // TCanvas canvasGen3 = new TCanvas("name", 800, 800);
-	// // canvasGen3.draw(aGenH1f);
-	// // canvasGen3.draw(aGenH12, "same");
-	//
-	// }
+
+	private void saveCanvas(TCanvas can) {
+		String plotName = can.getTitle();
+		System.out.println(plotName);
+		JPanel mainPanel = makeJPanel();
+		mainPanel.add(can.getCanvas());
+		System.out.println(mainPanel.getWidth());
+		System.out.println(can.getWidth());
+		try {
+			Document d = new Document(PageSize.A4.rotate());// PageSize.A4.rotate()
+			PdfWriter writer = PdfWriter.getInstance(d, new FileOutputStream(plotName + ".pdf"));
+			d.open();
+
+			PdfContentByte cb = writer.getDirectContent();
+			cb.saveState();
+			// PageSize.A4.getWidth(), PageSize.A4.getHeight()
+			PdfTemplate template = cb.createTemplate(mainPanel.getWidth(), mainPanel.getHeight());
+			Graphics2D g2d = new PdfGraphics2D(cb, can.getWidth(), can.getHeight() * 75 / 100);
+
+			g2d.scale(1.0, 0.75);
+			// g2d.translate(0.0, 400.0);
+			mainPanel.print(g2d);
+			// frame.addNotify();
+			// frame.validate();
+			g2d.dispose();
+			cb.addTemplate(template, 0, 0);
+
+			cb.restoreState();
+			d.close();
+		} catch (Exception e) {
+			//
+		}
+	}
 
 	private void makeAcceptance() {
 		JFrame frame2 = makeJFrame("Acceptance");
