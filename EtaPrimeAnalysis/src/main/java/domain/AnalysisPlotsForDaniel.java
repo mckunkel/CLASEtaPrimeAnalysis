@@ -73,6 +73,8 @@ public class AnalysisPlotsForDaniel {
 	
 	
 	private void plotHistograms() {
+		
+		
 
 		plotGenWCuts(0.975,0.03,30,"total");
 		plotRecWCuts(0.975,0.03,30,"total");
@@ -121,12 +123,15 @@ public class AnalysisPlotsForDaniel {
 	public void loadCut(String myVar, double mean, double sigma, double sigmaRange, String option) {
 		resetCut();
 		
+		double minCut = mean - sigmaRange*sigma;
+		double maxCut = mean + sigmaRange*sigma;
+		
 		if(option.equals("")) {
-			this.myCut = "0 < " + myVar + " && abs(" + myVar + "-" + mean + ") < " + sigmaRange + "*" + sigma;
+			this.myCut = "0 < " + myVar + " && " + myVar + ">" + minCut + " && " + myVar + " < " + maxCut;
 		}else if(option.equals("left")) {
-			this.myCut = "0 < " + myVar + " && " + myVar + ">" + mean + "-" + sigmaRange + "*" + sigma;
+			this.myCut = "0 < " + myVar + " && " + myVar + ">" + minCut;
 		}else if(option.equals("right")) {
-			this.myCut = "0 < " + myVar + " && " + myVar + "<" + mean + "+" + sigmaRange + "*" + sigma;
+			this.myCut = "0 < " + myVar + " && " + myVar + "<" + maxCut;
 		}else {
 			System.out.println("Sorry. You did not specify any cut. Nothing will happen.");
 			myCut = "";
