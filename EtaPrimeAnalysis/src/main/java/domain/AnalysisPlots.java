@@ -86,7 +86,9 @@ public class AnalysisPlots {
 	private void plotAcceptance() {
 		// plotGen();
 		// plotRec();
-		acceptance();
+		// plotQ();
+		plotW();
+		// acceptance();
 
 	}
 
@@ -259,6 +261,163 @@ public class AnalysisPlots {
 
 	}
 
+	private void plotQ() {
+		TCanvas c1 = new TCanvas("Reconstructed Qsqr with cuts", 800, 800);
+		c1.divide(1, 2);
+
+		String[] cuts = { "genMxPEm2", "recMxPEm1" };
+		double[] cutVals = { 0.957, 0.96637 };
+		double[] cutLimits = { 2.5 * 0.03, 2.5 * 0.03 };
+		String[] cutOperations = { "<", "<" };
+		String[] cutSeperators = { "&& ", "" };
+
+		c1.cd(0);
+		H1F recMEmEp2Scaled = Mplots("recQSq2", "M(e+e-) [GeV]", 100, 0.0, 4.0, 2, cuts, cutVals, cutLimits,
+				cutOperations, cutSeperators);
+		c1.draw(recMEmEp2Scaled);
+		cuts[1] = "recMxPEm2";
+		H1F recMEmEp1Scaled = Mplots("recQSq1", "M(e+e-) [GeV]", 100, 0.0, 4.0, 4, cuts, cutVals, cutLimits,
+				cutOperations, cutSeperators);
+		c1.draw(recMEmEp1Scaled, "same");
+
+		H1F total = recMEmEp2Scaled.histClone("total");
+		total.add(recMEmEp1Scaled);
+		c1.cd(1);
+		c1.draw(total);
+
+		// gen plots
+
+		// MEpEmCut
+		String cutsGen[] = { "genMxPEm1" };
+		double cutValsGen[] = { 0.957 };
+		double[] cutLimitsGen = { 2.5 * 0.03 };
+		String[] cutOperationsGen = { "<" };
+		String[] cutSeperatorsGen = { "" };
+
+		TCanvas c2 = new TCanvas("Generated Qsqr with cuts", 800, 800);
+		c2.divide(1, 2);
+		H1F genMEmEp2Scaled = Mplots("genQSq2", "M(e+e-) [GeV]", 100, 0.0, 4.0, 4, cutsGen, cutValsGen, cutLimitsGen,
+				cutOperationsGen, cutSeperatorsGen);
+
+		cutsGen[0] = "genMxPEm2";
+
+		H1F genMEmEp1Scaled = Mplots("genQSq1", "M(e+e-) [GeV]", 100, 0.0, 4.0, 2, cutsGen, cutValsGen, cutLimitsGen,
+				cutOperationsGen, cutSeperatorsGen);
+		c2.cd(0);
+		c2.draw(genMEmEp1Scaled);
+		c2.draw(genMEmEp2Scaled, "same");
+
+		H1F gentotal = genMEmEp2Scaled.histClone("total");
+		gentotal.add(genMEmEp1Scaled);
+		c2.cd(1);
+		c2.draw(gentotal);
+
+		TCanvas c3 = new TCanvas("Acceptance in  Qsqr", 800, 800);
+
+		// c3.getCanvas().divide(1, 2);
+
+		H1F totalClone = total.histClone("totalClone");
+		totalClone.setFillColor(5);
+		totalClone.setLineColor(1);
+		totalClone.divide(gentotal);
+		c3.draw(totalClone, "E");
+		// c3.getCanvas().getPad(0).draw(totalClone, "E");
+
+		// im not trusting the error propagation of the histogram division, lets
+		// check manually
+		H1F errorPlot = new H1F("Error Plot", 100, 0.0, 0.965);
+		for (int i = 0; i < total.getXaxis().getNBins(); i++) {
+			errorPlot.setBinContent(i, totalClone.getBinError(i));
+		}
+		// c3.getCanvas().getPad(1).draw(errorPlot, "");
+
+		// TCanvas c4 = new TCanvas("Error in Acceptance in M(e+e-)", 800, 800);
+		// c4.draw(errorPlot);
+
+		saveCanvas(c1);
+		saveCanvas(c2);
+		saveCanvas(c3);
+	}
+
+	private void plotW() {
+		TCanvas c1 = new TCanvas("Reconstructed W with cuts", 800, 800);
+		c1.divide(1, 2);
+
+		String[] cuts = { "genMxPEm2", "recMxPEm1" };
+		double[] cutVals = { 0.957, 0.96637 };
+		double[] cutLimits = { 2.5 * 0.03, 2.5 * 0.03 };
+		String[] cutOperations = { "<", "<" };
+		String[] cutSeperators = { "&& ", "" };
+
+		c1.cd(0);
+		H1F recMEmEp2Scaled = Mplots("recW2", "M(e+e-) [GeV]", 100, 0.0, 5.0, 2, cuts, cutVals, cutLimits,
+				cutOperations, cutSeperators);
+		c1.draw(recMEmEp2Scaled);
+		cuts[1] = "recMxPEm2";
+		H1F recMEmEp1Scaled = Mplots("recW1", "M(e+e-) [GeV]", 100, 0.0, 5.0, 4, cuts, cutVals, cutLimits,
+				cutOperations, cutSeperators);
+		c1.draw(recMEmEp1Scaled, "same");
+
+		H1F total = recMEmEp2Scaled.histClone("total");
+		total.add(recMEmEp1Scaled);
+		c1.cd(1);
+		c1.draw(total);
+
+		// gen plots
+
+		// MEpEmCut
+		String cutsGen[] = { "genMxPEm1" };
+		double cutValsGen[] = { 0.957 };
+		double[] cutLimitsGen = { 2.5 * 0.03 };
+		String[] cutOperationsGen = { "<" };
+		String[] cutSeperatorsGen = { "" };
+
+		TCanvas c2 = new TCanvas("Generated W with cuts", 800, 800);
+		c2.divide(1, 2);
+		H1F genMEmEp2Scaled = Mplots("genW2", "M(e+e-) [GeV]", 100, 0.0, 5.0, 4, cutsGen, cutValsGen, cutLimitsGen,
+				cutOperationsGen, cutSeperatorsGen);
+
+		cutsGen[0] = "genMxPEm2";
+
+		H1F genMEmEp1Scaled = Mplots("genW1", "M(e+e-) [GeV]", 100, 0.0, 5.0, 2, cutsGen, cutValsGen, cutLimitsGen,
+				cutOperationsGen, cutSeperatorsGen);
+		c2.cd(0);
+		c2.draw(genMEmEp1Scaled);
+		c2.draw(genMEmEp2Scaled, "same");
+
+		H1F gentotal = genMEmEp2Scaled.histClone("total");
+		gentotal.add(genMEmEp1Scaled);
+		c2.cd(1);
+		c2.draw(gentotal);
+
+		TCanvas c3 = new TCanvas("Acceptance in  W", 800, 800);
+
+		// c3.getCanvas().divide(1, 2);
+
+		H1F totalClone = total.histClone("totalClone");
+		totalClone.setFillColor(5);
+		totalClone.setLineColor(1);
+		totalClone.divide(gentotal);
+		c3.draw(totalClone, "E");
+		// c3.getCanvas().getPad(0).draw(totalClone, "E");
+
+		// im not trusting the error propagation of the histogram division, lets
+		// check manually
+		H1F errorPlot = new H1F("Error Plot", 100, 0.0, 0.965);
+		for (int i = 0; i < total.getXaxis().getNBins(); i++) {
+			errorPlot.setBinContent(i, totalClone.getBinError(i));
+		}
+		// c3.getCanvas().getPad(1).draw(errorPlot, "");
+
+		// TCanvas c4 = new TCanvas("Error in Acceptance in M(e+e-)", 800, 800);
+		// c4.draw(errorPlot);
+
+		saveCanvas(c1);
+		saveCanvas(c2);
+		saveCanvas(c3);
+
+	}
+
 	private void acceptance() {
 		// zoom in to EpEm plots with cuts
 		TCanvas c1 = new TCanvas("Cut Plots", 800, 800);
@@ -311,7 +470,6 @@ public class AnalysisPlots {
 		c2.cd(1);
 		c2.draw(gentotal);
 
-
 		TCanvas c3 = new TCanvas("Acceptance in  M(e+e-)", 800, 800);
 
 		// c3.getCanvas().divide(1, 2);
@@ -333,7 +491,7 @@ public class AnalysisPlots {
 
 		// TCanvas c4 = new TCanvas("Error in Acceptance in M(e+e-)", 800, 800);
 		// c4.draw(errorPlot);
-		
+
 		saveCanvas(c1);
 		saveCanvas(c2);
 		saveCanvas(c3);

@@ -13,6 +13,7 @@ print "CLAS12DIR is set to be $ENV{'CLAS12DIR'}\n";
 print "\n";
 ############
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
+my $clas12Dir = "/work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/Reconstructed";
 my $userName = "mkunkel";
 
 my $claraSERVICE = "$ENV{'COATJAVA'}/config/services.yaml"; #Location of the service files i.e. the jars
@@ -82,7 +83,7 @@ for $a (0 .. $#torusValue)
     
     print $get_file "set session s_".$userName."_etaprime_".$session."_rec\n";
     print $get_file "set description d_".$userName."_etaprime_".$session."_rec\n";
-    print $get_file "set fileList $submit_dir/ReconstructedFiles/$claraList.list\n";
+    print $get_file "set fileList $clas12Dir/$claraList.list\n";
     print $get_file "set servicesFile $claraSERVICE\n";
     
     print $get_file "run farm\n";
