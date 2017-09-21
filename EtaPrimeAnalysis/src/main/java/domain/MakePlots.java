@@ -22,6 +22,7 @@ import org.jlab.clas.pdg.PDGDatabase;
 import org.jlab.clas.physics.Particle;
 
 import domain.DalitzEvent.EventList;
+import domain.utils.GlobalConstants;
 import services.MainService;
 import services.ServiceManager;
 
@@ -207,6 +208,33 @@ public class MakePlots {
 		}
 	}
 
+	private void fillP() {
+		if (this.mainService.isP()) {
+			String[] pList = { "Ptot", "Px", "Py", "Pz" };
+			List<List<Particle>> aList = new ArrayList<>();
+
+			for (String str : this.mainService.getReactionList()) {
+				List<Particle> aParticles = aMap.get(str);
+				if (aParticles.size() > 1) {
+					for (int i = 0; i < aParticles.size(); i++) {
+						String branchName = "";
+						for (String string2 : pList) {
+							branchName = dataType + GlobalConstants.coordinateToString(str) + "_" + string2
+									+ Integer.toString(i + 1);
+							sortMap.put(branchName, putValue(aParticles.get(i), string2));
+
+						}
+					}
+				} else {
+					for (String string2 : pList) {
+						String branchName = dataType + GlobalConstants.coordinateToString(str) + "_" + string2;
+						sortMap.put(branchName, putValue(aParticles.get(0), string2));
+					}
+				}
+			}
+		}
+	}
+
 	private void fillTree(List<Coordinate> coordinates, String topologyType) {
 		// fillM(coordinates, topologyType);
 		// fillM();
@@ -341,6 +369,7 @@ public class MakePlots {
 				sortMap.put(branchName, sum.mass());
 			}
 		}
+		fillP();
 	}
 
 	private void sortAndFillTree() {
@@ -367,6 +396,27 @@ public class MakePlots {
 		sum.copy(EventList.beamParticle);
 		sum.combine(EventList.targetParticle, +1);
 		return sum;
+	}
+
+	private double putValue(Particle p, String string) {
+		double retVal = -100000.0;
+		switch (string) {
+		case "Ptot":
+			retVal = p.p();
+			break;
+		case "Px":
+			retVal = p.px();
+			break;
+		case "Py":
+			retVal = p.py();
+			break;
+		case "Pz":
+			retVal = p.pz();
+			break;
+		default:
+			break;
+		}
+		return retVal;
 	}
 
 	private List<Particle> MultArray(List<Particle> aList1, List<Particle> aList2) {

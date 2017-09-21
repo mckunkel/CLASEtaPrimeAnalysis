@@ -48,12 +48,69 @@ public class AnalysisPlots {
 	}
 
 	private void plotHistograms() {
-		plotGen();
-		plotRec();
-		acceptance();
+		// plotGen();
+		// plotRec();
+		// acceptance();
 		// plotQ();
 		// plotW();
 		// plotWandQ();
+		plotP();
+	}
+
+	private void plotP() {
+		H1F genP_Ptot = new H1F("genP_Ptot", 100, 0, 10);
+		genP_Ptot.fill(this.mainService.getTree().getDataVector("genP_Ptot", ""));
+		H1F genEp_Ptot = new H1F("genEp_Ptot", 100, 0, 10);
+		genEp_Ptot.fill(this.mainService.getTree().getDataVector("genEp_Ptot", ""));
+		H1F genEm1_Ptot = new H1F("genEm1_Ptot", 100, 0, 10);
+		genEm1_Ptot.fill(this.mainService.getTree().getDataVector("genEm_Ptot1", ""));
+		H1F genEm2_Ptot = new H1F("genEm2_Ptot", 100, 0, 10);
+		genEm2_Ptot.fill(this.mainService.getTree().getDataVector("genEm_Ptot2", ""));
+		TCanvas c1 = new TCanvas("Gen P", 800, 800);
+		c1.divide(2, 2);
+		c1.cd(0);
+		c1.getCanvas().getPad(0).getAxisY().setLog(true);
+		c1.draw(genP_Ptot);
+		c1.cd(1);
+		c1.getCanvas().getPad(1).getAxisY().setLog(true);
+
+		c1.draw(genEp_Ptot);
+		c1.cd(2);
+		c1.getCanvas().getPad(2).getAxisY().setLog(true);
+
+		c1.draw(genEm1_Ptot);
+		c1.cd(3);
+		c1.getCanvas().getPad(3).getAxisY().setLog(true);
+
+		c1.draw(genEm2_Ptot);
+
+		H1F recP_Ptot = new H1F("recP_Ptot", 100, 0, 10);
+		recP_Ptot.fill(this.mainService.getTree().getDataVector("recP_Ptot", ""));
+		H1F recEp_Ptot = new H1F("recEp_Ptot", 100, 0, 10);
+		recEp_Ptot.fill(this.mainService.getTree().getDataVector("recEp_Ptot", ""));
+		H1F recEm1_Ptot = new H1F("recEm1_Ptot", 100, 0, 10);
+		recEm1_Ptot.fill(this.mainService.getTree().getDataVector("recEm_Ptot1", ""));
+		H1F recEm2_Ptot = new H1F("recEm2_Ptot", 100, 0, 10);
+		recEm2_Ptot.fill(this.mainService.getTree().getDataVector("recEm_Ptot2", ""));
+		TCanvas c2 = new TCanvas("rec P", 800, 800);
+		c2.divide(2, 2);
+		c2.cd(0);
+		c2.getCanvas().getPad(0).getAxisY().setLog(true);
+
+		c2.draw(recP_Ptot);
+		c2.cd(1);
+		c2.getCanvas().getPad(1).getAxisY().setLog(true);
+
+		c2.draw(recEp_Ptot);
+		c2.cd(2);
+		c2.getCanvas().getPad(2).getAxisY().setLog(true);
+
+		c2.draw(recEm1_Ptot);
+		c2.cd(3);
+		c2.getCanvas().getPad(3).getAxisY().setLog(true);
+
+		c2.draw(recEm2_Ptot);
+
 	}
 
 	private void plotGen() {

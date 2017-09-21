@@ -43,8 +43,8 @@ public class ParticleGuns {
 		particleMap.put("KMinus", -321);
 		particleMap.put("Gamma", 22);
 
-		double pMin = 0.150; // GeV
-		double pMax = 10.5; // GeV
+		double pMin = 0.25; // GeV
+		double pMax = 8.5; // GeV
 		double thetaMin = 3.0; // degrees
 		double thetaMax = Math.toDegrees(Math.PI / 2.0); // degrees
 		double phiMin = -180.0; // degrees

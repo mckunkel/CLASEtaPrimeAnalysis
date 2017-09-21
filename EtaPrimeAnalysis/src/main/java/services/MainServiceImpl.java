@@ -25,6 +25,7 @@ import domain.Coordinate;
 import domain.Cuts;
 import domain.DataPoint;
 import domain.TreeVector;
+import domain.utils.GlobalConstants;
 
 public class MainServiceImpl implements MainService {
 
@@ -36,6 +37,7 @@ public class MainServiceImpl implements MainService {
 	private List<Coordinate> missingMassList = null;
 	private boolean calQ;
 	private boolean calW;
+	private boolean calP;
 	private Map<Coordinate, Integer> neededHists = null;
 
 	private List<String> genList = null;
@@ -54,6 +56,7 @@ public class MainServiceImpl implements MainService {
 		this.missingMassList = new ArrayList<>();
 		this.calQ = false;
 		this.calW = false;
+		this.calP = false;
 
 		this.neededHists = new HashMap<>();
 
@@ -73,12 +76,13 @@ public class MainServiceImpl implements MainService {
 			String branchName = "";
 			if (this.neededHists.get(aCoordinate) > 1) {
 				for (int i = 0; i < this.neededHists.get(aCoordinate); i++) {
-					branchName = dataType + "M" + coordinateToString(aCoordinate) + Integer.toString(i + 1);
+					branchName = dataType + "M" + GlobalConstants.coordinateToString(aCoordinate)
+							+ Integer.toString(i + 1);
 					treeVector.addBranch(branchName, "", "");
 					tmpList.add(branchName);
 				}
 			} else {
-				branchName = dataType + "M" + coordinateToString(aCoordinate);
+				branchName = dataType + "M" + GlobalConstants.coordinateToString(aCoordinate);
 				treeVector.addBranch(branchName, "", "");
 				tmpList.add(branchName);
 			}
@@ -87,12 +91,13 @@ public class MainServiceImpl implements MainService {
 			String branchName = "";
 			if (this.neededHists.get(aCoordinate) > 1) {
 				for (int i = 0; i < this.neededHists.get(aCoordinate); i++) {
-					branchName = dataType + "Mx" + coordinateToString(aCoordinate) + Integer.toString(i + 1);
+					branchName = dataType + "Mx" + GlobalConstants.coordinateToString(aCoordinate)
+							+ Integer.toString(i + 1);
 					treeVector.addBranch(branchName, "", "");
 					tmpList.add(branchName);
 				}
 			} else {
-				branchName = dataType + "Mx" + coordinateToString(aCoordinate);
+				branchName = dataType + "Mx" + GlobalConstants.coordinateToString(aCoordinate);
 				treeVector.addBranch(branchName, "", "");
 				tmpList.add(branchName);
 			}
@@ -119,6 +124,33 @@ public class MainServiceImpl implements MainService {
 				tmpList.add(branchName);
 			}
 		}
+		if (calP) {
+			String[] pList = { "Ptot", "Px", "Py", "Pz" };
+			for (String string : reactionList) {
+				String branchName = "";
+				int occurrences = Collections.frequency(reactionList, string);
+				if (occurrences > 1) {
+					for (int i = 0; i < occurrences; i++) {
+						for (String string2 : pList) {
+							branchName = dataType + GlobalConstants.coordinateToString(string) + "_" + string2
+									+ Integer.toString(i + 1);
+							// System.out.println(branchName);
+
+							treeVector.addBranch(branchName, "", "");
+							tmpList.add(branchName);
+						}
+					}
+				} else {
+					for (String string2 : pList) {
+						branchName = dataType + GlobalConstants.coordinateToString(string) + "_" + string2;
+						// System.out.println(branchName);
+
+						treeVector.addBranch(branchName, "", "");
+						tmpList.add(branchName);
+					}
+				}
+			}
+		}
 		if (dataType.equals("gen")) {
 			this.genList.addAll(tmpList);
 		} else {
@@ -128,24 +160,6 @@ public class MainServiceImpl implements MainService {
 		// for (String str : treeVector.getListOfBranches()) {
 		// System.out.println(str + " is a branch that you set " + dataType);
 		// }
-	}
-
-	private String coordinateToString(Coordinate aCoordinate) {
-		String sb = new String();
-		for (int i = 0; i < aCoordinate.getStrSize(); i++) {
-			sb += aCoordinate.getStrings()[i];
-
-		}
-		String my_new_str = sb.replaceAll("p", "P");
-
-		my_new_str = my_new_str.replaceAll("e\\+", "Ep");
-		my_new_str = my_new_str.replaceAll("e\\-", "Em");
-		my_new_str = my_new_str.replaceAll("pi\\-", "Pim");
-		my_new_str = my_new_str.replaceAll("pi\\+", "Pip");
-		my_new_str = my_new_str.replaceAll("K\\-", "Km");
-		my_new_str = my_new_str.replaceAll("K\\+", "Kp");
-
-		return my_new_str;
 	}
 
 	private void makeBranches() {
@@ -260,12 +274,21 @@ public class MainServiceImpl implements MainService {
 		this.calW = true;
 	}
 
+	public void calP() {
+		this.calP = true;
+	}
+
 	public boolean isQ() {
 		return this.calQ;
 	}
 
 	public boolean isW() {
 		return this.calW;
+	}
+
+	public boolean isP() {
+		return this.calP;
+
 	}
 
 	public TreeVector getTree() {
