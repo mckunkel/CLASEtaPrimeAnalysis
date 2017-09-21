@@ -48,9 +48,9 @@ public class RunAnalysis {
 		mainService.addMCService();
 		mainService.addReconService();
 
-		String dirName = "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
 		// String dirName =
-		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
+		// "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
+		String dirName = "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
 
 		String part1Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_100.hipo";
 		String part2Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_101.hipo";
@@ -64,16 +64,17 @@ public class RunAnalysis {
 		aList.add(dirName + part1Name);
 		aList.add(dirName + part2Name);
 		aList.add(dirName + part3Name);
-		// aList.add(dirName + part4Name);
-		// aList.add(dirName + part5Name);
-		// aList.add(dirName + part6Name);
-		// aList.add(dirName + part7Name);
+		aList.add(dirName + part4Name);
+		aList.add(dirName + part5Name);
+		aList.add(dirName + part6Name);
+		aList.add(dirName + part7Name);
 
 		// aList.add(
 		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CODES/SIMUALTION/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_51.hipo");
 		String[] array = aList.toArray(new String[0]);
-		mainService.runService(array);
-		// mainService.runService(args);
+		// mainService.runService(array);
+		mainService.runService(args);
+		System.exit(0);
 
 	}
 

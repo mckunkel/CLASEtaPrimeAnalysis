@@ -20,6 +20,7 @@ import java.util.Map;
 
 import domain.Analysis;
 import domain.AnalysisPlots;
+import domain.AnalysisPlotsForDaniel;
 import domain.Coordinate;
 import domain.Cuts;
 import domain.DataPoint;
@@ -287,7 +288,7 @@ public class MainServiceImpl implements MainService {
 		}
 		Analysis analysis = new Analysis(array);
 		analysis.run();
-		// AnalysisPlotsForDaniel analysisPlotsD = new AnalysisPlotsForDaniel();
+		AnalysisPlotsForDaniel analysisPlotsD = new AnalysisPlotsForDaniel();
 		// analysisPlotsD.run();
 		AnalysisPlots analysisPlots = new AnalysisPlots();
 		analysisPlots.run();
