@@ -9,16 +9,17 @@ use strict;
 use warnings;
 
 
-my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
-my @solenoidValue = ("0.6", "0.8");
+my @torusValue = ("-0.75", "1.0");
+my @solenoidValue = ("0.8");
+my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
 
-
-for $a (0 .. $#torusValue)
-{
-  for $b (0 .. $#solenoidValue){
-    my $runworkflow = "swif run etaP_sim_tor".$torusValue[$a]."sol".$solenoidValue[$b];
-    
-    print "$runworkflow \n";
-    system($runworkflow);
+for my $p (0 .. $#particleValue){
+  for $a (0 .. $#torusValue){
+    for $b (0 .. $#solenoidValue){
+      my $workflow = "machineLearning_sim".$particleValue[$p]."_tor".$torusValue[$a]."sol".$solenoidValue[$b];
+      my $runworkflow = "swif run $workflow";
+      
+      print "$runworkflow \n";
+      system($runworkflow);
+    }
   }
-}

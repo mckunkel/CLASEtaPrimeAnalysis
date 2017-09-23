@@ -1,10 +1,8 @@
 #!/apps/bin/perl -w
 
 
-#Script to submit simulations, decoding and reconstruction to the farm
-#Last date worked on> 08/24/17
+#Script to submit simulations to the farm
 #Written by: Michael C. Kunkel / m.kunkel@fz-juelich.de
-#Written by: Daniel R. Lersch / d.lersch@fz-juelich.de
 
 
 use strict;
@@ -31,8 +29,7 @@ my $CPU_count = "-cores 1";
 
 my $submit_dir = "/volatile/clas12/mkunkel/MachineLearningPID";
 my $lundInput_dir = "$submit_dir/LundFiles";
-my $reconOutput_dir = "$submit_dir/ReconstructedFiles";
-
+my $gemc_outDir = "$submit_dir/GEMCFiles";
 
 my $command_source = "source /group/clas12/gemc/environment.csh 4a.2.1"; #4a.2.0
 my $command_exit = "exit 0";
@@ -54,18 +51,18 @@ my $input_1 = "-input clas12.gcard $submit_dir/clas12_4a.2.1.gcard";
 my @torusValue = ("-0.75", "1.0");
 my @solenoidValue = ("0.8");
 #my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
-my @particleValue = ("Positron","Proton");
+my @particleValue = ("Positron","Proton","Electron","Gamma");
 
 
 for my $p (0 .. $#particleValue){
   for my $a (0 .. $#torusValue){
     for my $b (0 .. $#solenoidValue){
       
-      my $iJob = 0;
+      my $iJob = 1;
       
       my $torusSol_dir = $particleValue[$p]."/Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
       my $workflow = "-workflow machineLearning_sim".$particleValue[$p]."_tor".$torusValue[$a]."sol".$solenoidValue[$b];
-      my $gemcOutput_dir = "$submit_dir/$torusSol_dir";
+      my $gemcOutput_dir = "$gemc_outDir/$torusSol_dir";
       
       #Options to input into Gemc
       my $setTorusString = "value=\"clas12-torus-big, ".$torusValue[$a]."\"";
@@ -78,7 +75,7 @@ for my $p (0 .. $#particleValue){
       
       
       
-      while($iJob < $nJobs){
+      while($iJob <= $nJobs){
         #now lets get the lund file as input
         my $input_2 = "-input fullEtaPrimeDilepton.lund $lundInput_dir/$particleValue[$p]/".$particleValue[$p]."_$iJob.lund";
         
@@ -110,8 +107,6 @@ for my $p (0 .. $#particleValue){
         
         $iJob++;
       }#end of job loop
-      
-      
     }#end of torus loop
   }#end of solenoid loop
 }#end of particle loop
