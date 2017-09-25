@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use POSIX;
 
-my $nJobs = 4;	# total number of jobs
+my $nJobs = 400;	# total number of jobs
 my $submit_dir = "/volatile/clas12/mkunkel/MachineLearningPID";
 my $gemc_outDir = "$submit_dir/GEMCFiles";
 
