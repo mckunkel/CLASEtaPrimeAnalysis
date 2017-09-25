@@ -9,7 +9,7 @@ use strict;
 use warnings;
 
 
-my $nJobs = 4;	# total number of jobs
+my $nJobs = 400;	# total number of jobs
 my $NEvents = 10000; #
 #workflow settings
 my $project = "-project clas12";
@@ -50,7 +50,7 @@ for my $p (0 .. $#particleValue){
       my $decoded_dir = "$submit_dir/DecodedFiles/$torusSol_dir";
       
       
-      while($iJob < $nJobs){
+      while($iJob <= $nJobs){
         
         #check to see in gemc file already exists
         my $gemc_in = $particleValue[$p]."_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
