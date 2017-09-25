@@ -23,11 +23,11 @@ for my $p (0 .. $#particleValue){
     for my $b (0 .. $#solenoidValue){
       
       my $torusSol_dir = $particleValue[$p]."/Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
+      #my $gemcOutput_dir = "$gemc_outDir/".$particleValue[$p];
       my $gemcOutput_dir = "$gemc_outDir/$torusSol_dir";
-      
       my $mkdir = "mkdir $gemcOutput_dir";
       print"$mkdir \n";
-      #system($mkdir);
+      system($mkdir);
     }
   }
 }

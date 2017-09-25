@@ -9,12 +9,12 @@ use strict;
 use warnings;
 
 
-my $nJobs = 2;	# total number of jobs
+my $nJobs = 400;	# total number of jobs
 my $NEvents = 10000; #
 #workflow settings
 my $project = "-project clas12";
 my $track = "-track simulation";
-my $time = "-time 400min";
+my $time = "-time 60min";
 my $OS = "-os centos7";
 my $shell = "-shell /bin/tcsh";
 my $ram = "-ram 6g";
@@ -50,8 +50,8 @@ my $input_1 = "-input clas12.gcard $submit_dir/clas12_4a.2.1.gcard";
 #torus setting for this study -0.75, 0.75, 1,-1.  Solenoid values for this study 0.8, 0.6
 my @torusValue = ("-0.75", "1.0");
 my @solenoidValue = ("0.8");
-#my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
-my @particleValue = ("Positron","Proton","Electron","Gamma");
+my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
+#my @particleValue = ("Positron","Proton","Electron","Gamma");
 
 
 for my $p (0 .. $#particleValue){
@@ -101,7 +101,7 @@ for my $p (0 .. $#particleValue){
         
         
         my $sub = "swif add-job $workflow $project $track $time $OS $ram $disk $CPU_count $input_1 $input_2 -script command.dat $mv_gemc";
-        #system ($sub);
+        system ($sub);
         print "$sub \n\n";
         
         

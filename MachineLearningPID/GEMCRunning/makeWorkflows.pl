@@ -19,11 +19,11 @@ for my $p (0 .. $#particleValue){
   {
     for my $b (0 .. $#solenoidValue){
       my $workflow = "machineLearning_sim".$particleValue[$p]."_tor".$torusValue[$a]."sol".$solenoidValue[$b];
-      my $rm_workflow = "swif cancel $workflow";
-      my $workflow = "swif create $workflow";
+      my $rm_workflow = "swif cancel $workflow -delete";
+      my $createWorkflow = "swif create $workflow";
       system($rm_workflow);
-      print "$workflow \n";
-      system($workflow);
+      print "$createWorkflow \n";
+      system($createWorkflow);
     }
   }
 }
