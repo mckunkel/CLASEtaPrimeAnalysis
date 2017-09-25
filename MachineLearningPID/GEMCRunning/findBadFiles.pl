@@ -17,13 +17,10 @@ my @solenoidValue = ("0.8");
 my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
 my $deletedFile = 0;
 
-for my $p (0 .. $#particleValue){
-  
-  #interate through torus
-  for $a (0 .. $#torusValue)
-  {
-    #interate through solenoid
-    for $b (0 .. $#solenoidValue){
+for my $p (0 .. $#particleValue){#interate through particles
+  for $a (0 .. $#torusValue){#interate through torus
+    for $b (0 .. $#solenoidValue){#interate through solenoid
+
       my $iJob = 0;
       my $doneJobs = 0;
       my $totalSize = 0;
