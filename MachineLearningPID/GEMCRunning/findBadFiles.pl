@@ -49,7 +49,7 @@ for my $p (0 .. $#particleValue){#interate through particles
         if(-e $gemc_out){
           my $filesize = -s $gemc_out;
           $filesize = ceil($filesize/(1024*1024));
-          if($filesize<0.985*$average){
+          if($filesize<0.975*$average){
             print "$gemc_out is to be deleted  \n";
             print "$filesize is fileSize and Average is  $average \n";
             my $rmFile = "rm $gemc_out";

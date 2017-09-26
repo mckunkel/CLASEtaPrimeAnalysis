@@ -14,7 +14,7 @@ my $NEvents = 10000; #
 #workflow settings
 my $project = "-project clas12";
 my $track = "-track simulation";
-my $time = "-time 60min";
+my $time = "-time 90min";
 my $OS = "-os centos7";
 my $shell = "-shell /bin/tcsh";
 my $ram = "-ram 6g";
