@@ -28,7 +28,7 @@ for my $p (0 .. $#particleValue){#interate through particles
       my $torusSol_dir = $particleValue[$p]."/Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
       my $gemcOutput_dir = "$gemc_outDir/$torusSol_dir";
       #find average file size from all files in $gemcOutput_dir
-      while($iJob < $nJobs){
+      while($iJob <= $nJobs){
         my $gemc_out = "$gemcOutput_dir/".$particleValue[$p]."_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
         if(-e $gemc_out){
           $doneJobs++;
@@ -44,7 +44,7 @@ for my $p (0 .. $#particleValue){#interate through particles
       
       #re-interate in while loop for files in $gemcOutput_dir to see if file is less than average, if so, delete it
       $iJob = 0;
-      while($iJob < $nJobs){
+      while($iJob <= $nJobs){
         my $gemc_out = "$gemcOutput_dir/".$particleValue[$p]."_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
         if(-e $gemc_out){
           my $filesize = -s $gemc_out;

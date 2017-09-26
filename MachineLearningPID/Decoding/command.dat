@@ -1,1 +1,1 @@
-/work/clas12/mkunkel/myClara4a.8.2/plugins/clas12/bin/evio2hipo -r 11 -t 1.0 -s 0.8 -o PiMinus_Tor1.0Sol0.8_399.hipo PiMinus_Tor1.0Sol0.8_399.ev; exit 0
+/work/clas12/mkunkel/myClara4a.8.2/plugins/clas12/bin/evio2hipo -r 11 -t 1.0 -s 0.8 -o Gamma_Tor1.0Sol0.8_16.hipo Gamma_Tor1.0Sol0.8_16.ev; exit 0
