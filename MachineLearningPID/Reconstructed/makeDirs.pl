@@ -25,7 +25,7 @@ for my $p (0 .. $#particleValue){
       
       my $torusSol_dir = $particleValue[$p]."/Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
       my $output_dirII = "$outDir/$torusSol_dir";
-      my $mkdir = "mkdir $output_dirII";
+      my $mkdirII = "mkdir $output_dirII";
       print"$mkdirII \n";
       system($mkdirII);
       
