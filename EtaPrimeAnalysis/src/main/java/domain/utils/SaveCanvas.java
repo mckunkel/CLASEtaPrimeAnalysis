@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.groot.ui.TCanvas;
 
 import com.itextpdf.awt.PdfGraphics2D;
@@ -35,6 +36,40 @@ public class SaveCanvas {
 		System.out.println(plotName);
 		JPanel mainPanel = makeJPanel();
 		mainPanel.add(can.getCanvas());
+		System.out.println(mainPanel.getWidth());
+		System.out.println(can.getWidth());
+		try {
+			Document d = new Document(PageSize.A4.rotate());// PageSize.A4.rotate()
+			PdfWriter writer = PdfWriter.getInstance(d, new FileOutputStream(plotName + ".pdf"));
+			d.open();
+
+			PdfContentByte cb = writer.getDirectContent();
+			cb.saveState();
+			// PageSize.A4.getWidth(), PageSize.A4.getHeight()
+			PdfTemplate template = cb.createTemplate(mainPanel.getWidth(), mainPanel.getHeight());
+			Graphics2D g2d = new PdfGraphics2D(cb, can.getWidth(), can.getHeight() * 75 / 100);
+
+			g2d.scale(1.0, 0.75);
+			// g2d.translate(0.0, 400.0);
+			mainPanel.print(g2d);
+			// frame.addNotify();
+			// frame.validate();
+			g2d.dispose();
+			cb.addTemplate(template, 0, 0);
+
+			cb.restoreState();
+			d.close();
+		} catch (Exception e) {
+			//
+		}
+	}
+
+	public static void saveCanvas(EmbeddedCanvas can) {
+		String plotName = can.getName();
+		can.setSize(800, 775);
+		System.out.println(plotName);
+		JPanel mainPanel = makeJPanel();
+		mainPanel.add(can);
 		System.out.println(mainPanel.getWidth());
 		System.out.println(can.getWidth());
 		try {
