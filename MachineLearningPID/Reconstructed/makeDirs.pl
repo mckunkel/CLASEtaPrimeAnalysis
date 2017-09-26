@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 
-my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
+my $submit_dir = "/volatile/clas12/mkunkel/MachineLearningPID";
 my $outDir = "$submit_dir/ReconstructedFiles";
 
 my @torusValue = ("-0.75", "1.0");
