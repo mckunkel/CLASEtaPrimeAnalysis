@@ -35,7 +35,8 @@ my $input_0 = "-input setCLARA.csh /work/clas12/mkunkel/EtaPrimeDilepton/CLASEta
 
 my $command_exit = "exit 0";
 
-my @torusValue = ("-0.75", "1.0");
+#my @torusValue = ("-0.75", "1.0");
+my @torusValue = ("-1.0");
 my @solenoidValue = ("0.8");
 my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
 

@@ -48,7 +48,9 @@ my $input_1 = "-input clas12.gcard $submit_dir/clas12_4a.2.1.gcard";
 
 
 #torus setting for this study -0.75, 0.75, 1,-1.  Solenoid values for this study 0.8, 0.6
-my @torusValue = ("-0.75", "1.0");
+#my @torusValue = ("-0.75", "1.0");
+my @torusValue = ("-1.0");
+
 my @solenoidValue = ("0.8");
 my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
 #my @particleValue = ("Positron","Proton","Electron","Gamma");

@@ -12,7 +12,8 @@ my $nJobs = 400;	# total number of jobs
 my $submit_dir = "/volatile/clas12/mkunkel/MachineLearningPID";
 my $gemc_outDir = "$submit_dir/GEMCFiles";
 
-my @torusValue = ("-0.75", "1.0");
+#my @torusValue = ("-0.75", "1.0");
+my @torusValue = ("-1.0");
 my @solenoidValue = ("0.8");
 my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
 my $deletedFile = 0;

@@ -11,7 +11,8 @@ use warnings;
 my $submit_dir = "/volatile/clas12/mkunkel/MachineLearningPID";
 my $outDir = "$submit_dir/ReconstructedFiles";
 
-my @torusValue = ("-0.75", "1.0");
+#my @torusValue = ("-0.75", "1.0");
+my @torusValue = ("-1.0");
 my @solenoidValue = ("0.8");
 my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
 for my $p (0 .. $#particleValue){

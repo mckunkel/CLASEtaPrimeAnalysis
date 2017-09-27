@@ -19,6 +19,7 @@ import org.jlab.clas.pdg.PDGDatabase;
 import org.jlab.clas.physics.LorentzVector;
 import org.jlab.clas.physics.Particle;
 import org.jlab.clas.physics.Vector3;
+import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
 import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.io.base.DataBank;
@@ -48,7 +49,7 @@ public class TriggerAnalysis {
 	private H2F NvsN = null;
 
 	private double thetaMin = 0.0;
-	private double thetaMax = 60.0;
+	private double thetaMax = 180.0;
 	private double pMin = 0.0;
 	private double pMax = 6.0;
 
@@ -460,9 +461,9 @@ public class TriggerAnalysis {
 	}
 
 	public static void main(String[] args) {
+		String dirName = "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
 		// String dirName =
-		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
-		String dirName = "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
+		// "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
 		String part1Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_100.hipo";
 		String part2Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_101.hipo";
 		String part3Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_102.hipo";
@@ -528,10 +529,59 @@ public class TriggerAnalysis {
 		SaveCanvas.saveCanvas(c7);
 		SaveCanvas.saveCanvas(c8);
 
+		EmbeddedCanvas projection = new EmbeddedCanvas();
+		projection.setName("projection");
+
+		projection.divide(2, 2);
+		projection.cd(0);
+		H1F posPvP = triggerAnalysis.getpVspGen().projectionX();
+		posPvP.setTitle("e+ projection for p vs. p plot");
+		posPvP.setTitleX("p(e+) [GeV] ");
+		projection.draw(posPvP);
+		projection.cd(1);
+		H1F elePvP = triggerAnalysis.getpVspGen().projectionY();
+		elePvP.setTitle("e- projection for p vs. p plot");
+		elePvP.setTitleX("p(e-) [GeV] ");
+
+		projection.draw(elePvP);
+		projection.cd(2);
+		H1F posPvTheta = triggerAnalysis.getPositronHistGen().projectionX();
+		posPvTheta.setTitle("e+ projection for p vs. theta plot");
+		posPvTheta.setTitleX("p(e+) [GeV] ");
+
+		projection.draw(posPvTheta);
+
+		projection.cd(3);
+		H1F elePvTheta = triggerAnalysis.getElectronronHistGen().projectionX();
+		elePvTheta.setTitle("e- projection for p vs. theta plot");
+		elePvTheta.setTitleX("p(e-) [GeV] ");
+
+		projection.draw(elePvTheta);
+
+		SaveCanvas.saveCanvas(projection);
+
 		EmbeddedCanvas c9 = new EmbeddedCanvas();
 		c9.setName("N vs N");
 		c9.draw(triggerAnalysis.getNvsN());
 		SaveCanvas.saveCanvas(c9);
+
+		EmbeddedCanvas thetaprojection = new EmbeddedCanvas();
+		thetaprojection.setName("thetaprojection");
+
+		thetaprojection.divide(1, 2);
+		thetaprojection.cd(0);
+		H1F posthetaPvP = triggerAnalysis.getPositronHistGen().projectionY();
+		posthetaPvP.setTitle("e+ projection for theta vs. p plot");
+		posthetaPvP.setTitleX("theta(e+) [degree] ");
+		thetaprojection.draw(posthetaPvP);
+		thetaprojection.cd(1);
+		H1F elethetavP = triggerAnalysis.getElectronronHistGen().projectionY();
+		elethetavP.setTitle("e- projection for theta vs. p plot");
+		elethetavP.setTitleX("theta(e-) [degree] ");
+
+		thetaprojection.draw(elethetavP);
+
+		SaveCanvas.saveCanvas(thetaprojection);
 
 		System.exit(0);
 
