@@ -45,6 +45,8 @@ public class TriggerAnalysis {
 	private H2F pVspGen = null;
 	private H2F thetaVsthetaGen = null;
 
+	private H2F NvsN = null;
+
 	private double thetaMin = 0.0;
 	private double thetaMax = 60.0;
 	private double pMin = 0.0;
@@ -101,6 +103,12 @@ public class TriggerAnalysis {
 		thetaVsthetaGen.setTitleY("e- Theta [degrees]");
 		thetaVsthetaGen.setTitleX("e+ Theta [degrees]");
 
+		NvsN = new H2F("N time the loop was filled", 100, 0, 4, 100, 0, 4);
+
+		NvsN.setTitle("N vs N");
+		NvsN.setTitleY("N e+ fills");
+		NvsN.setTitleX("N e- fills");
+
 	}
 
 	private void init() {
@@ -128,8 +136,8 @@ public class TriggerAnalysis {
 			List<Particle> tbHitsList = fillParticleTBList(event, this.tbHitsBankName);
 
 			if (recList.size() > 1) {
-				// compareLists(getOnlyDCHits(recList, tbHitsList), DalitzList);
-				compareLists(recList, DalitzList);
+				compareLists(getOnlyDCHits(recList, tbHitsList), DalitzList);
+				// compareLists(recList, DalitzList);
 
 			}
 			drawGenHists(DalitzList);
@@ -365,25 +373,34 @@ public class TriggerAnalysis {
 		double epP = 0.0;
 		double emTheta = 0.0;
 		double epTheta = 0.0;
+		int nEp = 0;
+		int nEm = 0;
 		for (Particle particle : aList) {
 			if (particle.pid() == 11) {
 				electronronHistGen.fill(particle.p(), particle.theta() * 180.0 / Math.PI);
 				emP = particle.p();
 				emTheta = particle.theta() * 180.0 / Math.PI;
-				// System.out.println(emP + " emP ");
-
+				nEm++;
 			}
 			if (particle.pid() == -11) {
 				positronHistGen.fill(particle.p(), particle.theta() * 180.0 / Math.PI);
 				epP = particle.p();
 				epTheta = particle.theta() * 180.0 / Math.PI;
-				// System.out.println(epP + " epP ");
-
+				nEp++;
 			}
 		}
+		// System.out.println(nEm + " " + nEp);
+		NvsN.fill(nEm, nEp);
 		pVspGen.fill(epP, emP);
 		thetaVsthetaGen.fill(epTheta, emTheta);
 		// System.out.println(emP + " " + epP);
+	}
+
+	/**
+	 * @return the nvsN
+	 */
+	public H2F getNvsN() {
+		return NvsN;
 	}
 
 	/**
@@ -443,8 +460,9 @@ public class TriggerAnalysis {
 	}
 
 	public static void main(String[] args) {
-		String dirName = "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
-
+		// String dirName =
+		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
+		String dirName = "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
 		String part1Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_100.hipo";
 		String part2Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_101.hipo";
 		String part3Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_102.hipo";
@@ -509,6 +527,11 @@ public class TriggerAnalysis {
 		SaveCanvas.saveCanvas(c6);
 		SaveCanvas.saveCanvas(c7);
 		SaveCanvas.saveCanvas(c8);
+
+		EmbeddedCanvas c9 = new EmbeddedCanvas();
+		c9.setName("N vs N");
+		c9.draw(triggerAnalysis.getNvsN());
+		SaveCanvas.saveCanvas(c9);
 
 		System.exit(0);
 
