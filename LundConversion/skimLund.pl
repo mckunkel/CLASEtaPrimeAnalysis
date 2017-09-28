@@ -4,14 +4,14 @@ use warnings;
 
 
 
-my $file = "EtaPrimeDalitz500Files.lund";
+my $file = "AllFiles.lund";
 open my $FILE_f, "<", $file or die "Cannot open $file for read :$!";
 
-my $searchStr = "5 1 1";
+my $searchStr = "1 1 0.0 0.0 0.0";
 my $iLine = 0;
 my $iFile = 0;
 my $nSkimmed = 10000;
-open my $get_file, ">EtaPrimeDalitz_$iFile.lund" or die "cannot open EtaPrimeDalitz_$iFile.lund file:$!";
+open my $get_file, ">AllDalitz_$iFile.lund" or die "cannot open AllDalitz_$iFile.lund file:$!";
 
 while (<$FILE_f>) {
   chop($_);
@@ -23,7 +23,7 @@ while (<$FILE_f>) {
 
       $iFile++;
       $iLine = 0;
-      open $get_file, ">EtaPrimeDalitz_$iFile.lund" or die "cannot open EtaPrimeDalitz_$iFile.lund file:$!";
+      open $get_file, ">AllDalitz_$iFile.lund" or die "cannot open AllDalitz_$iFile.lund file:$!";
 
 
     }
