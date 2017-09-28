@@ -63,7 +63,7 @@ for $a (0 .. $#torusValue)
     my $iJob = 0;
 
     my $torusSol_dir = "Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
-    my $workflow = "-workflow etaP_sim_tor".$torusValue[$a]."sol".$solenoidValue[$b];
+    my $workflow = "-workflow full_sim_tor".$torusValue[$a]."sol".$solenoidValue[$b];
     my $gemcOutput_dir = "$submit_dir/GEMCFiles/$torusSol_dir";
     
     #Options to input into Gemc
