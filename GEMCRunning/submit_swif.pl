@@ -32,8 +32,6 @@ my $CPU_count = "-cores 1";
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
 my $lundInput_dir = "$submit_dir/LundFiles";
 
-my $clara_dir = "$submit_dir/clara/myClara";
-my $coatjava_dir = "$clara_dir/plugins/clas12";
 my $reconOutput_dir = "$submit_dir/ReconstructedFiles";
 
 
@@ -81,11 +79,11 @@ for $a (0 .. $#torusValue)
     
     while($iJob < $nJobs){
       #now lets get the lund file as input
-      my $input_2 = "-input fullEtaPrimeDilepton.lund $lundInput_dir/EtaPrimeDalitz_$iJob.lund";
+      my $input_2 = "-input fullEtaPrimeDilepton.lund $lundInput_dir/AllDalitz_$iJob.lund";
       
       
       #check to see in gemc file already exists
-      my $gemc_out = "$gemcOutput_dir/EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
+      my $gemc_out = "$gemcOutput_dir/FullDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
       my $mv_gemc = "-output out.ev $gemc_out";
       
       if(-e $gemc_out){
@@ -96,25 +94,7 @@ for $a (0 .. $#torusValue)
       my $gemc_run = "gemc clas12.gcard";
       
       
-      #GEMC is done, now lets set up Decoding
-      
-      #my $decodedData = "EtaPrimeDilepton_".$iJob.".hipo";
-      my $decodedData = "EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".hipo";
-      
-      my $doDecoding = "$coatjava_dir/bin/evio2hipo -r 11 -t ".$torusValue[$a]." -s ".$solenoidValue[$b]." -o $decodedData out.ev";
-      my $mv_decoded = "-output $decodedData $reconOutput_dir/$decodedData";
-      #GEMC is done, now lets set up CLARA
-      #Note, streamlineing Clara to the farm with this script is not yet compatible, since clara itself is a shell
-      #
-      #  my $input_4 = "-input cook.clara $submit_dir/clara/cook.clara";
-      #  my $listName = "fullEtaPrimeDilepton_".$iJob.".list";
-      #  my $getList = "ls $decodedData > $reconOutput_dir/$listName";
-      #  my $runClara = "$clara_dir/bin/runClara-shell cook.clara";
-      #
-      
-      
       open my $command_file, ">command.dat" or die "cannot open command.dat file:$!";
-      #print $command_file "$command_source ; $setEvents;  $setTorus; $setSolenoid; $gemc_run; $doDecoding; $command_exit";
       print $command_file "$command_source ; $setEvents;  $setTorus; $setSolenoid; $gemc_run; $command_exit";
       
       close $command_file;
