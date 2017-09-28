@@ -11,7 +11,7 @@ use strict;
 use warnings;
 
 
-my $nJobs = 469;	# total number of jobs
+my $nJobs = 449;	# total number of jobs
 my $NEvents = 10000; #
 #workflow settings
 my $project = "-project clas12";
@@ -54,9 +54,10 @@ my $input_1 = "-input clas12.gcard $submit_dir/clas12_4a.2.1.gcard";
 
 
 #torus setting for this study -0.75, 0.75, 1,-1.  Solenoid values for this study 0.8, 0.6
-my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
-my @solenoidValue = ("0.6", "0.8");
-
+#my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
+#my @solenoidValue = ("0.6", "0.8");
+my @torusValue = ("-1.0");
+my @solenoidValue = ("0.8");
 
 for $a (0 .. $#torusValue)
 {

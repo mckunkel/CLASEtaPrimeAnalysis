@@ -9,8 +9,10 @@ use strict;
 use warnings;
 
 
-my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
-my @solenoidValue = ("0.6", "0.8");
+#my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
+#my @solenoidValue = ("0.6", "0.8");
+my @torusValue = ("-1.0");
+my @solenoidValue = ("0.8");
 my $gemcDataDir = "/volatile/clas12/mkunkel/EtaPrimeDilepton/GEMCFiles";
 
 

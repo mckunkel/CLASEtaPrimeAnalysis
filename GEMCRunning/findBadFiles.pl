@@ -11,8 +11,10 @@ use POSIX;
 my $nJobs = 470;	# total number of jobs
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
 
-my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
-my @solenoidValue = ("0.6", "0.8");
+#my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
+#my @solenoidValue = ("0.6", "0.8");
+my @torusValue = ("-1.0");
+my @solenoidValue = ("0.8");
 my $deletedFile = 0;
 
 #interate through torus
