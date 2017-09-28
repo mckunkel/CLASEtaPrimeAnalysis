@@ -19,7 +19,6 @@ for $a (0 .. $#torusValue)
   for $b (0 .. $#solenoidValue){
 	  my $rm_workflow = "swif cancel ".$deletePrefix."_sim_tor".$torusValue[$a]."sol".$solenoidValue[$b]." -delete";
     system($rm_workflow);
-    print "$workflow \n";
    
   }
 }
