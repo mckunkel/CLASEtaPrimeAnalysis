@@ -26,7 +26,7 @@ import domain.MLObjects.CherenkovContainer;
 import domain.MLObjects.MLObject;
 import domain.MLObjects.ParticleContainer;
 import domain.MLObjects.RecParticle;
-import domiain.svmWriter.OpenCloseSVMWriterImpl;
+import domain.svmWriter.OpenCloseSVMWriterImpl;
 
 public class RunMLObject {
 	private HipoDataSource hipoReader = null;
@@ -108,10 +108,10 @@ public class RunMLObject {
 		}
 
 		String[] array = aList.toArray(new String[0]);
-		// RunMLObject runMLObject = new RunMLObject(array, "Electron.txt");
-		String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
-		String outName = args[0];
-		RunMLObject runMLObject = new RunMLObject(newArgs, outName);
+		 RunMLObject runMLObject = new RunMLObject(array, "Electron.txt");
+		//String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
+		//String outName = args[0];
+		//RunMLObject runMLObject = new RunMLObject(newArgs, outName);
 
 		runMLObject.run();
 		System.exit(0);

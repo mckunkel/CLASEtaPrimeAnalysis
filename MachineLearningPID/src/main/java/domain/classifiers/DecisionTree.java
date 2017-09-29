@@ -44,8 +44,13 @@ public class DecisionTree {
 		// "/usr/local/Cellar/apache-spark/2.1.1/libexec/data/mllib/";
 		String dir = "/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/";
 		String file = "Electron.txt";
+		String file2 = "ElectronTestAdd.txt";
+
 		// Load the data stored in LIBSVM format as a DataFrame.
-		Dataset<Row> data = spark.read().format("libsvm").load(dir + file);
+		Dataset<Row> dataprt1 = spark.read().format("libsvm").load(dir + file);
+		Dataset<Row> dataprt2 = spark.read().format("libsvm").load(dir + file2);
+		Dataset<Row> data = dataprt1.union(dataprt2);
+
 		/// Dataset<Row> data = spark.read().format("libsvm").load(dir +
 		/// "sample_libsvm_data.txt");
 

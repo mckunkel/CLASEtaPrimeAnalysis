@@ -18,9 +18,9 @@ import java.util.Map;
 import org.jlab.clas.physics.Particle;
 import org.jlab.clas.physics.ParticleGenerator;
 
-import domain.LundHeader;
-import domain.OpenCloseLundFile;
-import domain.OpenCloseLundFileImpl;
+import domain.lundWriter.LundHeader;
+import domain.lundWriter.OpenCloseLundFile;
+import domain.lundWriter.OpenCloseLundFileImpl;
 
 public class ParticleGuns {
 
