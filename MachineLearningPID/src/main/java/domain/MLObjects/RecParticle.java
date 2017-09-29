@@ -44,6 +44,44 @@ public class RecParticle {
 		return pMap;
 	}
 
+	public static Map<MLObject, Integer> skimBankExclusive(DataEvent aEvent, int pid) {
+		Map<MLObject, Integer> pMap = new HashMap<>();
+		if (aEvent.hasBank(bankName)) {
+			DataBank aBank = aEvent.getBank(bankName);
+			int Nrows = aBank.rows();
+			for (int t = 0; t < Nrows; t++) {
+				if (getPID(aBank, t) == pid) {
+					MLObject mlObject = new MLObject();
+					mlObject.setpContainer(createMLParticle(aBank, t));
+					mlObject.setEcList(RecCalorimeter.createCalorimeter(aEvent, t));
+					mlObject.setCcList(RecCherenkov.createCherenkov(aEvent, t));
+					pMap.put(mlObject, getPID(aBank, t));
+				}
+
+			}
+		}
+		return pMap;
+	}
+
+	public static Map<MLObject, Integer> skimBankIDCrisis(DataEvent aEvent, int pid) {
+		Map<MLObject, Integer> pMap = new HashMap<>();
+		if (aEvent.hasBank(bankName)) {
+			DataBank aBank = aEvent.getBank(bankName);
+			int Nrows = aBank.rows();
+			for (int t = 0; t < Nrows; t++) {
+				if (getPID(aBank, t) != 0) {
+					MLObject mlObject = new MLObject();
+					mlObject.setpContainer(createMLParticle(aBank, t));
+					mlObject.setEcList(RecCalorimeter.createCalorimeter(aEvent, t));
+					mlObject.setCcList(RecCherenkov.createCherenkov(aEvent, t));
+					pMap.put(mlObject, pid);
+				}
+
+			}
+		}
+		return pMap;
+	}
+
 	private static ParticleContainer createMLParticle(DataBank aBank, int evntIndex) {
 
 		ParticleContainer pContainer = new ParticleContainer();

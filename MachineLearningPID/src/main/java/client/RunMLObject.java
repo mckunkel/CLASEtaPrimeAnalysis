@@ -32,14 +32,27 @@ public class RunMLObject {
 	private HipoDataSource hipoReader = null;
 	private String[] fileList = null;
 	private int NinputFiles = 0;
+	private int particleID;
+	private OpenCloseSVMWriterImpl openSVMWriterAll = null;
+	private OpenCloseSVMWriterImpl openSVMWriterExclusive = null;
+	private OpenCloseSVMWriterImpl openSVMWriterIdentityCrisis = null;
 
-	private OpenCloseSVMWriterImpl openSVMWriter = null;
-
-	public RunMLObject(String[] fileList, String outputSVMName) {
+	public RunMLObject(String[] fileList, String outputSVMName, int particleID) {
 		this.fileList = fileList;
 		this.NinputFiles = fileList.length;
-		openSVMWriter = new OpenCloseSVMWriterImpl(outputSVMName);
-		openSVMWriter.openSVMFile();
+		String allOutputSVMName = outputSVMName + "All.txt";
+		String exclusiveOutputSVMName = outputSVMName + "Exclusive.txt";
+		String idCrisisOutputSVMName = outputSVMName + "IDCrisis.txt";
+
+		openSVMWriterAll = new OpenCloseSVMWriterImpl(allOutputSVMName);
+		openSVMWriterAll.openSVMFile();
+
+		openSVMWriterExclusive = new OpenCloseSVMWriterImpl(exclusiveOutputSVMName);
+		openSVMWriterExclusive.openSVMFile();
+
+		openSVMWriterIdentityCrisis = new OpenCloseSVMWriterImpl(idCrisisOutputSVMName);
+		openSVMWriterIdentityCrisis.openSVMFile();
+		this.particleID = particleID;
 	}
 
 	public void run() {
@@ -50,7 +63,10 @@ public class RunMLObject {
 			readHipo();
 		}
 
-		openSVMWriter.closeSVMFile();
+		openSVMWriterAll.closeSVMFile();
+		openSVMWriterExclusive.closeSVMFile();
+		openSVMWriterIdentityCrisis.closeSVMFile();
+
 	}
 
 	private int getNEvents() {
@@ -62,10 +78,23 @@ public class RunMLObject {
 		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
 			DataEvent aEvent = (DataEvent) this.hipoReader.gotoEvent(evnt);
 			Map<MLObject, Integer> aMap = RecParticle.skimBank(aEvent);
+			Map<MLObject, Integer> aExclusiveMap = RecParticle.skimBankExclusive(aEvent, this.particleID);
+			Map<MLObject, Integer> aIDCrisisMap = RecParticle.skimBankIDCrisis(aEvent, this.particleID);
+
 			if (aMap.size() > 0) {
 				// printMap(aMap, evnt);
-				openSVMWriter.writeEvent(aMap);
-				openSVMWriter.writeFlush();
+				openSVMWriterAll.writeEvent(aMap);
+				openSVMWriterAll.writeFlush();
+			}
+			if (aExclusiveMap.size() > 0) {
+				// printMap(aMap, evnt);
+				openSVMWriterExclusive.writeEvent(aMap);
+				openSVMWriterExclusive.writeFlush();
+			}
+			if (aIDCrisisMap.size() > 0) {
+				// printMap(aMap, evnt);
+				openSVMWriterIdentityCrisis.writeEvent(aMap);
+				openSVMWriterIdentityCrisis.writeFlush();
 			}
 
 		}
@@ -108,10 +137,11 @@ public class RunMLObject {
 		}
 
 		String[] array = aList.toArray(new String[0]);
-		 RunMLObject runMLObject = new RunMLObject(array, "Electron.txt");
-		//String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
-		//String outName = args[0];
-		//RunMLObject runMLObject = new RunMLObject(newArgs, outName);
+		// RunMLObject runMLObject = new RunMLObject(array, "Electron", 11);
+		String[] newArgs = Arrays.copyOfRange(args, 2, args.length);
+		String outName = args[0];
+		int pid = Integer.parseInt(args[1]);
+		RunMLObject runMLObject = new RunMLObject(newArgs, outName, pid);
 
 		runMLObject.run();
 		System.exit(0);
