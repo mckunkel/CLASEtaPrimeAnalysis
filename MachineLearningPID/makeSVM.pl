@@ -5,7 +5,7 @@ use warnings;
 
 
 
-my @torusValue = ("-0.75", "1.0");
+my @torusValue = ("-0.75", "1.0","-1.0");
 #my @torusValue = ("-1.0");
 my @solenoidValue = ("0.8");
 my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
