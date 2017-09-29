@@ -11,7 +11,7 @@ use strict;
 use warnings;
 
 
-my $nJobs = 449;	# total number of jobs
+my $nJobs = 349;	# total number of jobs
 my $NEvents = 10000; #
 #workflow settings
 my $project = "-project clas12";

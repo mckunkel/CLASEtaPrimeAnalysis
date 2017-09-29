@@ -55,7 +55,7 @@ for $a (0 .. $#torusValue)
           print "$filesize is fileSize and Average is  $average \n";
           my $rmFile = "rm $gemc_out";
           $deletedFile++;
-          #system($rmFile);
+          system($rmFile);
         }
       }
       $iJob++;
