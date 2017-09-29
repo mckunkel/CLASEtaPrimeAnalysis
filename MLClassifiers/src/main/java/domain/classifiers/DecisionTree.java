@@ -12,8 +12,6 @@
 */
 package domain.classifiers;
 
-import java.io.IOException;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.spark.ml.Pipeline;
@@ -40,31 +38,31 @@ public class DecisionTree {
 		Logger.getLogger("org.apache.spark.SparkContext").setLevel(Level.WARN);
 		Logger.getLogger("org").setLevel(Level.OFF);
 		Logger.getLogger("akka").setLevel(Level.OFF);
-		// String dir =
-		// "/usr/local/Cellar/apache-spark/2.1.1/libexec/data/mllib/";
-		String dir = "/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/";
-		String file = "Electron.txt";
-		String file2 = "ElectronTestAdd.txt";
 
+		// String dir =
+		// "/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/";
+
+		String dir = "/Volumes/Mac_Storage/Work_Data/CLAS12/MachineLearning/";
+		String file = "ElectronTorus-0.75Sol0.8Exclusive.txt";
+		String file2 = "AntiProtonTorus-0.75Sol0.8Exclusive.txt";
+
+		String test = "ElectronTorus-0.75Sol0.8All.txt";
+		String testII = "smallElectronTorus-0.75Sol0.8All.txt";
 		// Load the data stored in LIBSVM format as a DataFrame.
 		Dataset<Row> dataprt1 = spark.read().format("libsvm").load(dir + file);
 		Dataset<Row> dataprt2 = spark.read().format("libsvm").load(dir + file2);
 		Dataset<Row> data = dataprt1.union(dataprt2);
-
-		/// Dataset<Row> data = spark.read().format("libsvm").load(dir +
-		/// "sample_libsvm_data.txt");
+		// this is for after training
+		Dataset<Row> newTestData = spark.read().format("libsvm").load(dir + testII);
 
 		// Index labels, adding metadata to the label column.
 		// Fit on whole dataset to include all labels in index.
 		StringIndexerModel labelIndexer = new StringIndexer().setInputCol("label").setOutputCol("indexedLabel")
-				.fit(data);
-
-		// Automatically identify categorical features, and index them.
+				.fit(data).setHandleInvalid("keep");
 		VectorIndexerModel featureIndexer = new VectorIndexer().setInputCol("features").setOutputCol("indexedFeatures")
-				.setMaxCategories(4) // features with > 4 distinct values are
+				.setMaxCategories(40) // features with > 4 distinct values are
 										// treated as continuous.
 				.fit(data);
-
 		// Split the data into training and test sets (30% held out for
 		// testing).
 		Dataset<Row>[] splits = data.randomSplit(new double[] { 0.7, 0.3 });
@@ -82,16 +80,20 @@ public class DecisionTree {
 		// Chain indexers and tree in a Pipeline.
 		Pipeline pipeline = new Pipeline()
 				.setStages(new PipelineStage[] { labelIndexer, featureIndexer, dt, labelConverter });
-
 		// Train model. This also runs the indexers.
 		PipelineModel model = pipeline.fit(trainingData);
 
-		// Make predictions.
-		Dataset<Row> predictions = model.transform(testData);
+		// Make predictions on new set.
+		Dataset<Row> predictions = model.transform(newTestData);
+		// Make predictions on split set.
+
+		// Dataset<Row> predictions = model.transform(testData);
 
 		// Select example rows to display.
 		// predictions.select("predictedLabel", "label", "features").show(50);
-		predictions.select("predictedLabel", "label", "features").filter("predictedLabel = 11.0").show(50);
+		predictions.select("predictedLabel", "label", "features").filter("predictedLabel = -2212.0")
+				.filter("label = 11").show();
+		predictions.select("predictedLabel", "label", "features").show(50);
 		// Select (prediction, true label) and compute test error.
 		MulticlassClassificationEvaluator evaluator = new MulticlassClassificationEvaluator()
 				.setLabelCol("indexedLabel").setPredictionCol("prediction").setMetricName("accuracy");
@@ -101,12 +103,12 @@ public class DecisionTree {
 		DecisionTreeClassificationModel treeModel = (DecisionTreeClassificationModel) (model.stages()[2]);
 		System.out.println("Learned classification tree model:\n" + treeModel.toDebugString());
 		// $example off$
-		try {
-			model.save("target/models/DecisionTreeClassifierls");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// try {
+		// model.save("target/models/DecisionTreeClassifierls");
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		spark.stop();
 
 	}

@@ -30,7 +30,7 @@ for $a (0 .. $#torusValue)
     my $gemcOutput_dir = "$submit_dir/GEMCFiles/$torusSol_dir";
     #find average file size from all files in $gemcOutput_dir
     while($iJob < $nJobs){
-      my $gemc_out = "$gemcOutput_dir/EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
+      my $gemc_out = "$gemcOutput_dir/FullDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
       if(-e $gemc_out){
         $doneJobs++;
         my $filesize = -s $gemc_out;
@@ -46,7 +46,7 @@ for $a (0 .. $#torusValue)
     #re-interate in while loop for files in $gemcOutput_dir to see if file is less than average, if so, delete it
     $iJob = 0;
     while($iJob < $nJobs){
-      my $gemc_out = "$gemcOutput_dir/EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
+      my $gemc_out = "$gemcOutput_dir/FullDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".ev";
       if(-e $gemc_out){
         my $filesize = -s $gemc_out;
         $filesize = ceil($filesize/(1024*1024));

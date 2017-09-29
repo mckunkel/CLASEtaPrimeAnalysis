@@ -10,7 +10,7 @@
  * (________(                @author m.c.kunkel
  *  `------'
 */
-package domain.utils;
+package domain.spark.utils;
 
 public class StringConstants {
 
