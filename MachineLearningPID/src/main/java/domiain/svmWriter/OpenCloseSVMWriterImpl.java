@@ -86,7 +86,7 @@ public class OpenCloseSVMWriterImpl implements OpenCloseSVMWriter {
 			List<CherenkovContainer> cherenkovContainer = key.getCcList();
 			List<CalorimeterContainer> calorimeterContainer = key.getEcList();
 
-			out.write("1:" + value + " ");
+			out.write(value + " ");
 			writeParticle(pContainer);
 			writeCC(cherenkovContainer);
 			writeEC(calorimeterContainer, pContainer.getPtot());
@@ -100,15 +100,15 @@ public class OpenCloseSVMWriterImpl implements OpenCloseSVMWriter {
 	}
 
 	private void writeParticle(ParticleContainer pContainer) {
-		out.write("2:" + pContainer.getPx() + " ");
-		out.write("3:" + pContainer.getPy() + " ");
-		out.write("4:" + pContainer.getPz() + " ");
-		out.write("5:" + pContainer.getPtot() + " ");
-		out.write("6:" + pContainer.getTheta() + " ");
-		out.write("7:" + pContainer.getPhi() + " ");
-		out.write("8:" + pContainer.getVx() + " ");
-		out.write("9:" + pContainer.getVy() + " ");
-		out.write("10:" + pContainer.getVz() + " ");
+		out.write("1:" + pContainer.getPx() + " ");
+		out.write("2:" + pContainer.getPy() + " ");
+		out.write("3:" + pContainer.getPz() + " ");
+		out.write("4:" + pContainer.getPtot() + " ");
+		out.write("5:" + pContainer.getTheta() + " ");
+		out.write("6:" + pContainer.getPhi() + " ");
+		out.write("7:" + pContainer.getVx() + " ");
+		out.write("8:" + pContainer.getVy() + " ");
+		out.write("9:" + pContainer.getVz() + " ");
 	}
 
 	private void writeCC(List<CherenkovContainer> cherenkovContainer) {

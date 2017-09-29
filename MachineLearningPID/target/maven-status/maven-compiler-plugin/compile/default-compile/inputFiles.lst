@@ -1,8 +1,12 @@
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/utils/MutableInt.java
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/client/ParticleGuns.java
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/LundHeader.java
+/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/classifiers/DecisionTree.java
+/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/classifiers/MultilayerPerceptronClassifierExample.java
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/MLObjects/CherenkovContainer.java
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/ReadHipo.java
+/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/spark/utils/SparkManager.java
+/Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/utils/StringConstants.java
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/MLObjects/RecCherenkov.java
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domiain/svmWriter/OpenCloseSVMWriterImpl.java
 /Users/michaelkunkel/WORK/GIT_HUB/CLASEtaPrimeAnalysis/MachineLearningPID/src/main/java/domain/OpenCloseLundFile.java

@@ -11,6 +11,9 @@
 			<url>https://clasweb.jlab.org/clas12maven</url>
 		</repository>
 	</repositories>
+	<properties>
+		<spark.version>2.2.0</spark.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.jlab.coat</groupId>
@@ -28,14 +31,31 @@
 			<version>3.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>18.0</version>
-		</dependency>
-		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
 			<version>5.5.1</version>
+		</dependency>
+		<dependency>
+			<!-- Apache Spark main library -->
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-core_2.11</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-sql_2.11</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-streaming_2.11</artifactId>
+			<version>${spark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.spark</groupId>
+			<artifactId>spark-mllib_2.11</artifactId>
+			<version>${spark.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -88,7 +108,26 @@
 							<finalName>RunMLObject.jar</finalName>
 						</configuration>
 					</execution>
+<!-- 					<execution>
+						<id>build-c</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>domain.classifiers.MultilayerPerceptronClassifierExample</mainClass>
+								</manifest>
+							</archive>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<finalName>MultilayerPerceptronClassifierExample.jar</finalName>
+						</configuration>
+					</execution> -->
 				</executions>
+				
 			</plugin>
 
 		</plugins>

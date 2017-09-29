@@ -13,6 +13,7 @@
 package client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -59,11 +60,10 @@ public class RunMLObject {
 	private void readHipo() {
 
 		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
-			System.out.println("#####" + evnt);
 			DataEvent aEvent = (DataEvent) this.hipoReader.gotoEvent(evnt);
 			Map<MLObject, Integer> aMap = RecParticle.skimBank(aEvent);
 			if (aMap.size() > 0) {
-				printMap(aMap, evnt);
+				// printMap(aMap, evnt);
 				openSVMWriter.writeEvent(aMap);
 				openSVMWriter.writeFlush();
 			}
@@ -100,32 +100,20 @@ public class RunMLObject {
 		// String dirName =
 		// "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
 		String dirName = "/Volumes/DATA/CLAS12/MachineLearning/ReconstructedFiles/Electron/Torus-0.75Sol0.8/";
-		// AntiNeutron
-		String part1Name = "out_AntiNeutron_Tor-0.75Sol0.8_1.hipo";
-		String part2Name = "out_Electron_Tor-0.75Sol0.8_2.hipo";
-		String part3Name = "out_Electron_Tor-0.75Sol0.8_3.hipo";
-		String part4Name = "out_Electron_Tor-0.75Sol0.8_4.hipo";
-		String part5Name = "out_Electron_Tor-0.75Sol0.8_5.hipo";
-		String part6Name = "out_Electron_Tor-0.75Sol0.8_6.hipo";
-		String part7Name = "out_Electron_Tor-0.75Sol0.8_7.hipo";
+		String partName = "out_Electron_Tor-0.75Sol0.8_";
 
 		List<String> aList = new ArrayList<>();
-		aList.add(dirName + part2Name);
-		// aList.add(dirName + part2Name);
-		// aList.add(dirName + part3Name);
-		// aList.add(dirName + part4Name);
-		// aList.add(dirName + part5Name);
-		// aList.add(dirName + part6Name);
-		// aList.add(dirName + part7Name);
+		for (int i = 1; i <= 100; i++) {
+			aList.add(dirName + partName + i + ".hipo");
+		}
 
 		String[] array = aList.toArray(new String[0]);
-		RunMLObject runMLObject = new RunMLObject(array, "Electron.txt");
-		// String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
-		// String outName = args[0];
-		// RunMLObject runMLObject = new RunMLObject(newArgs, outName);
+		// RunMLObject runMLObject = new RunMLObject(array, "Electron.txt");
+		String[] newArgs = Arrays.copyOfRange(args, 1, args.length);
+		String outName = args[0];
+		RunMLObject runMLObject = new RunMLObject(newArgs, outName);
 
 		runMLObject.run();
-		// mainService.runService(args);
 		System.exit(0);
 
 	}
