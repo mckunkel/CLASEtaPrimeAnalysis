@@ -77,7 +77,7 @@ public class RunMLObject {
 
 		for (int evnt = 1; evnt < getNEvents(); evnt++) {// getNEvents()
 			DataEvent aEvent = (DataEvent) this.hipoReader.gotoEvent(evnt);
-			Map<MLObject, Integer> aMap = RecParticle.skimBank(aEvent);
+			Map<MLObject, Integer> aMap = RecParticle.skimBank(aEvent, this.particleID);
 			Map<MLObject, Integer> aExclusiveMap = RecParticle.skimBankExclusive(aEvent, this.particleID);
 			Map<MLObject, Integer> aIDCrisisMap = RecParticle.skimBankIDCrisis(aEvent, this.particleID);
 

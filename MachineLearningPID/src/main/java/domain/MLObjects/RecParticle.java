@@ -32,7 +32,7 @@ public class RecParticle {
 	public RecParticle() {
 	}
 
-	public static Map<MLObject, Integer> skimBank(DataEvent aEvent) {
+	public static Map<MLObject, Integer> skimBank(DataEvent aEvent, int pid) {
 		Map<MLObject, Integer> pMap = new HashMap<>();
 		List<Particle> tbHitsList = fillParticleTBList(aEvent, tbHitsBankName);
 
@@ -45,10 +45,14 @@ public class RecParticle {
 					mlObject.setpContainer(createMLParticle(aBank, t));
 					mlObject.setEcList(RecCalorimeter.createCalorimeter(aEvent, t));
 					mlObject.setCcList(RecCherenkov.createCherenkov(aEvent, t));
-
-					if (compareParticletoTBBank(mlObject.getpContainer(), tbHitsList)) {
-						pMap.put(mlObject, getPID(aBank, t));
-
+					if (checkNeutral(pid)) {
+						if (mlObject.getEcList().size() > 0) {
+							pMap.put(mlObject, getPID(aBank, t));
+						}
+					} else {
+						if (compareParticletoTBBank(mlObject.getpContainer(), tbHitsList)) {
+							pMap.put(mlObject, getPID(aBank, t));
+						}
 					}
 				}
 
@@ -70,9 +74,14 @@ public class RecParticle {
 					mlObject.setpContainer(createMLParticle(aBank, t));
 					mlObject.setEcList(RecCalorimeter.createCalorimeter(aEvent, t));
 					mlObject.setCcList(RecCherenkov.createCherenkov(aEvent, t));
-					if (compareParticletoTBBank(mlObject.getpContainer(), tbHitsList)) {
-						pMap.put(mlObject, getPID(aBank, t));
-
+					if (checkNeutral(pid)) {
+						if (mlObject.getEcList().size() > 0) {
+							pMap.put(mlObject, getPID(aBank, t));
+						}
+					} else {
+						if (compareParticletoTBBank(mlObject.getpContainer(), tbHitsList)) {
+							pMap.put(mlObject, getPID(aBank, t));
+						}
 					}
 				}
 
@@ -94,9 +103,14 @@ public class RecParticle {
 					mlObject.setpContainer(createMLParticle(aBank, t));
 					mlObject.setEcList(RecCalorimeter.createCalorimeter(aEvent, t));
 					mlObject.setCcList(RecCherenkov.createCherenkov(aEvent, t));
-					if (compareParticletoTBBank(mlObject.getpContainer(), tbHitsList)) {
-						pMap.put(mlObject, pid);
-
+					if (checkNeutral(pid)) {
+						if (mlObject.getEcList().size() > 0) {
+							pMap.put(mlObject, getPID(aBank, t));
+						}
+					} else {
+						if (compareParticletoTBBank(mlObject.getpContainer(), tbHitsList)) {
+							pMap.put(mlObject, getPID(aBank, t));
+						}
 					}
 				}
 
@@ -172,5 +186,12 @@ public class RecParticle {
 		}
 
 		return false;
+	}
+
+	private static boolean checkNeutral(int particleID) {
+		if (PDGDatabase.getParticleById(particleID).charge() == 0) {
+			return true;
+		} else
+			return false;
 	}
 }
