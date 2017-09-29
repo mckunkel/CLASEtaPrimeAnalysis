@@ -88,12 +88,12 @@ public class RunMLObject {
 			}
 			if (aExclusiveMap.size() > 0) {
 				// printMap(aMap, evnt);
-				openSVMWriterExclusive.writeEvent(aMap);
+				openSVMWriterExclusive.writeEvent(aExclusiveMap);
 				openSVMWriterExclusive.writeFlush();
 			}
 			if (aIDCrisisMap.size() > 0) {
 				// printMap(aMap, evnt);
-				openSVMWriterIdentityCrisis.writeEvent(aMap);
+				openSVMWriterIdentityCrisis.writeEvent(aIDCrisisMap);
 				openSVMWriterIdentityCrisis.writeFlush();
 			}
 
@@ -132,7 +132,7 @@ public class RunMLObject {
 		String partName = "out_Electron_Tor-0.75Sol0.8_";
 
 		List<String> aList = new ArrayList<>();
-		for (int i = 1; i <= 100; i++) {
+		for (int i = 1; i <= 10; i++) {
 			aList.add(dirName + partName + i + ".hipo");
 		}
 

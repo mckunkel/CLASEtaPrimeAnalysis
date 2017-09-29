@@ -297,7 +297,7 @@ public class TriggerAnalysis {
 			for (Particle genParticle : tbHitsList) {
 				if (Math.abs(recParticle.px() - genParticle.px()) < 0.01
 						&& Math.abs(recParticle.py() - genParticle.py()) < 0.01
-						&& Math.abs(recParticle.py() - genParticle.py()) < 0.01) {
+						&& Math.abs(recParticle.pz() - genParticle.pz()) < 0.01) {
 					aList.add(recParticle);
 				}
 			}

@@ -155,4 +155,9 @@ public class ParticleContainer {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "ParticleContainer [px=" + px + ", py=" + py + ", pz=" + pz + "]";
+	}
+
 }
