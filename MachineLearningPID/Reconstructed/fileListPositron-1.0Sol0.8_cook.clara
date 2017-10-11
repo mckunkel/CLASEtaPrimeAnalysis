@@ -1,0 +1,18 @@
+set inputDir /volatile/clas12/mkunkel/MachineLearningPID/DecodedFiles/Positron/Torus-1.0Sol0.8
+set outputDir /volatile/clas12/mkunkel/MachineLearningPID/ReconstructedFiles/Positron/Torus-1.0Sol0.8
+
+set farm.disk 5
+set farm.time 1440
+set farm.os centos7
+set farm.track analysis
+set farm.memory 37
+set farm.cpu 32
+set farm.scaling 4
+set threads 32
+set javaMemory 2
+
+set session s_mkunkel_etaprime_9_rec
+set description d_mkunkel_etaprime_9_rec
+set fileList /work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/MachineLearningPID/Reconstructed/fileListPositron-1.0Sol0.8.list
+set servicesFile /work/clas12/mkunkel/myClara4a.8.2/plugins/clas12/config/services.yaml
+run farm
