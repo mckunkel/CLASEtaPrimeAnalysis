@@ -1,0 +1,8 @@
+#This is a config file for the simulation chain
+#Written by: Michael C. Kunkel / m.kunkel@fz-juelich.de
+---
+torusValue:
+    - -1.0
+    - 1.0
+solenoidValue:
+    - 0.8
