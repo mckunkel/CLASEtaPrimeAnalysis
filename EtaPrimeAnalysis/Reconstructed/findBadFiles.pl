@@ -27,7 +27,7 @@ for my $a ( @{ $config->{torusValue} } ) {
 
 		my $torusSol_dir = "Torus" . $a . "Sol" . $b;
 		my $fileOutput_dir =
-		  "$submit_dir/$config->{directories}->[1]/$torusSol_dir";
+		  "$submit_dir/$config->{directories}->[2]/$torusSol_dir";
 
 		#find average file size from all files in $fileOutput_dir
 		while ( $iJob < $nJobs ) {

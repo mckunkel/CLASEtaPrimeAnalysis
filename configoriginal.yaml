@@ -2,7 +2,12 @@
 #Written by: Michael C. Kunkel / m.kunkel@fz-juelich.de
 ---
 torusValue:
+    - -0.75
     - -1.0
     - 1.0
 solenoidValue:
     - 0.8
+fileName:
+    -FullDilepton_Tor   
+claraConfig:
+    -myClara4a.8.3     

@@ -7,6 +7,9 @@
 use strict;
 use warnings;
 use POSIX;
+use YAML::XS 'LoadFile';
+use Data::Dumper;
+my $config = LoadFile('../config.yaml');
 
 my $nJobs = 470;	# total number of jobs
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
