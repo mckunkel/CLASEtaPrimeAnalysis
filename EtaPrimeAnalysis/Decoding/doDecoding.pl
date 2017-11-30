@@ -8,7 +8,7 @@ use strict;
 use warnings;
 use POSIX;
 
-my $nJobs = 469;	# total number of jobs 469
+my $nJobs = 4;	# total number of jobs 469
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
 my $clara_dir = "/work/clas12/mkunkel/myClara4a.8.1";
 my $coatjava_dir = "$clara_dir/plugins/clas12";

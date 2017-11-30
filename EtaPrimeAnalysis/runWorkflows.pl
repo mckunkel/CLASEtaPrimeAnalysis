@@ -17,6 +17,6 @@ for $a ( @{ $config->{torusValue} } ) {
 		my $runworkflow = "swif run " . $workflow;
 		print "$runworkflow \n";
 
-		#system($runworkflow);
+		system($runworkflow);
 	}
 }

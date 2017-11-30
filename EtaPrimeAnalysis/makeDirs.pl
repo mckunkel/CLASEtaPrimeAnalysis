@@ -21,7 +21,7 @@ for my $d ( @{ $config->{directories} } ) {
 
 			my $mkdir = "mkdir $torusSol_dir";
 			print "$mkdir \n";
-			#system($mkdir);
+			system($mkdir);
 		}
 	}
 }
