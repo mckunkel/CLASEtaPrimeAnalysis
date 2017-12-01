@@ -23,7 +23,7 @@ my $claraSERVICE = "$ENV{'COATJAVA'}/config/services.yaml"; #Location of the ser
 
 print "$claraSERVICE\n";
 
-my $nJobs = 4;	# total number of jobs 349
+my $nJobs = 16;	# total number of jobs 349
 my $session = 0;
 #interate through torus
 for $a ( @{ $config->{torusValue} } ) {
@@ -90,7 +90,7 @@ for $a ( @{ $config->{torusValue} } ) {
     close $get_file;
     
     my $runClara = "$ENV{'CLARA_HOME'}/bin/clara-shell $claraCOOK";
-    system("$runClara");
+    #system("$runClara");
     print "$runClara\n";
     $session++;
     #sleep(60);

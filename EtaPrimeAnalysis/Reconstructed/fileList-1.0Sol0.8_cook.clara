@@ -1,11 +1,7 @@
 set inputDir /volatile/clas12/mkunkel/EtaPrimeDilepton/DecodedFiles/Torus-1.0Sol0.8
 set outputDir /volatile/clas12/mkunkel/EtaPrimeDilepton/ReconstructedFiles/Torus-1.0Sol0.8
 
-set farm.disk 5
 set farm.time 1440
-set farm.os centos7
-set farm.track analysis
-set farm.memory 30
 set farm.cpu 32
 set farm.scaling 4
 set threads 32
