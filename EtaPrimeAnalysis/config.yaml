@@ -22,7 +22,7 @@ path:
 projectName:
      EtaPrimeDilepton       
 directories:
-   # - GEMCFiles
+    - GEMCFiles
     - DecodedFiles
     - ReconstructedFiles   
 lundDirectory:

@@ -17,6 +17,6 @@ for $a ( @{ $config->{torusValue} } ) {
 		my $rmworkflow = "swif cancel $workflow -delete";
 		print "$rmworkflow \n";
 
-		#system($rmworkflow);
+		system($rmworkflow);
 	}
 }
