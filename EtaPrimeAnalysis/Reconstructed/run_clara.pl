@@ -90,7 +90,7 @@ for $a ( @{ $config->{torusValue} } ) {
     close $get_file;
     
     my $runClara = "$ENV{'CLARA_HOME'}/bin/clara-shell $claraCOOK";
-    #system("$runClara");
+    system("$runClara");
     print "$runClara\n";
     $session++;
     #sleep(60);
