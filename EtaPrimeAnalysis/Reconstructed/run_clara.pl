@@ -40,7 +40,7 @@ for $a ( @{ $config->{torusValue} } ) {
     #lets make a fileList with values not already reconstructed
     my $iJob = 0;
     while($iJob < $nJobs){
-      my $decodedData = "$config->{fileName}".$a."Sol".$b."_".$iJob.".hipo";
+      my $decodedData = $config->{fileName}."_Tor".$a."Sol".$b."_".$iJob.".hipo";
       my $decoded_out = "$decoded_dir/$decodedData";
       my $reconData = "out_".$config->{fileName}."_Tor".$a."Sol".$b."_".$iJob.".hipo";
       my $recon_out = "$recon_dir/$reconData";
