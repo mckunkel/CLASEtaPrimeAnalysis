@@ -72,7 +72,7 @@ for $a ( @{ $config->{torusValue} } ) {
     print $get_file "set farm.time 1440\n";
     print $get_file "set farm.os centos7\n";
     print $get_file "set farm.track analysis\n";
-    print $get_file "set farm.memory 30\n";
+    print $get_file "set farm.memory 37\n";
     print $get_file "set farm.cpu 32\n";
     print $get_file "set farm.scaling 4\n";
     print $get_file "set threads 32\n";
