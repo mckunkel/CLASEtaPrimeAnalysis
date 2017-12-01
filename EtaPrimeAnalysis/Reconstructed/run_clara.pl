@@ -40,7 +40,7 @@ for $a ( @{ $config->{torusValue} } ) {
     #lets make a fileList with values not already reconstructed
     my $iJob = 0;
     while($iJob < $nJobs){
-      my $decodedData = "EtaPrimeDilepton_Tor".$a."Sol".$b."_".$iJob.".hipo";
+      my $decodedData = "$config->{fileName}".$a."Sol".$b."_".$iJob.".hipo";
       my $decoded_out = "$decoded_dir/$decodedData";
       my $reconData = "out_".$config->{fileName}."_Tor".$a."Sol".$b."_".$iJob.".hipo";
       my $recon_out = "$recon_dir/$reconData";
@@ -90,7 +90,7 @@ for $a ( @{ $config->{torusValue} } ) {
     close $get_file;
     
     my $runClara = "$ENV{'CLARA_HOME'}/bin/clara-shell $claraCOOK";
-    system("$runClara");
+    #system("$runClara");
     print "$runClara\n";
     $session++;
     #sleep(60);
