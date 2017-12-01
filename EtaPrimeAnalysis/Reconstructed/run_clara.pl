@@ -1,49 +1,48 @@
 #!/apps/bin/perl -w
-### setCLARA.csh /work/clas12/mkunkel/myClara4a.8.2
+### setCLARA.csh /work/clas12/mkunkel/myClara4a.8.3
 #Script to run clara with decoded files
 #Written by: Michael C. Kunkel / m.kunkel@fz-juelich.de
 
 use strict;
 use warnings;
+use YAML::XS 'LoadFile';
+use Data::Dumper;
 
+my $config = LoadFile('../config.yaml');
 ####Some environment book keeping
 print "CLARA_HOME is set to be $ENV{'CLARA_HOME'}\n";
 print "COATJAVA is set to be $ENV{'COATJAVA'}\n";
 print "CLAS12DIR is set to be $ENV{'CLAS12DIR'}\n";
 print "\n";
 ############
-my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
-my $clas12Dir = "/work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/Reconstructed";
-my $userName = "mkunkel";
+my $submit_dir    = "$config->{path}/$config->{projectName}";
+my $clas12Dir = $config->{clas12Dir};
+my $userName = $config->{userName};
 
 my $claraSERVICE = "$ENV{'COATJAVA'}/config/services.yaml"; #Location of the service files i.e. the jars
 
 print "$claraSERVICE\n";
 
-my $nJobs = 4;	# total number of jobs 469
-my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
-my @solenoidValue = ("0.6", "0.8");
+my $nJobs = 4;	# total number of jobs 349
 my $session = 0;
 #interate through torus
-for $a (0 .. $#torusValue)
-{
-  #interate through solenoid
-  for $b (0 .. $#solenoidValue){
-    my $torusSol_dir = "Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
+for $a ( @{ $config->{torusValue} } ) {
+	for $b ( @{ $config->{solenoidValue} } ) {
+    my $torusSol_dir = "Torus".$a."Sol".$b;
     my $decoded_dir = "$submit_dir/DecodedFiles/$torusSol_dir"; #Location of your decoded hipo-files
     my $recon_dir = "$submit_dir/ReconstructedFiles/$torusSol_dir";#Location where the reconstructed hipo-file should be written
     
     #lets get the clara list
-    my $claraList = "fileList".$torusValue[$a]."Sol".$solenoidValue[$b];
+    my $claraList = "fileList".$a."Sol".$b;
     
     open my $clara_file, ">$claraList.list" or die "cannot open $claraList.list file:$!";
     
     #lets make a fileList with values not already reconstructed
     my $iJob = 0;
     while($iJob < $nJobs){
-      my $decodedData = "EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".hipo";
+      my $decodedData = "EtaPrimeDilepton_Tor".$a."Sol".$b."_".$iJob.".hipo";
       my $decoded_out = "$decoded_dir/$decodedData";
-      my $reconData = "out_EtaPrimeDilepton_Tor".$torusValue[$a]."Sol".$solenoidValue[$b]."_".$iJob.".hipo";
+      my $reconData = "out_".$config->{fileName}."_Tor".$a."Sol".$b."_".$iJob.".hipo";
       my $recon_out = "$recon_dir/$reconData";
       
       if(-e $decoded_out){

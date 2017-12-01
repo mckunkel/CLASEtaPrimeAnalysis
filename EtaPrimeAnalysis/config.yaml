@@ -1,6 +1,12 @@
 #This is a config file for the simulation chain
 #Written by: Michael C. Kunkel / m.kunkel@fz-juelich.de
 ---
+userName:
+    mkunkel
+topDir: 
+    /work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/EtaPrimeAnalysis
+clas12Dir: 
+    /work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/EtaPrimeAnalysis/Reconstructed
 torusValue:
     - -0.75
     - -1.0
@@ -10,9 +16,7 @@ solenoidValue:
 fileName:
     FullDilepton_Tor   
 claraConfig:
-    /work/clas12/mkunkel/myClara4a.8.3
-setCLARA:
-    /work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis    
+    /work/clas12/mkunkel/myClara4a.8.3    
 gemcConfig:
     4a.2.1 
 gcardLundPrefix:

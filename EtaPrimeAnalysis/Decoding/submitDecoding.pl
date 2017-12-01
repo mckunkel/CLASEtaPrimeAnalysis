@@ -34,7 +34,7 @@ my $clara_dir    = $config->{claraConfig};
 my $coatjava_dir = "$clara_dir/plugins/clas12";
 
 my $command_source = "source setCLARA.csh $clara_dir";
-my $input_0        = "-input setCLARA.csh $config->{setCLARA}/setCLARA.csh";
+my $input_0        = "-input setCLARA.csh $config->{topDir}/setCLARA.csh";
 
 my $command_exit = "exit 0";
 
