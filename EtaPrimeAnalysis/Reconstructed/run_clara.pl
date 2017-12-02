@@ -46,7 +46,7 @@ for $a ( @{ $config->{torusValue} } ) {
 		my $iJob = 0;
 		while ( $iJob < $nJobs ) {
 			my $decodedData =
-			    $config->{fileName} . "_Tor"
+			    $config->{fileName}
 			  . $a . "Sol"
 			  . $b . "_"
 			  . $iJob . ".hipo";
@@ -66,7 +66,6 @@ for $a ( @{ $config->{torusValue} } ) {
 					$iJob++;
 					next;
 				}
-				print "$decodedData\n";
 
 				print $clara_file "$decodedData\n";
 			}
@@ -118,7 +117,7 @@ for $a ( @{ $config->{torusValue} } ) {
 
 		my $runClara = "$ENV{'CLARA_HOME'}/bin/clara-shell $claraCOOK";
 
-		#system("$runClara");
+		system("$runClara");
 		print "$runClara\n";
 		$session++;
 
