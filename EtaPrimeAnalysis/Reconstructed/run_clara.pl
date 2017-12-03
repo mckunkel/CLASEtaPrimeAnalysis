@@ -98,16 +98,16 @@ for $a ( @{ $config->{torusValue} } ) {
 
 		print $get_file "\n";
 
-		print $get_file "set session s_"
+		print $get_file "set session s"
 		  . $userName
-		  . "_etaprime_"
+		  . $config->{projectName}
 		  . $session
-		  . "_rec\n";
-		print $get_file "set description d_"
+		  . "Rec\n";
+		print $get_file "set description d"
 		  . $userName
-		  . "_etaprime_"
+		  . $config->{projectName}
 		  . $session
-		  . "_rec\n";
+		  . "Rec\n";
 		print $get_file "set fileList $clas12Dir/$claraList.list\n";
 		print $get_file "set servicesFile $claraSERVICE\n";
 
