@@ -24,7 +24,7 @@ my $claraSERVICE = "$ENV{'COATJAVA'}/config/services.yaml"
 
 print "$claraSERVICE\n";
 
-my $nJobs   = 32;    # total number of jobs 349
+my $nJobs   = 349;    # total number of jobs 349
 my $session = 0;
 
 #interate through torus
@@ -59,10 +59,10 @@ for $a ( @{ $config->{torusValue} } ) {
 			my $recon_out = "$recon_dir/$reconData";
 
 			if ( -e $decoded_out ) {
-print "$recon_out This is the outfile \n";
+				#print "$recon_out This is the outfile \n";
 				if ( -e $recon_out ) {
 
-			print "YO dumbass, are you overwriting an existing file? Tsk Tsk!";
+					#print "YO dumbass, are you overwriting an existing file? Tsk Tsk!";
 					$iJob++;
 					next;
 				}
@@ -121,6 +121,6 @@ print "$recon_out This is the outfile \n";
 		print "$runClara\n";
 		$session++;
 
-		sleep(60);
+		#sleep(60);
 	}    #end of solenoid loop
 }    #end of torus loops

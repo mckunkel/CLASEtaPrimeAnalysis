@@ -11,4 +11,3 @@ set session s_mkunkel_etaprime_0_rec
 set description d_mkunkel_etaprime_0_rec
 set fileList /work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/EtaPrimeAnalysis/Reconstructed/fileList-0.75Sol0.8.list
 set servicesFile /work/clas12/mkunkel/myClara4a.8.3/plugins/clas12/config/services.yaml
-run farm
