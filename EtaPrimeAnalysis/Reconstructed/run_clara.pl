@@ -31,9 +31,9 @@ my $session = 0;
 for $a ( @{ $config->{torusValue} } ) {
 	for $b ( @{ $config->{solenoidValue} } ) {
 		my $torusSol_dir = "Torus" . $a . "Sol" . $b;
-		my $decoded_dir  = "$submit_dir/DecodedFiles/$torusSol_dir"
+		my $decoded_dir  = "$submit_dir/$config->{directories}->[1]/$torusSol_dir"
 		  ;          #Location of your decoded hipo-files
-		my $recon_dir = "$submit_dir/ReconstructedFiles/$torusSol_dir"
+		my $recon_dir = "$submit_dir/$config->{directories}->[2]/$torusSol_dir"
 		  ;    #Location where the reconstructed hipo-file should be written
 
 		#lets get the clara list

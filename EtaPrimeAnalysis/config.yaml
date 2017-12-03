@@ -28,7 +28,7 @@ projectName:
 directories:
     - GEMCFiles
     - DecodedFiles
-    - ReconstructedFiles   
+    - TempReconstructedFiles   
 lundDirectory:
     LundFiles  
 lundPrefix:
