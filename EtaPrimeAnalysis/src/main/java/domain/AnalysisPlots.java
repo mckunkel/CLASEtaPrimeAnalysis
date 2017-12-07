@@ -48,13 +48,13 @@ public class AnalysisPlots {
 	}
 
 	private void plotHistograms() {
-		// plotGen();
+		plotGen();
 		// plotRec();
 		// acceptance();
 		// plotQ();
 		// plotW();
 		// plotWandQ();
-		plotP();
+		// plotP();
 	}
 
 	private void plotP() {

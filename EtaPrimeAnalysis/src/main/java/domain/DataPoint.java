@@ -82,6 +82,11 @@ public class DataPoint implements Iterable<Double> {
 		return doubleList.iterator();
 	}
 
+	@Override
+	public String toString() {
+		return "DataPoint [size=" + Arrays.toString(size) + "]";
+	}
+
 	public static void main(String[] args) {
 		DataPoint d8 = new DataPoint(10.2, 11.2);
 
@@ -92,6 +97,22 @@ public class DataPoint implements Iterable<Double> {
 		for (Double double1 : d8) {
 			System.out.println(double1);
 		}
+		DataPoint dPoint = new DataPoint();
+
+		DataPoint[] dataPoints = new DataPoint[10];
+		for (int i = 0; i < dataPoints.length; i++) {
+			dPoint.toString();
+			dPoint = dPoint.addDataPoint(new DataPoint((double) i));
+			dPoint.toString();
+
+			// dataPoints[i].toString();
+		}
+		dPoint.toString();
+
+		for (Double dataPoint : dPoint) {
+			System.out.println(dataPoint);
+		}
+
 	}
 
 }

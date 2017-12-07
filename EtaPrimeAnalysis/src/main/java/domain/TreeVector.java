@@ -53,6 +53,10 @@ public class TreeVector extends Tree implements TreeProvider {
 		}
 	}
 
+	public void addToTree(List<DataVector> aList) {
+		dataVectors.addAll(aList);
+	}
+
 	private String[] generateBranchNames(int count) {
 		byte currentH = 'a';
 		byte currentL = 'a';

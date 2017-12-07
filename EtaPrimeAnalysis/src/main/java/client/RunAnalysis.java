@@ -12,6 +12,8 @@
 */
 package client;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,18 +33,21 @@ public class RunAnalysis {
 		mainService.calP();
 
 		// mainService.addToIMissingMassList("p", "e-", "e+");
-		mainService.addToIMissingMassList("p", "e+");
+		// mainService.addToIMissingMassList("p", "e+");
 
 		mainService.addToInvariantList("e-", "e+");
+		mainService.addToInvariantList("e-", "e+", "gamma");
 
-		mainService.addCut(0.96637, 0.03, 2.5, "Mx", "p", "e-");
-		mainService.addCut(0.96637, 1, "M", "e+", "e-");
+		// mainService.addCut(0.96637, 0.03, 2.5, "Mx", "p", "e-");
+		// mainService.addCut(0.96637, 1, "M", "e+", "e-");
 
 		List<String> reactionList = new ArrayList<>();
 		reactionList.add("p");
-		reactionList.add("e-");
+		// reactionList.add("e-");
 		reactionList.add("e+");
 		reactionList.add("e-");
+		reactionList.add("gamma");
+
 		String[] reactionArray = reactionList.toArray(new String[0]);
 		mainService.setReaction(reactionArray);
 
@@ -51,17 +56,34 @@ public class RunAnalysis {
 
 		// String dirName =
 		// "/Volumes/Mac_Storage/Work_Data/CLAS12/EtaPrimeDilepton/";
-		String dirName = "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
+		// String dirName =
+		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CLAS12Data/EtaPrimeDilepton/";
+		String dirName = "/Volumes/DATA/CLAS12/EtaPrimeAnalysis/Torus-0.75Sol0.8/";
 
-		String part1Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_100.hipo";
-		String part2Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_101.hipo";
-		String part3Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_102.hipo";
-		String part4Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_103.hipo";
-		String part5Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_104.hipo";
-		String part6Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_105.hipo";
-		String part7Name = "out_EtaPrimeDilepton_Tor-0.75Sol0.6_106.hipo";
+		String baseName = "out_FullDilepton_Tor-0.75Sol0.8";
+		String part1Name = baseName + "_100.hipo";
+		String part2Name = baseName + "_101.hipo";
+		String part3Name = baseName + "_102.hipo";
+		String part4Name = baseName + "_103.hipo";
+		String part5Name = baseName + "_104.hipo";
+		String part6Name = baseName + "_105.hipo";
+		String part7Name = baseName + "_106.hipo";
 
 		List<String> aList = new ArrayList<>();
+		File[] listOfFiles = new File("/Volumes/DATA/CLAS12/EtaPrimeAnalysis/Torus-0.75Sol0.8")
+				.listFiles(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.endsWith(".hipo");
+					}
+				});
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				System.out.println("File " + listOfFiles[i].getName());
+				// aList.add(dirName + listOfFiles[i].getName());
+			}
+		}
+
 		aList.add(dirName + part1Name);
 		aList.add(dirName + part2Name);
 		aList.add(dirName + part3Name);
@@ -70,8 +92,6 @@ public class RunAnalysis {
 		aList.add(dirName + part6Name);
 		aList.add(dirName + part7Name);
 
-		// aList.add(
-		// "/Users/michaelkunkel/WORK/CLAS/CLAS12/CODES/SIMUALTION/EtaPrimeDilepton/ReconstructedFiles/out_EtaPrimeDilepton_Tor-0.75Sol0.8_51.hipo");
 		String[] array = aList.toArray(new String[0]);
 		mainService.runService(array);
 		// mainService.runService(args);

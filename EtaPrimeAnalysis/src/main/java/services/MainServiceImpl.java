@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import domain.Analysis;
-import domain.AnalysisPlots;
-import domain.AnalysisPlotsForDaniel;
 import domain.Coordinate;
 import domain.Cuts;
 import domain.DataPoint;
@@ -309,12 +307,18 @@ public class MainServiceImpl implements MainService {
 		for (String str : treeVector.getListOfBranches()) {
 			System.out.println(str + " is a branch that is made");
 		}
+		// AnalysisPlotsWithGamma analysisPlots = new AnalysisPlotsWithGamma();
+		// AnalysisPlotsEpEmGam analysisPlots = new AnalysisPlotsEpEmGam();
+
 		Analysis analysis = new Analysis(array);
 		analysis.run();
-		AnalysisPlotsForDaniel analysisPlotsD = new AnalysisPlotsForDaniel();
-		// analysisPlotsD.run();
-		AnalysisPlots analysisPlots = new AnalysisPlots();
-		analysisPlots.run();
+
+		DataToJSON dataToJSON = new DataToJSON();
+		dataToJSON.init();
+		// AnalysisPlots analysisPlots = new AnalysisPlots();
+		// analysisPlots.run();
+
+		System.exit(1);
 	}
 
 }

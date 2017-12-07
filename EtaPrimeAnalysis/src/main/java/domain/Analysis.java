@@ -13,6 +13,7 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jlab.clas.pdg.PDGDatabase;
@@ -114,14 +115,28 @@ public class Analysis {
 				aList.add(getParticle(aBank, t));
 			}
 		}
+
 		if (bankName.equals("REC::Particle") && aEvent.hasBank(bankName) && aEvent.hasBank("FT::particles")) {
 			DataBank ftBank = aEvent.getBank("FT::particles");
 			int Nrows = ftBank.rows();
 			for (int t = 0; t < Nrows; t++) {
-				aList.add(getFTParticle(ftBank, t));
+				Particle particle = getFTParticle(ftBank, t);
+				compareWithRec(particle, aList);
 			}
 		}
+
 		return aList;
+	}
+
+	private void compareWithRec(Particle particle, List<Particle> aList) {
+		Iterator<Particle> itr = aList.iterator();
+
+		while (itr.hasNext()) {
+			Particle part = itr.next();
+			if (Math.abs(part.pz() - particle.pz()) < 0.01 && part.pid() == particle.pid()) {
+				itr.remove();
+			}
+		}
 	}
 
 	private int getpid(DataBank aBank, int evntIndex) {

@@ -144,6 +144,7 @@ public class MakePlots {
 			for (List<Particle> ic : aList) {
 				tempList = MultArray(tempList, ic);
 			}
+			System.out.println(tempList.size());
 			if (tempList.size() > 1) {
 				for (int i = 0; i < tempList.size(); i++) {
 					String branchName = "";
@@ -303,7 +304,7 @@ public class MakePlots {
 			for (List<Particle> ic : aList) {
 				tempList = MultArray(tempList, ic);
 			}
-			if (tempList.size() > 1) {
+			if (tempList.size() > 0) {
 				for (int i = 0; i < tempList.size(); i++) {
 					String branchName = "";
 
@@ -345,7 +346,7 @@ public class MakePlots {
 			for (List<Particle> ic : aList) {
 				tempList = MultArray(tempList, ic);
 			}
-			if (tempList.size() > 1) {
+			if (tempList.size() > 0) {
 				for (int i = 0; i < tempList.size(); i++) {
 					String branchName = "";
 
