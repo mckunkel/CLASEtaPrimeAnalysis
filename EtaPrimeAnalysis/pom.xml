@@ -13,6 +13,7 @@
 			<url>file:////Users/michaelkunkel/.m2/repository</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
@@ -64,7 +65,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<executions>
+				<!-- <executions>
 					<execution>
 						<id>build-a</id>
 						<phase>package</phase>
@@ -101,7 +102,7 @@
 							<finalName>CountHipoEvents.jar</finalName>
 						</configuration>
 					</execution>
-				</executions>
+				</executions> -->
 			</plugin>
 
 		</plugins>
