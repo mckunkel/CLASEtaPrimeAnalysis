@@ -19,12 +19,12 @@ my $submit_dir = "$config->{path}/$config->{projectName}";
 my $clas12Dir  = $config->{clas12Dir};
 my $userName   = $config->{userName};
 
-my $claraSERVICE = "$ENV{'COATJAVA'}/config/services.yaml"
-  ;    #Location of the service files i.e. the jars
+my $claraSERVICE = "$ENV{'COATJAVA'}/config/services.yaml";    #Location of the service files i.e. the jars
 
 print "$claraSERVICE\n";
 
-my $nJobs   = 349;    # total number of jobs 349
+my $nJobs   = $config->{NinitialJobs};      # total number of jobs
+my $NEvents = $config->{NeventsPerJob};    #
 my $session = 0;
 
 #interate through torus
