@@ -8,8 +8,8 @@ topDir:
 clas12Dir: 
     /work/clas12/mkunkel/EtaPrimeDilepton/CLASEtaPrimeAnalysis/EtaPrimeAnalysis/Reconstructed
 torusValue:
-    - -0.75
-    - -1.0
+#    - -0.75
+#    - -1.0
     - 1.0
 NinitialJobs:
     20  
