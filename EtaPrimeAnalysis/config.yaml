@@ -12,9 +12,9 @@ torusValue:
     - -1.0
     - 1.0
 NinitialJobs:
-    - 20  
+    20  
 NeventsPerJob:
-    - 10000     
+    10000     
 solenoidValue:
     - 0.8
 fileName:
