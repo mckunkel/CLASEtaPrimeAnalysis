@@ -7,12 +7,12 @@
 
 	<!-- <repositories> <repository> <id>clas12maven</id> <url>https://clasweb.jlab.org/clas12maven</url> 
 		</repository> </repositories> -->
-	<repositories>
-		<repository>
-			<id>local-maven-repo</id>
-			<url>file:////Users/michaelkunkel/.m2/repository</url>
-		</repository>
-	</repositories>
+<!--  <repositories>-->
+<!--    <repository>-->
+<!--      <id>local-maven-repo</id>-->
+<!--      <url>file:////Users/michaelkunkel/.m2/repository</url>-->
+<!--    </repository>-->
+<!--  </repositories>-->
 	<properties>
 		<spark.version>2.2.1</spark.version>
 	</properties>
