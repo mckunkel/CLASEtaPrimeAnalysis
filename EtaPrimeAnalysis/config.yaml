@@ -11,14 +11,18 @@ torusValue:
     - -0.75
     - -1.0
     - 1.0
+NinitialJobs:
+    - 20  
+NeventsPerJob:
+    - 10000     
 solenoidValue:
     - 0.8
 fileName:
     FullDilepton_Tor   
 claraConfig:
-    /work/clas12/mkunkel/myClara4a.8.3    
+    /work/clas12/mkunkel/myClara5a.0.7    
 gemcConfig:
-    4a.2.1 
+    4a.2.2 
 gcardLundPrefix:
     fullEtaPrimeDilepton     
 path:

@@ -11,8 +11,8 @@ use Data::Dumper;
 
 my $config = LoadFile('../config.yaml');
 
-my $nJobs   = 349;      # total number of jobs
-my $NEvents = 10000;    #
+my $nJobs   = $config->{NinitialJobs};      # total number of jobs
+my $NEvents = $config->{NeventsPerJob};    #
 
 #workflow settings
 my $project   = "-project clas12";
