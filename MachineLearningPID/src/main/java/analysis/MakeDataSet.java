@@ -39,11 +39,11 @@ public class MakeDataSet {
 	public static void main(String[] args) throws IOException {
 
 		// First step: Read in the file you want to look at:
-		// String dir = "/Volumes/FutureBoots/data/EtaPData/Torus1.0Sol0.8/";
+		String dir = "/Volumes/FutureBoots/data/EtaPData/Torus1.0Sol0.8/";
 		double limit = 0.065; // this is the mass spread limit for ML selection
 								// of possible particles
 
-		String dir = "/Volumes/DATA/CLAS12/EtaPrimeAnalysis/Torus1.0Sol0.8/";
+		// String dir = "/Volumes/DATA/CLAS12/EtaPrimeAnalysis/Torus1.0Sol0.8/";
 		List<String> aList = new ArrayList<>();
 		File[] listOfFiles = new File(dir).listFiles(new FilenameFilter() {
 			@Override
@@ -88,6 +88,8 @@ public class MakeDataSet {
 		H1F epP = new H1F("epP", 100, -0.2, 0.2);
 
 		H1F gammaP = new H1F("gammaP", 100, -0.2, 0.2);
+
+		H1F nGamma = new H1F("NGamma", 20, 0, 10);
 
 		String bnkName = "REC::Particle";
 		// String bnkName = "MC::Particle";
@@ -153,6 +155,9 @@ public class MakeDataSet {
 							gammaStack.push(AnalysisMethods.getParticle(RecBank, h));
 						}
 					}
+					// if (!gammaStack.isEmpty()) {
+					nGamma.fill(gammaStack.size());
+					// }
 					// =====================================================
 					if (epStack.size() > 0 && emStack.size() > 0 && protonStack.size() > 0 && gammaStack.size() > 0) {
 						// if (epStack.size() == 1 && emStack.size() == 2 &&
@@ -301,6 +306,9 @@ public class MakeDataSet {
 		c6.draw(gammaP);
 		c6.cd(1);
 		c6.draw(epP);
+
+		TCanvas gamma = new TCanvas("gamma", 500, 500);
+		gamma.draw(nGamma);
 
 	}
 }

@@ -10,9 +10,9 @@ clas12Dir:
 torusValue:
 #    - -0.75
 #    - -1.0
-    - 1.0
+    - 1.0 
 NinitialJobs:
-    20  
+    300  
 NeventsPerJob:
     10000     
 solenoidValue:

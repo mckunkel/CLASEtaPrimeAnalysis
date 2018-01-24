@@ -1,0 +1,13 @@
+domain/svmWriter/OpenCloseSVMWriter.class
+analysis/DataContainer.class
+domain/MLObjects/MLObject.class
+analysis/AnalysisWithStacks.class
+analysis/MakeDataSet$1.class
+domain/MLObjects/CalorimeterContainer.class
+domain/MLObjects/CherenkovContainer.class
+analysis/DataContainer$1.class
+analysis/Container.class
+domain/MLObjects/ParticleContainer.class
+analysis/EventList.class
+analysis/MakeDataSet.class
+domain/svmWriter/OpenCloseSVMWriterImpl.class
