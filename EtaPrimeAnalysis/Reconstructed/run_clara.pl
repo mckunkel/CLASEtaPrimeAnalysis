@@ -117,7 +117,7 @@ for $a ( @{ $config->{torusValue} } ) {
 
 		my $runClara = "$ENV{'CLARA_HOME'}/bin/clara-shell $claraCOOK";
 
-		#system("$runClara");
+		system("$runClara");
 		print "$runClara\n";
 		$session++;
 
