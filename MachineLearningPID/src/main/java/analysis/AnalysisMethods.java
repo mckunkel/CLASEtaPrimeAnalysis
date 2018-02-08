@@ -13,7 +13,9 @@
 package analysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jlab.clas.pdg.PDGDatabase;
 import org.jlab.clas.physics.LorentzVector;
@@ -77,7 +79,7 @@ public class AnalysisMethods {
 		return sum;
 	}
 
-	private static List<Particle> mcList(DataBank aBank) {
+	public static List<Particle> mcList(DataBank aBank) {
 		List<Particle> aList = new ArrayList<>();
 		int epCount = 0;
 		int emCount = 0;
@@ -96,11 +98,93 @@ public class AnalysisMethods {
 				gammaCount++;
 			}
 		}
-		if (emCount == 2 && epCount == 1 && gammaCount == 1) {
+		if (emCount == 2 && epCount == 1) {// && gammaCount == 1
 			aList.remove(aList.size() - 1);
 			return aList;
 		}
 		return new ArrayList<>();
+	}
+
+	public static List<Particle> mcListAll(DataBank aBank) {
+		List<Particle> aList = new ArrayList<>();
+		int epCount = 0;
+		int emCount = 0;
+		int gammaCount = 0;
+		for (int h = 0; h < aBank.rows(); h++) {
+			if (aBank.getInt("pid", h) == 11) {
+				aList.add(AnalysisMethods.getParticle(aBank, h));
+				emCount++;
+			}
+			if (aBank.getInt("pid", h) == -11) {
+				aList.add(AnalysisMethods.getParticle(aBank, h));
+				epCount++;
+			}
+			if (aBank.getInt("pid", h) == 22) {
+				aList.add(AnalysisMethods.getParticle(aBank, h));
+				gammaCount++;
+			}
+		}
+		if (emCount == 2 && epCount == 1 && aList.get(aList.size() - 1).pid() == 11) {
+			return aList;
+		}
+		return new ArrayList<>();
+	}
+
+	public static Map<String, List<Particle>> getMCMap(DataBank aBank) {
+
+		List<Particle> mcList = mcListAll(aBank);
+
+		List<Particle> dalitzElectronList = new ArrayList<>();
+		List<Particle> scatteredElectronList = new ArrayList<>();
+		List<Particle> dalitzPositronList = new ArrayList<>();
+		List<Particle> gammaList = new ArrayList<>();
+
+		scatteredElectronList.add(mcList.get(mcList.size() - 1));
+		for (int i = 0; i < mcList.size() - 1; i++) {
+			if (mcList.get(i).pid() == 11) {
+				dalitzElectronList.add(mcList.get(i));
+			} else if (mcList.get(i).pid() == -11) {
+				dalitzPositronList.add(mcList.get(i));
+			} else if (mcList.get(i).pid() == 22) {
+				gammaList.add(mcList.get(i));
+			}
+		}
+
+		Map<String, List<Particle>> aMap = new HashMap<>();
+		aMap.put("Scattered", scatteredElectronList);
+		aMap.put("DalitzEm", dalitzElectronList);
+		aMap.put("DalitzEp", dalitzPositronList);
+		aMap.put("Gamma", gammaList);
+
+		return aMap;
+
+	}
+
+	public static String mcPID(DataBank aBank) {
+		double pidMass = mclistmass(aBank);
+		String retString = "";
+		if (Math.abs(pidMass - 0.1349) < 0.01) {
+			retString = "pi0";
+		} else if (Math.abs(pidMass - 0.547) < 0.01) {
+			retString = "eta";
+
+		} else if (Math.abs(pidMass - 0.775) < 0.15) {
+			retString = "omega";
+
+		} else if (Math.abs(pidMass - 0.957) < 0.01) {
+			retString = "etaP";
+
+		} else {
+			retString = "unknown";
+			// System.out.println(pidMass + " ++++ unknown mass...list size" +
+			// mcList(aBank).size());
+			// for (Particle p : mcList(aBank)) {
+			// System.out.println(p.mass() + " " + p.pid());
+			// }
+		}
+
+		return retString;
+
 	}
 
 	public static boolean matchTrack(DataBank aBank, Particle p) {
@@ -128,25 +212,36 @@ public class AnalysisMethods {
 	}
 
 	public static double mclistmass(DataBank aBank) {
-		Particle particle = new Particle(22, 0, 0, 0);
-		for (Particle p : mcList(aBank)) {
-			particle.combine(p, +1);
+		List<Particle> aList = mcList(aBank);
+
+		Particle particle = aList.get(0);
+		for (int i = 1; i < aList.size(); i++) {
+			particle.combine(aList.get(i), +1);
 		}
+		// Particle particle = new Particle(22, 0, 0, 0);
+		// for (Particle p : mcList(aBank)) {
+		// particle.combine(p, +1);
+		// }
 		return particle.mass();
 	}
 
 	public static String getPName(double mass, int signal, double limit) {
 		if (signal == 1) {
-			if (Math.abs(mass - 0.1349) < limit) {
+			if (Math.abs(mass - 0.1349) < 0.01) {
 				return "pi0";
-			} else if (Math.abs(mass - 0.547) < limit) {
+			} else if (Math.abs(mass - 0.547) < 0.018) {
 				return "eta";
 
-			} else if (Math.abs(mass - 0.957) < limit) {
+			} else if (Math.abs(mass - 0.957) < 0.01) {
 				return "etaPrime";
 
-			} else {
-				return "Unknown";
+			}
+			// else if (Math.abs(mass - 0.782) < 0.150) {
+			// return "rho/omega";
+			//
+			// }
+			else {
+				return "Background";
 			}
 		}
 		return "Background";

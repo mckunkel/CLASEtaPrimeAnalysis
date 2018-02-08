@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.mkunkel</groupId>
+	<artifactId>testJavaR</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<repositories>
+		<repository>
+			<id>bedatadriven</id>
+			<name>bedatadriven public repo</name>
+			<url>https://nexus.bedatadriven.com/content/groups/public/</url>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>org.renjin</groupId>
+			<artifactId>renjin-script-engine</artifactId>
+			<version>0.8.2527</version>
+		</dependency>
+		<dependency>
+			<groupId>org.renjin.cran</groupId>
+			<artifactId>dplyr</artifactId>
+			<version>0.7.4-b73</version>
+		</dependency>
+		<dependency>
+			<groupId>org.renjin.cran</groupId>
+			<artifactId>ggplot2</artifactId>
+			<version>2.2.1-b102</version>
+		</dependency>
+		<dependency>
+			<groupId>org.renjin.cran</groupId>
+			<artifactId>ggthemes</artifactId>
+			<version>3.4.0-b15</version>
+		</dependency>
+		<dependency>
+			<groupId>org.renjin.cran</groupId>
+			<artifactId>corrplot</artifactId>
+			<version>0.84-b5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.renjin.cran</groupId>
+			<artifactId>broom</artifactId>
+			<version>0.4.3-b20</version>
+		</dependency>
+		<dependency>
+			<groupId>org.renjin.cran</groupId>
+			<artifactId>ROCR</artifactId>
+			<version>1.0-7-b386</version>
+		</dependency>
+		<dependency>
+			<groupId>org.renjin.cran</groupId>
+			<artifactId>tidyr</artifactId>
+			<version>0.7.2-b58</version>
+		</dependency>
+	</dependencies>
+</project>
