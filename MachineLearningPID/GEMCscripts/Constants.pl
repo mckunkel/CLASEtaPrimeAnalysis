@@ -10,13 +10,13 @@ use Data::Dumper;
 
 my $config = LoadFile('config.yaml');
 
-my $workFlowID = $config->{projectName};
 for $a ( @{ $config->{torusValue} } ) {
 	for $b ( @{ $config->{solenoidValue} } ) {
-		my $workflow = $workFlowID . "_tor" . $a . "sol" . $b;
-		my $rmworkflow = "swif cancel $workflow -delete";
-		print "$rmworkflow \n";
+		my $runworkflow = "swif run full_sim_tor" . $a . "sol"
+		  . $b;
 
-		system($rmworkflow);
+		print "$runworkflow \n";
+		#system($runworkflow);
 	}
 }
+

@@ -14,9 +14,9 @@ my $workFlowID = $config->{projectName};
 for $a ( @{ $config->{torusValue} } ) {
 	for $b ( @{ $config->{solenoidValue} } ) {
 		my $workflow = $workFlowID . "_tor" . $a . "sol" . $b;
-		my $rmworkflow = "swif cancel $workflow -delete";
-		print "$rmworkflow \n";
+		my $runworkflow = "swif run " . $workflow;
+		print "$runworkflow \n";
 
-		system($rmworkflow);
+		system($runworkflow);
 	}
 }

@@ -27,7 +27,7 @@ for my $a ( @{ $config->{torusValue} } ) {
 
 		my $torusSol_dir = "Torus" . $a . "Sol" . $b;
 		my $fileOutput_dir =
-		  "$submit_dir/$config->{directories}->[1]/$torusSol_dir";
+		  "$submit_dir/$config->{directories}->[0]/$torusSol_dir";
 
 		#find average file size from all files in $fileOutput_dir
 		while ( $iJob < $nJobs ) {
@@ -35,7 +35,7 @@ for my $a ( @{ $config->{torusValue} } ) {
 			    "$fileOutput_dir/$fileName"
 			  . $a . "Sol"
 			  . $b . "_"
-			  . $iJob . ".hipo";
+			  . $iJob . ".ev";
 			if ( -e $file_out ) {
 				$doneJobs++;
 				my $filesize = -s $file_out;
@@ -56,16 +56,16 @@ for my $a ( @{ $config->{torusValue} } ) {
 			  . $a . "Sol"
 			  . $b
 			  . "_"
-			  . $iJob . ".hipo";
+			  . $iJob . ".ev";
 			if ( -e $file_out ) {
 				my $filesize = -s $file_out;
 				$filesize = ceil( $filesize / ( 1024 * 1024 ) );
-				if ( $filesize < 0.975 * $average ) {
+				if ( $filesize < 0.985 * $average ) {
 					print "$file_out is to be deleted  \n";
 					print "$filesize is fileSize and Average is  $average \n";
 					my $rmFile = "rm $file_out";
 					$deletedFile++;
-					#$system($rmFile);
+					system($rmFile);
 				}
 			}
 			$iJob++;
