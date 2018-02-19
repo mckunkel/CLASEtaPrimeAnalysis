@@ -12,17 +12,11 @@
 */
 package analysis;
 
-import java.util.List;
-
 public class App {
 	public static void main(String[] args) {
 		String bankName = "REC::Particle";
 
 		String dir = "/Volumes/DATA/CLAS12/EtaPrimeAnalysis/Torus1.0Sol0.8/";
-		TestData testData = new TestData(dir, bankName, 5);
-		List<Container> aList = testData.getaList();
-
-		System.out.println(aList.size());
 
 	}
 }

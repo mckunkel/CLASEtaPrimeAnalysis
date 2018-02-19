@@ -39,11 +39,11 @@ public class MakeDataSet {
 	public static void main(String[] args) throws IOException {
 
 		// First step: Read in the file you want to look at:
-		String dir = "/Volumes/FutureBoots/data/EtaPData/Torus1.0Sol0.8/";
+		// String dir = "/Volumes/FutureBoots/data/EtaPData/Torus1.0Sol0.8/";
 		double limit = 0.065; // this is the mass spread limit for ML selection
 								// of possible particles
 
-		// String dir = "/Volumes/DATA/CLAS12/EtaPrimeAnalysis/Torus1.0Sol0.8/";
+		String dir = "/Volumes/DATA/CLAS12/EtaPrimeAnalysis/Torus1.0Sol0.8/";
 		List<String> aList = new ArrayList<>();
 		File[] listOfFiles = new File(dir).listFiles(new FilenameFilter() {
 			@Override
@@ -51,18 +51,21 @@ public class MakeDataSet {
 				return name.endsWith(".hipo");
 			}
 		});
-		for (int i = 0; i < listOfFiles.length; i++) {// listOfFiles.length
+		for (int i = 0; i < 50; i++) {// listOfFiles.length
 			if (listOfFiles[i].isFile()) {
 				// System.out.println("File " + listOfFiles[i].getName());
 				aList.add(dir + listOfFiles[i].getName());
 			}
 		}
-
-		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_0.hipo");
-		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_1.hipo");
-		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_2.hipo");
-		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_3.hipo");
-		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_4.hipo");
+		//
+		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_60.hipo");
+		//
+		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_61.hipo");
+		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_62.hipo");
+		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_63.hipo");
+		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_65.hipo");
+		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_66.hipo");
+		// aList.add(dir + "out_FullDilepton_Tor1.0Sol0.8_67.hipo");
 
 		HipoDataSource reader = new HipoDataSource();
 
@@ -91,11 +94,12 @@ public class MakeDataSet {
 
 		H1F nGamma = new H1F("NGamma", 20, 0, 10);
 
+		H1F mvm = new H1F("MVM", 100, -4.1, 1.1);
 		String bnkName = "REC::Particle";
 		// String bnkName = "MC::Particle";
 		boolean onceRan = true;
 		for (String string : aList) {
-
+			System.out.println(string);
 			String SAMPLE_CSV_FILE = "MLsample.csv";
 			CSVPrinter csvPrinter = null;
 			BufferedWriter writer = null;
@@ -104,7 +108,7 @@ public class MakeDataSet {
 						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 				if (onceRan) {
 					csvPrinter = new CSVPrinter(writer,
-							CSVFormat.DEFAULT.withHeader("ID", "PID", "EpEmAngle", "EmEpGamAngle",
+							CSVFormat.DEFAULT.withHeader("ID", "PID", "MCPID", "MCMASS", "EpEmAngle", "EmEpGamAngle",
 									"InvariantMassEpEmGam", "InvariantMassEpEm", "EmPx", "EmPy", "EmPz", "EmTheta",
 									"EmPhi"));
 					onceRan = false;
@@ -125,9 +129,18 @@ public class MakeDataSet {
 				// Each hipo-file has some banks with information
 				// here is one example how to access one:
 				// =====================================================
-				if (event.hasBank(bnkName) && event.hasBank("MC::Particle")) {
+				if (event.hasBank(bnkName) && event.hasBank("MC::Particle")
+						&& !AnalysisMethods.mcList(event.getBank("MC::Particle")).isEmpty()) {
 					DataBank mCBank = event.getBank("MC::Particle");
 
+					if (AnalysisMethods.mcList(mCBank).isEmpty()) {
+						System.out.println("########## ");
+						for (int h = 0; h < mCBank.rows(); h++) {
+							System.out.println(AnalysisMethods.getParticle(mCBank, h).pid() + "  "
+									+ AnalysisMethods.getParticle(mCBank, h).px() + "  " + event.getBank("MC::Particle")
+									+ "  ZERO????   " + event.getBank("MC::Header").getInt("event", 0));
+						}
+					}
 					// Get the bank itself, when existing:
 					RecBank = event.getBank(bnkName);
 					// I am interested first in pe+e-gamma
@@ -159,7 +172,10 @@ public class MakeDataSet {
 					nGamma.fill(gammaStack.size());
 					// }
 					// =====================================================
-					if (epStack.size() > 0 && emStack.size() > 0 && protonStack.size() > 0 && gammaStack.size() > 0) {
+					if (epStack.size() == 1 && emStack.size() > 0 && gammaStack.size() == 1) {// &&
+																								// protonStack.size()
+																								// >
+																								// 0
 						// if (epStack.size() == 1 && emStack.size() == 2 &&
 						// protonStack.size() == 1
 						// && gammaStack.size() == 1) {
@@ -182,12 +198,27 @@ public class MakeDataSet {
 
 								for (Particle gamma : gammaStack) {
 									int signal = 0;
+									String pName = "unknown";
 									Particle p = new Particle();
 									p.copy(em);
 									p.combine(ep, +1);
 									p.combine(gamma, +1);
 									mEpEmGam.fill(p.mass());
+									// if
+									// ((AnalysisMethods.mcPID(mCBank).equals("omega")))
+									// {
+									// System.out.println(AnalysisMethods.mcPID(mCBank)
+									// + " " + i + " "
+									// +
+									// event.getBank("MC::Header").getInt("event",
+									// 0));
+									//
+									// }
+									if (AnalysisMethods.matchTrack(mCBank, em)
+											&& AnalysisMethods.matchTrack(mCBank, ep)) {
+										mvm.fill((AnalysisMethods.mclistmass(mCBank) - p.mass()));
 
+									}
 									if (Math.abs(AnalysisMethods.mclistmass(mCBank) - p.mass()) < limit) {
 										epphi.fill(ep.phi() - AnalysisMethods.matchedMCParticle(mCBank, ep).phi());
 										eptheta.fill(
@@ -203,13 +234,29 @@ public class MakeDataSet {
 										// System.out.println(
 										// AnalysisMethods.mclistmass(mCBank) +
 										// " " + p.mass() + " " + i);
-										if (AnalysisMethods.matchTrack(mCBank, em)
-												&& AnalysisMethods.matchTrack(mCBank, ep)
-												&& AnalysisMethods.matchTrack(mCBank, gamma)) {
-											signal = 1;
-											// System.out.println("MC matched at
-											// event " + i);
-										}
+										signal = 1;
+										pName = AnalysisMethods.mcPID(mCBank);
+
+										//
+										// System.out.println(
+										// "MC matched at event " + i + " " +
+										// AnalysisMethods.mcPID(mCBank));
+										//
+
+										// if
+										// (AnalysisMethods.matchTrack(mCBank,
+										// em)
+										// && AnalysisMethods.matchTrack(mCBank,
+										// ep)) {// &&
+										// // AnalysisMethods.matchTrack(mCBank,
+										// // gamma)
+										// signal = 1;
+										// pName =
+										// AnalysisMethods.mcPID(mCBank);
+										// System.out.println(
+										// "MC matched at event " + i + " " +
+										// AnalysisMethods.mcPID(mCBank));
+										// }
 									}
 
 									// put e+e- in frame of e+e-gamma and check
@@ -246,10 +293,10 @@ public class MakeDataSet {
 									// "EmPz", "EmTheta", "EmPhi"
 									try {
 										csvPrinter.printRecord(signal,
-												AnalysisMethods.getPName(p.mass(), signal, limit),
-												emInFrame.cosTheta(epInFrame), xParticle.cosTheta(gamma.inFrame(p)),
-												xParticle.mass(), p.mass(), em.px(), em.py(), em.pz(), em.theta(),
-												em.phi());
+												AnalysisMethods.getPName(p.mass(), signal, limit), pName,
+												AnalysisMethods.mclistmass(mCBank), emInFrame.cosTheta(epInFrame),
+												xParticle.cosTheta(gamma.inFrame(p)), xParticle.mass(), p.mass(),
+												em.px(), em.py(), em.pz(), em.theta(), em.phi());
 									} catch (Exception e) {
 										// TODO: handle exception
 									}
@@ -307,8 +354,8 @@ public class MakeDataSet {
 		c6.cd(1);
 		c6.draw(epP);
 
-		TCanvas gamma = new TCanvas("gamma", 500, 500);
-		gamma.draw(nGamma);
+		TCanvas gamma = new TCanvas("mvm", 500, 500);
+		gamma.draw(mvm);
 
 	}
 }

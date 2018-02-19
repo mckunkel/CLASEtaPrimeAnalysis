@@ -8,12 +8,12 @@ use strict;
 use warnings;
 use POSIX;
 
-my $nJobs = 469;	# total number of jobs 469
+my $nJobs = 4;	# total number of jobs 469
 my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
 my $clara_dir = "/work/clas12/mkunkel/myClara4a.8.1";
 my $coatjava_dir = "$clara_dir/plugins/clas12";
-my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
-my @solenoidValue = ("0.6", "0.8");
+my @torusValue = ("-0.75","-1.0","1.0");
+my @solenoidValue = ("0.8");
 
 #interate through torus
 for $a (0 .. $#torusValue)

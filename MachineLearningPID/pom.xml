@@ -17,10 +17,15 @@
 		<spark.version>2.2.1</spark.version>
 	</properties>
 	<dependencies>
+	<dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>15.0</version>
+      </dependency>
 		<dependency>
 			<groupId>org.jlab.coat</groupId>
 			<artifactId>coat-libs</artifactId>
-			<version>3.0-SNAPSHOT</version>
+			<version>5.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -30,7 +35,7 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.0.1</version>
+			<version>3.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

@@ -8,28 +8,22 @@
 use strict;
 use warnings;
 
-my $submit_dir = "/volatile/clas12/mkunkel/MachineLearningPID";
-my $outDir = "$submit_dir/ReconstructedFiles";
+my $submit_dir = "/volatile/clas12/mkunkel/EtaPrimeDilepton";
+my $type_dir = "ReconstructedFiles";
 
-#my @torusValue = ("-0.75", "1.0");
-my @torusValue = ("-1.0");
-my @solenoidValue = ("0.8");
-my @particleValue = ("AntiNeutron","AntiProton","Electron","Gamma","KMinus","KPlus","Neutron","PiMinus","PiPlus","Positron","Proton");
-for my $p (0 .. $#particleValue){
-  for my $a (0 .. $#torusValue){
-    for my $b (0 .. $#solenoidValue){
-      
-      my $output_dirI = "$outDir/".$particleValue[$p];
-      my $mkdirI = "mkdir $output_dirI";
-      system($mkdirI);
-      
-      
-      my $torusSol_dir = $particleValue[$p]."/Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
-      my $output_dirII = "$outDir/$torusSol_dir";
-      my $mkdirII = "mkdir $output_dirII";
-      print"$mkdirII \n";
-      system($mkdirII);
-      
-    }
+my @torusValue = ("-0.75", "0.75", "1.0", "-1.0");
+my @solenoidValue = ("0.6", "0.8");
+
+
+for $a (0 .. $#torusValue)
+{
+  for $b (0 .. $#solenoidValue){
+
+    my $torusSol_dir = "Torus".$torusValue[$a]."Sol".$solenoidValue[$b];
+    my $fileOutput_dir = "$submit_dir/".$type_dir."/$torusSol_dir";
+
+    my $mkdir = "mkdir $fileOutput_dir";
+    
+    system($mkdir);
   }
 }
